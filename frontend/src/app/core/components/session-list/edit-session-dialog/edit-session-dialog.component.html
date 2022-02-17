@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Muokkaa sessiota</h2>
+
+<mat-dialog-content [formGroup]="sessionEditform">
+  <mat-form-field>
+    <mat-label>Päivä</mat-label>
+    <input matInput type="text" formControlName="date">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Kesto</mat-label>
+    <input matInput type="number" formControlName="duration">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>RPE</mat-label>
+    <input matInput type="number" formControlName="rpe">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button (click)="close()">Sulje</button>
+    <button mat-raised-button color="primary" (click)="save()">Tallenna</button>
+</mat-dialog-actions>
