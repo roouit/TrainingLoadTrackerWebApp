@@ -9,5 +9,5 @@
   <input id="rpe" type="number" formControlName="rpe" required>
 
   <p>Kuorma: {{addSessionForm.value.duration * addSessionForm.value.rpe}}</p>
-  <button type="submit" [disabled]="!addSessionForm.valid">Submit</button>
+  <button mat-raised-button color="primary" type="submit" [disabled]="!addSessionForm.valid">Lisää</button>
 </form>
