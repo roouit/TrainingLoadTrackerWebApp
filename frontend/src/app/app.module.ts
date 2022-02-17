@@ -5,12 +5,20 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SessionComponent } from './components/session/session.component';
-import { ShowSessionComponent } from './components/session/show-session/show-session.component';
-import { SessionApiService } from './services/session-api.service';
+import { SessionApiService } from './core/services/session-api.service';
+import { SessionListComponent } from './core/components/session-list/session-list.component';
+import { LandingPageComponent } from './core/components/landing-page/landing-page.component';
+import { DataTableComponent } from './core/components/session-list/data-table/data-table.component';
+import { AddSessionComponent } from './core/components/landing-page/add-session/add-session.component';
 
 @NgModule({
-  declarations: [AppComponent, SessionComponent, ShowSessionComponent],
+  declarations: [
+    AppComponent,
+    SessionListComponent,
+    LandingPageComponent,
+    DataTableComponent,
+    AddSessionComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

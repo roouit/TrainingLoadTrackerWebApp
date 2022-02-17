@@ -1,0 +1,13 @@
+<form [formGroup]="addSessionForm" (ngSubmit)="onSubmit()">
+  <label for="date">Päivä: </label>
+  <input id="date" type="text" formControlName="date" required>
+  <br>
+  <label for="duration">Kesto: </label>
+  <input id="duration" type="number" formControlName="duration" required>
+  <br>
+  <label for="rpe">RPE: </label>
+  <input id="rpe" type="number" formControlName="rpe" required>
+
+  <p>Kuorma: {{addSessionForm.value.duration * addSessionForm.value.rpe}}</p>
+  <button type="submit" [disabled]="!addSessionForm.valid">Submit</button>
+</form>

@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <td>Päivä</td>
+    <td>Kesto</td>
+    <td>RPE</td>
+    <td>Kuorma</td>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of sessionsData">
+      <td>{{item.startTime}}</td>
+      <td>{{item.duration}}</td>
+      <td>{{item.rpe}}</td>
+      <td>{{getLoad(item.id)}}</td>
+    </tr>
+  </tbody>
+</table>
