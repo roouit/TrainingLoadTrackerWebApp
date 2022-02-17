@@ -21,7 +21,7 @@ export class AddSessionComponent implements OnInit {
 
   onSubmit() {
     const newSession: Session = {
-      startTime: this.addSessionForm.value.date,
+      date: this.addSessionForm.value.date,
       duration: this.addSessionForm.value.duration,
       rpe: this.addSessionForm.value.rpe,
     };

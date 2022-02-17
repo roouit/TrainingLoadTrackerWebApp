@@ -30,7 +30,6 @@ export class DataTableComponent implements OnInit {
   }
 
   openDialog(session: Session) {
-    console.log('dialogi')
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
