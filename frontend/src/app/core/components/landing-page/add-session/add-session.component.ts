@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
-import { Session } from '../../../interfaces/Session';
 
 @Component({
   selector: 'app-add-session',
@@ -20,14 +19,14 @@ export class AddSessionComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
-    const newSession: Session = {
+    const newSessionCandidate = {
       date: this.addSessionForm.value.date,
       duration: this.addSessionForm.value.duration,
       rpe: this.addSessionForm.value.rpe,
     };
 
     this.sessionApiService
-      .addSession(newSession)
+      .addSession(newSessionCandidate)
       .subscribe((data) => console.log(data));
   }
 }

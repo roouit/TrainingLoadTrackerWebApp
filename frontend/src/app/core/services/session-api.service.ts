@@ -15,7 +15,7 @@ export class SessionApiService {
     return this.http.get<Session[]>(`${this.sessionApiUrl}/sessions/`);
   }
 
-  addSession(data: Session): Observable<Session> {
+  addSession(data: {date: Date, duration: number, rpe: number}): Observable<Session> {
     return this.http.post<Session>(`${this.sessionApiUrl}/sessions/`, data);
   }
 
