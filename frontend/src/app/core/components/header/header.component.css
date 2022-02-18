@@ -1,0 +1,17 @@
+#header {
+  display: flex;
+  position: relative;
+  height: 60px;
+}
+
+.app-title {
+  width: 100%;
+  align-self: center;
+  color: #2D89B0;
+}
+
+.menu-icon {
+  position: absolute;
+  align-self: center;
+  right: 20px;
+}

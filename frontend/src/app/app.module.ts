@@ -20,6 +20,7 @@ import { LandingPageComponent } from './core/components/landing-page/landing-pag
 import { DataTableComponent } from './core/components/session-list/data-table/data-table.component';
 import { AddSessionComponent } from './core/components/landing-page/add-session/add-session.component';
 import { EditSessionDialogComponent } from './core/components/session-list/edit-session-dialog/edit-session-dialog.component';
+import { HeaderComponent } from './core/components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { EditSessionDialogComponent } from './core/components/session-list/edit-
     DataTableComponent,
     AddSessionComponent,
     EditSessionDialogComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
