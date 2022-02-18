@@ -36,6 +36,19 @@ export class DataTableComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = session;
 
-    this.dialog.open(EditSessionDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(
+      EditSessionDialogComponent,
+      dialogConfig
+    );
+
+    dialogRef.afterClosed().subscribe((val) => {
+      if (val.action === 'delete') {
+        const indexToDel = this.sessionsData.findIndex(session => session.id === val.id);
+        if (indexToDel !== -1) {
+          this.sessionsData.splice(indexToDel, 1);
+        }
+        
+      }
+    });
   }
 }

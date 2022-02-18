@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Session } from '../interfaces/Session';
@@ -12,14 +12,23 @@ export class SessionApiService {
   constructor(private http: HttpClient) {}
 
   getSessionList(): Observable<Session[]> {
-    return this.http.get<any>(`${this.sessionApiUrl}/sessions/`);
+    return this.http.get<Session[]>(`${this.sessionApiUrl}/sessions/`);
   }
 
-  addSession(data: Session) {
-    return this.http.post(`${this.sessionApiUrl}/sessions/`, data);
+  addSession(data: Session): Observable<Session> {
+    return this.http.post<Session>(`${this.sessionApiUrl}/sessions/`, data);
   }
 
-  editSession(data: Session) {
-    return this.http.put(`${this.sessionApiUrl}/sessions/${data.id}`, data);
+  editSession(data: Session): Observable<Session> {
+    return this.http.put<Session>(
+      `${this.sessionApiUrl}/sessions/${data.id}`,
+      data
+    );
+  }
+
+  deleteSession(id: number) {
+    return this.http.delete(
+      `${this.sessionApiUrl}/sessions/${id}`
+    );
   }
 }

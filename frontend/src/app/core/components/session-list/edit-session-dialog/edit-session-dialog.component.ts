@@ -10,7 +10,6 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
   styleUrls: ['./edit-session-dialog.component.css'],
 })
 export class EditSessionDialogComponent implements OnInit {
-
   sessionEditform!: FormGroup;
   session: Session;
 
@@ -31,12 +30,22 @@ export class EditSessionDialogComponent implements OnInit {
     });
   }
 
-  save() {
-    this.sessionApiService.editSession(Object.assign(this.session, this.sessionEditform.value)).subscribe()
+  save(): void {
+    this.sessionApiService
+      .editSession(Object.assign(this.session, this.sessionEditform.value))
+      .subscribe((data) => console.log(data));
     this.dialogRef.close(this.sessionEditform.value);
   }
 
-  close() {
+  delete(): void {
+    if (this.session.id === undefined) return;
+    this.sessionApiService
+      .deleteSession(this.session.id)
+      .subscribe(data => console.log(data));
+    this.dialogRef.close({action: 'delete', id: this.session.id});
+  }
+
+  close(): void {
     this.dialogRef.close();
   }
 }
