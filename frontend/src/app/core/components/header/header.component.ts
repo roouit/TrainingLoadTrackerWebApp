@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { state, style, transition, animate, trigger } from '@angular/animations';
 
 @Component({
+  host: {
+    '(window:click)': 'onClick($event)',
+  },
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
@@ -24,7 +27,6 @@ import { state, style, transition, animate, trigger } from '@angular/animations'
     ]),
   ],
 })
-
 export class HeaderComponent implements OnInit {
   isMenuVisible: boolean = false;
 
@@ -32,7 +34,14 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  toggleMenu() {
+  toggleMenu($event: any) {
+    $event.stopPropagation();
     this.isMenuVisible = !this.isMenuVisible;
+  }
+
+  onClick($event: Event) {
+    if (!($event.target as HTMLElement).classList.contains('nav-menu')){
+      this.isMenuVisible = false;
+    }
   }
 }
