@@ -30,7 +30,7 @@ import { HeaderComponent } from './core/components/header/header.component';
     DataTableComponent,
     AddSessionComponent,
     EditSessionDialogComponent,
-    HeaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

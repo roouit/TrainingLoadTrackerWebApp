@@ -1,6 +1,8 @@
 <div id="header">
     <h3 class="app-title">TLOAD Tracker</h3>
-    <img class="menu-icon" src="../../../../assets/menu_icon.svg" alt="menu icon">
+    <img class="menu-icon" (click)="toggleMenu()" src="../../../../assets/menu_icon.svg" alt="menu icon">
+    <div class="nav-menu" [@toggleMenu]="isMenuVisible ? 'showMenu' : 'hideMenu'">
+        <a [routerLink]="['/']">Aloitus</a>
+        <a [routerLink]="['/sessions']">Historia</a>
+    </div>
 </div>
-<a [routerLink]="['/']">Aloitus</a>
-    <a [routerLink]="['/sessions']">Historia</a>
