@@ -45,3 +45,12 @@ p {
     font-size: 1.2em;     
 }
 
+.btn-success {
+  color: #fff;
+  background-color: #41A94C;
+}
+
+.btn-remove {
+  color: #fff;
+  background-color: #dd2d2d;
+}
