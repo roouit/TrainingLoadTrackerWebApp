@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TrackerWebAPI.Models;
 
 namespace TrackerWebAPI.Data
@@ -9,5 +10,6 @@ namespace TrackerWebAPI.Data
             : base(options) { }
 
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
