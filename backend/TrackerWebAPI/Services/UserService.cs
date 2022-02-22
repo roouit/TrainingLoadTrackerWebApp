@@ -13,11 +13,16 @@ namespace TrackerWebAPI.Services
             _context = context;
         }
 
-        public async Task<User> CreateUser(UserRegister request)
+        public Task<User> Login(UserLogin request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<User> Register(UserRegister request)
         {
             var user = new User();
             user.Username = request.Username;
-            user.Password = request.Password;
+            //user.Password = request.Password;
             user.Email = request.Email;
             user.FirstName = !string.IsNullOrWhiteSpace(request.FirstName) ? request.FirstName : "";
             user.LastName = !string.IsNullOrWhiteSpace(request.LastName) ? request.LastName : "";
@@ -26,14 +31,47 @@ namespace TrackerWebAPI.Services
             return user;
         }
 
-        public bool DeleteUser(int id)
+        public async Task<bool> DeleteUser(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return false;
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task<User> GetUser(UserLogin request)
+        public async Task<User> GetUser(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
+
+        public async Task<User> GetUser(Guid id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        //private string CreateToken(User user)
+        //{
+        //    List<Claim> claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.Name, user.Name),
+        //        new Claim(ClaimTypes.Role, user.Role),
+        //    };
+        //    var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configuration["Jwt:key"]));
+        //    var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+
+        //    var token = new JwtSecurityToken(
+        //        claims: claims,
+        //        expires: DateTime.Now.AddDays(1),
+        //        signingCredentials: cred);
+
+        //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        //    return jwt;
+        //}
     }
 }

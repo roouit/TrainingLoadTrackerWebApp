@@ -4,9 +4,14 @@ namespace TrackerWebAPI.Services
 {
     public interface IUserService
     {
-        public Task<User> GetUser(UserLogin request);
+        public Task<User> GetUser(string username);
 
-        public Task<User> CreateUser(UserRegister request);
-        public bool DeleteUser(int id);
+        public Task<User> GetUser(Guid id);
+
+        public Task<User> Register(UserRegister request);
+
+        public Task<User> Login(UserLogin request);
+
+        public Task<bool> DeleteUser(Guid id);
     }
 }

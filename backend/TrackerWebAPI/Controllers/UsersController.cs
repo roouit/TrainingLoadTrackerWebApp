@@ -25,6 +25,20 @@ namespace TrackerWebAPI.Controllers
             _userService = userService;
         }
 
+        [HttpPost("Register")]
+        public async Task<ActionResult<User>> Register(UserRegister request)
+        {
+            var user = await _userService.Register(request);
+            return user;
+        }
+
+        [HttpGet("Login")]
+        public async Task<ActionResult<User>> Login(UserLogin request)
+        {
+            var user = await _userService.Login(request);
+            return user;
+        }
+
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
@@ -32,11 +46,11 @@ namespace TrackerWebAPI.Controllers
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        // GET: api/Users/single
+        [HttpGet("single")]
+        public async Task<ActionResult<User>> GetUser(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetUser(id);
 
             if (user == null)
             {
@@ -46,67 +60,17 @@ namespace TrackerWebAPI.Controllers
             return user;
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        // DELETE: api/Users
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
-
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var isSuccesful = await _userService.DeleteUser(id);
+            if (!isSuccesful)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
