@@ -32,11 +32,17 @@ namespace TrackerWebAPI.Controllers
             return user;
         }
 
-        [HttpGet("Login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<User>> Login(UserLogin request)
         {
+            if (!_userService.UserExists(request.Username))
+                return NotFound("User not found");
+
             var user = await _userService.Login(request);
-            return user;
+            if (user == null)
+                return Unauthorized("Password didn't match");
+
+            return Ok(user);
         }
 
         // GET: api/Users

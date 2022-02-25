@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Text;
 using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
 
@@ -13,19 +14,16 @@ namespace TrackerWebAPI.Services
             _context = context;
         }
 
-        public Task<User> Login(UserLogin request)
+        public async Task<User> Login(UserLogin request)
         {
-            throw new NotImplementedException();
+            var user = await GetUser(request.Username);
+            var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+            return isPasswordValid ? user : null;
         }
 
         public async Task<User> Register(UserRegister request)
         {
-            var user = new User();
-            user.Username = request.Username;
-            //user.Password = request.Password;
-            user.Email = request.Email;
-            user.FirstName = !string.IsNullOrWhiteSpace(request.FirstName) ? request.FirstName : "";
-            user.LastName = !string.IsNullOrWhiteSpace(request.LastName) ? request.LastName : "";
+            var user = new User(request, BCrypt.Net.BCrypt.HashPassword(request.Password));
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;
@@ -73,5 +71,10 @@ namespace TrackerWebAPI.Services
         //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         //    return jwt;
         //}
+
+        public bool UserExists(string username)
+        {
+            return _context.Users.Any(user => user.Username == username);
+        }
     }
 }

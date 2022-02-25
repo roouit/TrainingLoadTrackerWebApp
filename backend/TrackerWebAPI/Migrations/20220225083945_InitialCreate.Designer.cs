@@ -12,8 +12,8 @@ using TrackerWebAPI.Data;
 namespace TrackerWebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220217115922_ChangeStartTimeColumnToDate")]
-    partial class ChangeStartTimeColumnToDate
+    [Migration("20220225083945_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,9 @@ namespace TrackerWebAPI.Migrations
 
             modelBuilder.Entity("TrackerWebAPI.Models.Session", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -44,6 +42,37 @@ namespace TrackerWebAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("TrackerWebAPI.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

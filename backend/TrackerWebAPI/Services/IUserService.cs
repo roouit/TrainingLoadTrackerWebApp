@@ -13,5 +13,7 @@ namespace TrackerWebAPI.Services
         public Task<User> Login(UserLogin request);
 
         public Task<bool> DeleteUser(Guid id);
+
+        public bool UserExists(string username);
     }
 }

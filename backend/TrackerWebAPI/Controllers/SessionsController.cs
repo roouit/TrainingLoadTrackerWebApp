@@ -46,7 +46,7 @@ namespace TrackerWebAPI.Controllers
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSession(int id, Session session)
+        public async Task<IActionResult> PutSession(Guid id, Session session)
         {
             if (id != session.Id)
             {
@@ -79,6 +79,8 @@ namespace TrackerWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Session>> PostSession(Session session)
         {
+            // TODO: Make this Guid come from frontend?
+            session.Id = Guid.NewGuid();
             _context.Sessions.Add(session);
             await _context.SaveChangesAsync();
 
@@ -101,7 +103,7 @@ namespace TrackerWebAPI.Controllers
             return NoContent();
         }
 
-        private bool SessionExists(int id)
+        private bool SessionExists(Guid id)
         {
             return _context.Sessions.Any(e => e.Id == id);
         }
