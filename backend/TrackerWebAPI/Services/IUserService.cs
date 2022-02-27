@@ -8,6 +8,8 @@ namespace TrackerWebAPI.Services
 
         public Task<User> GetUser(Guid id);
 
+        public Task<IEnumerable<User>> GetUsers();
+
         public Task<User> Register(UserRegister request);
 
         public Task<User> Login(UserLogin request);

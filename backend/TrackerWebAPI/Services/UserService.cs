@@ -54,6 +54,10 @@ namespace TrackerWebAPI.Services
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
 
         //private string CreateToken(User user)
         //{

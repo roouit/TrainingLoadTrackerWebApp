@@ -16,12 +16,10 @@ namespace TrackerWebAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly DataContext _context;
         private readonly IUserService _userService;
 
-        public UsersController(DataContext context, IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _context = context;
             _userService = userService;
         }
 
@@ -70,7 +68,8 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var userList = await _userService.GetUsers();
+            return Ok(userList);
         }
 
         // GET: api/Users/single
