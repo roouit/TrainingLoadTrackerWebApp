@@ -15,5 +15,7 @@ namespace TrackerWebAPI.Services
         public Task<bool> DeleteUser(Guid id);
 
         public bool UserExists(string username);
+
+        public bool EmailExists(string email);
     }
 }

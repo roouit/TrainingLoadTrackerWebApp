@@ -76,5 +76,10 @@ namespace TrackerWebAPI.Services
         {
             return _context.Users.Any(user => user.Username == username);
         }
+
+        public bool EmailExists(string email)
+        {
+            return _context.Users.Any(user => user.Email == email);
+        }
     }
 }
