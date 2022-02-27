@@ -31,14 +31,21 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<User>> Register(UserRegister request)
         {
-            //if (_userService.UserExists(request.Username))
-            //    return BadRequest("Username is already taken");
+            if (_userService.UserExists(request.Username))
+                return BadRequest("Username is already taken");
 
-            //if (_userService.EmailExists(request.Email))
-            //    return BadRequest("Email is already in use");
+            if (_userService.EmailExists(request.Email))
+                return BadRequest("Email is already in use");
 
-            var user = await _userService.Register(request);
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            try
+            {
+                var user = await _userService.Register(request);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         // POST: api/Users/Login

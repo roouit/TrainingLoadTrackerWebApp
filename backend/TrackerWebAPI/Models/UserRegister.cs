@@ -20,9 +20,9 @@ namespace TrackerWebAPI.Models
         public string Email { get; set; }
 
         [MaxLength(128, ErrorMessage = "Maximum length of a first name is 128 characters")]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [MaxLength(128, ErrorMessage = "Maximum length of a last name is 128 characters")]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
     }
 }

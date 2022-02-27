@@ -18,8 +18,8 @@ namespace TrackerWebAPI.Models
             Username = request.Username;
             PasswordHash = passwordHash;
             Email = request.Email;
-            FirstName = request.FirstName;
-            LastName = request.LastName;
+            FirstName = request.FirstName != null ? request.FirstName.Trim() : "";
+            LastName = request.LastName != null ? request.LastName.Trim() : "";
         }
         [Required]
         [Key]

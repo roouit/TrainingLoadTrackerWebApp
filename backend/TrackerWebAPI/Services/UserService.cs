@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Text;
+using System.Text.RegularExpressions;
 using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
 
@@ -23,6 +24,7 @@ namespace TrackerWebAPI.Services
 
         public async Task<User> Register(UserRegister request)
         {
+            ValidateRegisterRequest(request);
             var user = new User(request, BCrypt.Net.BCrypt.HashPassword(request.Password));
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
@@ -80,6 +82,25 @@ namespace TrackerWebAPI.Services
         public bool EmailExists(string email)
         {
             return _context.Users.Any(user => user.Email == email);
+        }
+
+        private void ValidateRegisterRequest(UserRegister request)
+        {
+            // Username can contain basic Latin letters (including åÅäÄöÖ), digits
+            // and symbols -_ (symbols can't be the first character)
+            var usernameRegex = @"^[a-zA-Z0-9äÄöÖåÅ]{1}[a-zA-Z0-9_äÄöÖåÅ-]+$";
+
+            // This supports most of special characters
+            var nameRegex = @"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$";
+
+            if (!Regex.Match(request.Username, usernameRegex).Success)
+                throw new Exception("Username is not valid");
+
+            if (request.FirstName != null && !string.IsNullOrWhiteSpace(request.FirstName) && !Regex.Match(request.FirstName, nameRegex).Success)
+                throw new Exception("First name is not valid");
+
+            if (request.LastName != null && !string.IsNullOrWhiteSpace(request.LastName) && !Regex.Match(request.LastName, nameRegex).Success)
+                throw new Exception("Last name is not valid");
         }
     }
 }
