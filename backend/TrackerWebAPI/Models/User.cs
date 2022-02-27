@@ -46,5 +46,6 @@ namespace TrackerWebAPI.Models
         [MaxLength(128)]
         public string LastName { get; set; }
 
+        public ICollection<Session>? Sessions { get; set; }
     }
 }
