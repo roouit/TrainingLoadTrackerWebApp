@@ -96,9 +96,7 @@ namespace TrackerWebAPI.Controllers
         {
             var isSuccesful = await _userService.DeleteUser(userId);
             if (!isSuccesful)
-            {
                 return NotFound("User not found");
-            }
 
             return NoContent();
         }
