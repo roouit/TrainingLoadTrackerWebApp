@@ -7,6 +7,7 @@ namespace TrackerWebAPI.Models
         public Mappings()
         {
             CreateMap<User, UserDTO>();
+            CreateMap<Session, SessionDTO>();
         }
     }
 }
