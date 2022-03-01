@@ -30,10 +30,10 @@ namespace TrackerWebAPI.Controllers
         }
 
         // GET: api/Sessions/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Session>> GetSession(int id)
+        [HttpGet("{sessionId}")]
+        public async Task<ActionResult<Session>> GetSession(Guid sessionId)
         {
-            var session = await _context.Sessions.FindAsync(id);
+            var session = await _context.Sessions.FindAsync(sessionId);
 
             if (session == null)
             {
@@ -45,10 +45,10 @@ namespace TrackerWebAPI.Controllers
 
         // PUT: api/Sessions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSession(Guid id, Session session)
+        [HttpPut("{sessionId}")]
+        public async Task<IActionResult> PutSession(Guid sessionId, Session session)
         {
-            if (id != session.Id)
+            if (sessionId != session.SessionId)
             {
                 return BadRequest();
             }
@@ -61,7 +61,7 @@ namespace TrackerWebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SessionExists(id))
+                if (!SessionExists(sessionId))
                 {
                     return NotFound();
                 }
@@ -80,18 +80,18 @@ namespace TrackerWebAPI.Controllers
         public async Task<ActionResult<Session>> PostSession(Session session)
         {
             // TODO: Make this Guid come from frontend?
-            session.Id = Guid.NewGuid();
+            session.SessionId = Guid.NewGuid();
             _context.Sessions.Add(session);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSession", new { id = session.Id }, session);
+            return CreatedAtAction("GetSession", new { id = session.SessionId }, session);
         }
 
         // DELETE: api/Sessions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSession(int id)
+        [HttpDelete("{sessionId}")]
+        public async Task<IActionResult> DeleteSession(Guid sessionId)
         {
-            var session = await _context.Sessions.FindAsync(id);
+            var session = await _context.Sessions.FindAsync(sessionId);
             if (session == null)
             {
                 return NotFound();
@@ -103,9 +103,9 @@ namespace TrackerWebAPI.Controllers
             return NoContent();
         }
 
-        private bool SessionExists(Guid id)
+        private bool SessionExists(Guid sessionId)
         {
-            return _context.Sessions.Any(e => e.Id == id);
+            return _context.Sessions.Any(e => e.SessionId == sessionId);
         }
     }
 }

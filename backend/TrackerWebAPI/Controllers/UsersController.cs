@@ -27,7 +27,7 @@ namespace TrackerWebAPI.Controllers
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<User>> Register(UserRegister request)
+        public async Task<ActionResult<UserDTO>> Register(UserRegisterDTO request)
         {
             if (_userService.UserExists(request.Username))
                 return BadRequest("Username is already taken");
@@ -38,7 +38,7 @@ namespace TrackerWebAPI.Controllers
             try
             {
                 var user = await _userService.Register(request);
-                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+                return CreatedAtAction(nameof(GetUser), new { username = user.Username }, user);
             }
             catch (Exception e)
             {
@@ -51,7 +51,7 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<User>> Login(UserLogin request)
+        public async Task<ActionResult<UserDTO>> Login(UserLoginDTO request)
         {
             if (!_userService.UserExists(request.Username))
                 return NotFound("User not found");
@@ -76,9 +76,9 @@ namespace TrackerWebAPI.Controllers
         [HttpGet("single")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> GetUser(Guid id)
+        public async Task<ActionResult<UserDTO>> GetUser(string username)
         {
-            var user = await _userService.GetUser(id);
+            var user = await _userService.GetUser(username);
 
             if (user == null)
             {
@@ -92,9 +92,9 @@ namespace TrackerWebAPI.Controllers
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid userId)
         {
-            var isSuccesful = await _userService.DeleteUser(id);
+            var isSuccesful = await _userService.DeleteUser(userId);
             if (!isSuccesful)
             {
                 return NotFound("User not found");

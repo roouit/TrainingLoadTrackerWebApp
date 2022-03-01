@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Text.RegularExpressions;
 using TrackerWebAPI.Data;
@@ -9,31 +10,33 @@ namespace TrackerWebAPI.Services
     public class UserService : IUserService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public UserService(DataContext context)
+        public UserService(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<User> Login(UserLogin request)
+        public async Task<UserDTO> Login(UserLoginDTO request)
         {
-            var user = await GetUser(request.Username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
-            return isPasswordValid ? user : null;
+            return isPasswordValid ? _mapper.Map<UserDTO>(user) : null;
         }
 
-        public async Task<User> Register(UserRegister request)
+        public async Task<UserDTO> Register(UserRegisterDTO request)
         {
             ValidateRegisterRequest(request);
             var user = new User(request, BCrypt.Net.BCrypt.HashPassword(request.Password));
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return user;
+            return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<bool> DeleteUser(Guid id)
+        public async Task<bool> DeleteUser(Guid userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
             {
                 return false;
@@ -45,14 +48,15 @@ namespace TrackerWebAPI.Services
             return true;
         }
 
-        public async Task<User> GetUser(string username)
+        public async Task<UserDTO> GetUser(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<User> GetUser(Guid id)
+        public async Task<User> GetUser(Guid userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -88,7 +92,7 @@ namespace TrackerWebAPI.Services
             return _context.Users.Any(user => user.Email == email);
         }
 
-        private void ValidateRegisterRequest(UserRegister request)
+        private void ValidateRegisterRequest(UserRegisterDTO request)
         {
             // Username can contain basic Latin letters (including åÅäÄöÖ), digits
             // and symbols -_ (symbols can't be the first character)
