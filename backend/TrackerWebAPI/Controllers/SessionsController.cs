@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
+using TrackerWebAPI.Services;
 
 namespace TrackerWebAPI.Controllers
 {
@@ -15,97 +16,90 @@ namespace TrackerWebAPI.Controllers
     [ApiController]
     public class SessionsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly ISessionService _sessionService;
 
-        public SessionsController(DataContext context)
+        public SessionsController(ISessionService sessionService)
         {
-            _context = context;
+            _sessionService = sessionService;
+        }
+
+        // GET: api/Sessions
+        [HttpGet("full")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<Session>>> GetFullSessions(string username)
+        {
+            // TODO: get username from JWT token?
+            var sessionList = await _sessionService.GetFullSessions(username);
+            return Ok(sessionList);
         }
 
         // GET: api/Sessions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SessionDTO>>> GetSessions(string username)
         {
-            return await _context.Sessions.ToListAsync();
+            // TODO: get username from JWT token?
+            var sessionList = await _sessionService.GetSessions(username);
+            return Ok(sessionList);
         }
 
         // GET: api/Sessions/5
         [HttpGet("{sessionId}")]
         public async Task<ActionResult<Session>> GetSession(Guid sessionId)
         {
-            var session = await _context.Sessions.FindAsync(sessionId);
-
+            var session = await _sessionService.GetSession(sessionId);
             if (session == null)
-            {
-                return NotFound();
-            }
+                return NotFound("Session not found");
 
-            return session;
+            return Ok(session);
         }
 
-        // PUT: api/Sessions/5
+        // PUT: api/Sessions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{sessionId}")]
-        public async Task<IActionResult> PutSession(Guid sessionId, Session session)
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutSession(SessionUpdateDTO request)
         {
-            if (sessionId != session.SessionId)
-            {
-                return BadRequest();
-            }
+            var sessionDto = await _sessionService.GetSession(request.SessionId);
+            if (sessionDto == null)
+                return NotFound("Session not found");
 
-            _context.Entry(session).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SessionExists(sessionId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var session = await _sessionService.Update(request);
+            return Ok(session);
         }
 
         // POST: api/Sessions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Session>> PostSession(Session session)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SessionDTO>> Create(SessionCreateDTO request)
         {
-            // TODO: Make this Guid come from frontend?
-            session.SessionId = Guid.NewGuid();
-            _context.Sessions.Add(session);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSession", new { id = session.SessionId }, session);
+            try
+            {
+                var session = await _sessionService.Create(request);
+                return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        // DELETE: api/Sessions/5
-        [HttpDelete("{sessionId}")]
+        // DELETE: api/Sessions
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteSession(Guid sessionId)
         {
-            var session = await _context.Sessions.FindAsync(sessionId);
-            if (session == null)
+            var isSuccesful = await _sessionService.DeleteSession(sessionId);
+            if (!isSuccesful)
             {
-                return NotFound();
+                return NotFound("Session not found");
             }
 
-            _context.Sessions.Remove(session);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool SessionExists(Guid sessionId)
-        {
-            return _context.Sessions.Any(e => e.SessionId == sessionId);
         }
     }
 }
