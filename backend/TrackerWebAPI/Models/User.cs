@@ -12,9 +12,9 @@ namespace TrackerWebAPI.Models
         {
 
         }
-        public User(UserRegister request, string passwordHash)
+        public User(UserRegisterDTO request, string passwordHash)
         {
-            Id = Guid.NewGuid();
+            UserId = Guid.NewGuid();
             Username = request.Username;
             PasswordHash = passwordHash;
             Email = request.Email;
@@ -23,7 +23,7 @@ namespace TrackerWebAPI.Models
         }
         [Required]
         [Key]
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
         [MinLength(2)]
@@ -46,6 +46,6 @@ namespace TrackerWebAPI.Models
         [MaxLength(128)]
         public string LastName { get; set; }
 
-        public ICollection<Session>? Sessions { get; set; }
+        public virtual ICollection<Session> Sessions { get; set; }
     }
 }

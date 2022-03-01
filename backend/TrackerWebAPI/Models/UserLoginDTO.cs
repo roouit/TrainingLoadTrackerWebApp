@@ -2,7 +2,7 @@
 
 namespace TrackerWebAPI.Models
 {
-    public class UserLogin
+    public class UserLoginDTO
     {
         [Required]
         public string Username { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackerWebAPI.Models
 {
@@ -6,12 +7,12 @@ namespace TrackerWebAPI.Models
     {
         [Required]
         [Key]
-        public Guid Id { get; set; }
+        public Guid SessionId { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
 
-        public User? User { get; set; }
+        public virtual User User { get; set; }
 
         [Required]
         [Range(1,10)]

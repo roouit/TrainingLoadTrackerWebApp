@@ -2,7 +2,7 @@
 
 namespace TrackerWebAPI.Models
 {
-    public class UserRegister
+    public class UserRegisterDTO
     {
         [Required(ErrorMessage = "Username can't be empty")]
         [MinLength(2, ErrorMessage = "Username must have at least 2 characters")]
