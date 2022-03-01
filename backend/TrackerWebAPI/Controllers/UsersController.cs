@@ -46,25 +46,23 @@ namespace TrackerWebAPI.Controllers
             }
         }
 
-        // POST: api/Users/Login
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<UserDTO>> Login(UserLoginDTO request)
+        public async Task<ActionResult<string>> Login(UserLoginDTO request)
         {
             if (!_userService.UserExists(request.Username))
                 return NotFound("User not found");
 
-            var user = await _userService.Login(request);
-            if (user == null)
+            var token = await _userService.Login(request);
+            if (token == null)
                 return Unauthorized("Password didn't match");
 
-            return Ok(user);
+            return Ok(token);
         }
 
-        // GET: api/Users
-        [HttpGet]
+        [HttpGet("debug/full")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -72,8 +70,7 @@ namespace TrackerWebAPI.Controllers
             return Ok(userList);
         }
 
-        // GET: api/Users/single
-        [HttpGet("single")]
+        [HttpGet("{username}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetUser(string username)
@@ -88,13 +85,12 @@ namespace TrackerWebAPI.Controllers
             return Ok(user);
         }
 
-        // DELETE: api/Users
-        [HttpDelete]
+        [HttpDelete("{username}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteUser(Guid userId)
+        public async Task<IActionResult> DeleteUser(string username)
         {
-            var isSuccesful = await _userService.DeleteUser(userId);
+            var isSuccesful = await _userService.DeleteUser(username);
             if (!isSuccesful)
                 return NotFound("User not found");
 
