@@ -63,9 +63,9 @@ namespace TrackerWebAPI.Services
             return _mapper.Map<SessionDTO>(session);
         }
 
-        public async Task<SessionDTO> Update(SessionUpdateDTO request)
+        public async Task<SessionDTO> Update(Guid sessionId, SessionUpdateDTO request)
         {
-            var session = await _context.Sessions.FindAsync(request.SessionId);
+            var session = await _context.Sessions.FindAsync(sessionId);
             session.Rpe = request.Rpe;
             session.Duration = request.Duration;
             session.Date = request.Date;

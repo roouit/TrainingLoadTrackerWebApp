@@ -13,7 +13,7 @@ namespace TrackerWebAPI.Services
 
         public Task<SessionDTO> Create(SessionCreateDTO request);
 
-        public Task<SessionDTO> Update(SessionUpdateDTO request);
+        public Task<SessionDTO> Update(Guid sessionId, SessionUpdateDTO request);
 
         public Task<bool> DeleteSession(Guid sessionId);
     }
