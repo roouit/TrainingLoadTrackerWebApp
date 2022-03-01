@@ -1,10 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackerWebAPI.Models
 {
     public class Session
     {
+        public Session()
+        {
+
+        }
+        public Session(SessionCreateDTO request)
+        {
+            SessionId = Guid.NewGuid();
+            UserId = request.UserId;
+            Rpe = request.Rpe;
+            Duration = request.Duration;
+            Date = request.Date;
+        }
         [Required]
         [Key]
         public Guid SessionId { get; set; }
