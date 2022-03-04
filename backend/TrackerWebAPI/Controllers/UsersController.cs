@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,7 @@ using TrackerWebAPI.Services;
 
 namespace TrackerWebAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -23,7 +26,7 @@ namespace TrackerWebAPI.Controllers
             _userService = userService;
         }
 
-        // POST: api/Users/Register
+        [AllowAnonymous]
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,6 +49,7 @@ namespace TrackerWebAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -70,11 +74,15 @@ namespace TrackerWebAPI.Controllers
             return Ok(userList);
         }
 
-        [HttpGet("{username}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserDTO>> GetUser(string username)
+        public async Task<ActionResult<UserDTO>> GetUser()
         {
+            var username = GetUsernameFromIdentity();
+            if (string.IsNullOrWhiteSpace(username))
+                return NotFound("Error when fetching user identity");
+
             var user = await _userService.GetUser(username);
 
             if (user == null)
@@ -85,16 +93,30 @@ namespace TrackerWebAPI.Controllers
             return Ok(user);
         }
 
-        [HttpDelete("{username}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteUser(string username)
+        public async Task<IActionResult> DeleteUser()
         {
+            var username = GetUsernameFromIdentity();
+            if (string.IsNullOrWhiteSpace(username))
+                return NotFound("Error when fetching user identity");
+
             var isSuccesful = await _userService.DeleteUser(username);
             if (!isSuccesful)
                 return NotFound("User not found");
 
             return NoContent();
+        }
+
+        private string GetUsernameFromIdentity()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null)
+                return string.Empty;
+
+            return identity.FindFirst(ClaimTypes.Name).Value;
         }
     }
 }

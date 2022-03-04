@@ -74,10 +74,12 @@ namespace TrackerWebAPI.Services
             {
                 new Claim(ClaimTypes.Name, user.Username)
             };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var token = new JwtSecurityToken(
+                issuer: "http://localhost:7286",
+                audience: "http://localhost:7286",
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: cred);
