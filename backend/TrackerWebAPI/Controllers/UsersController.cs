@@ -20,10 +20,12 @@ namespace TrackerWebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         [AllowAnonymous]
@@ -79,7 +81,8 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetUser()
         {
-            var username = GetUsernameFromIdentity();
+            var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+
             if (string.IsNullOrWhiteSpace(username))
                 return NotFound("Error when fetching user identity");
 
@@ -98,25 +101,17 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser()
         {
-            var username = GetUsernameFromIdentity();
+            var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+
             if (string.IsNullOrWhiteSpace(username))
                 return NotFound("Error when fetching user identity");
 
             var isSuccesful = await _userService.DeleteUser(username);
+
             if (!isSuccesful)
                 return NotFound("User not found");
 
             return NoContent();
-        }
-
-        private string GetUsernameFromIdentity()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if (identity == null)
-                return string.Empty;
-
-            return identity.FindFirst(ClaimTypes.Name).Value;
         }
     }
 }
