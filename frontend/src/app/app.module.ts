@@ -18,9 +18,10 @@ import { AppComponent } from './app.component';
 import { SessionListComponent } from './core/components/session-list/session-list.component';
 import { LandingPageComponent } from './core/components/landing-page/landing-page.component';
 import { DataTableComponent } from './core/components/session-list/data-table/data-table.component';
-import { AddSessionComponent } from './core/components/landing-page/add-session/add-session.component';
+import { AddSessionComponent } from './core/components/add-session/add-session.component';
 import { EditSessionDialogComponent } from './core/components/session-list/edit-session-dialog/edit-session-dialog.component';
 import { HeaderComponent } from './core/components/header/header.component';
+import { RegisterComponent } from './core/components/landing-page/register/register.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { HeaderComponent } from './core/components/header/header.component';
     DataTableComponent,
     AddSessionComponent,
     EditSessionDialogComponent,
-    HeaderComponent
+    HeaderComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
