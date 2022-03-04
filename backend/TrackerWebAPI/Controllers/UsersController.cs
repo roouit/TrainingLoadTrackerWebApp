@@ -61,7 +61,7 @@ namespace TrackerWebAPI.Controllers
             if (!_userService.UserExists(request.Username))
                 return Unauthorized("Login information isn't correct");
 
-            var token = await _userService.Login(request);
+            var token = await _userService.Login(request, HttpContext);
 
             if (token == null)
                 return Unauthorized("Login information isn't correct");

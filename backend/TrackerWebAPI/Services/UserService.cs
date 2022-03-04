@@ -15,19 +15,21 @@ namespace TrackerWebAPI.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
 
-        public UserService(DataContext context, IMapper mapper, IConfiguration configuration)
+        public UserService(DataContext context, IMapper mapper, IConfiguration configuration, ITokenService tokenService)
         {
             _context = context;
             _mapper = mapper;
             _configuration = configuration;
+            _tokenService = tokenService;
         }
 
-        public async Task<string> Login(UserLoginDTO request)
+        public async Task<string> Login(UserLoginDTO request, HttpContext context)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
-            return isPasswordValid ? CreateToken(user) : null;
+            return isPasswordValid ? _tokenService.CreateToken(user, context) : null;
         }
 
         public async Task<UserDTO> Register(UserRegisterDTO request)
@@ -66,26 +68,6 @@ namespace TrackerWebAPI.Services
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _context.Users.ToListAsync();
-        }
-
-        private string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Username)
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-
-            var token = new JwtSecurityToken(
-                issuer: "http://localhost:7286",
-                audience: "http://localhost:7286",
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
-                signingCredentials: cred);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-            return jwt;
         }
 
         public bool UserExists(string username)

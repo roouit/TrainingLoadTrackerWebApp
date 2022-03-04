@@ -12,7 +12,7 @@ namespace TrackerWebAPI.Services
 
         public Task<UserDTO> Register(UserRegisterDTO request);
 
-        public Task<string> Login(UserLoginDTO request);
+        public Task<string> Login(UserLoginDTO request, HttpContext context);
 
         public Task<bool> DeleteUser(string username);
 
