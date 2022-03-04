@@ -1,0 +1,14 @@
+<h3 class="register-title">Kirjaudu</h3>
+<form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="login-inputs">
+    <div class="username-input">
+      <label for="username">Käyttäjätunnus: </label>
+      <input id="username" type="text" formControlName="username" required>
+    </div>
+    <div class="password-input">
+      <label for="password">Salasana: </label>
+      <input id="password" type="password" formControlName="password" required>
+    </div>
+  </div>
+  <button mat-raised-button class="btn-success login-btn" type="submit" [disabled]="!loginForm.valid">Kirjaudu sisään</button>
+</form>
