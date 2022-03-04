@@ -59,11 +59,12 @@ namespace TrackerWebAPI.Controllers
         public async Task<ActionResult<string>> Login(UserLoginDTO request)
         {
             if (!_userService.UserExists(request.Username))
-                return NotFound("User not found");
+                return Unauthorized("Login information isn't correct");
 
             var token = await _userService.Login(request);
+
             if (token == null)
-                return Unauthorized("Password didn't match");
+                return Unauthorized("Login information isn't correct");
 
             return Ok(token);
         }
@@ -78,13 +79,14 @@ namespace TrackerWebAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetUser()
         {
             var username = _tokenService.GetUsernameFromIdentity(HttpContext);
 
             if (string.IsNullOrWhiteSpace(username))
-                return NotFound("Error when fetching user identity");
+                return Forbid("Error when fetching user identity");
 
             var user = await _userService.GetUser(username);
 
@@ -98,13 +100,14 @@ namespace TrackerWebAPI.Controllers
 
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser()
         {
             var username = _tokenService.GetUsernameFromIdentity(HttpContext);
 
             if (string.IsNullOrWhiteSpace(username))
-                return NotFound("Error when fetching user identity");
+                return Forbid("Error when fetching user identity");
 
             var isSuccesful = await _userService.DeleteUser(username);
 
