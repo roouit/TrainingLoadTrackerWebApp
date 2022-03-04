@@ -11,7 +11,7 @@ namespace TrackerWebAPI.Services
 
         public Task<IEnumerable<SessionDTO>> GetSessions(string username);
 
-        public Task<SessionDTO> Create(SessionCreateDTO request);
+        public Task<SessionDTO> Create(SessionCreateDTO request, string username);
 
         public Task<SessionDTO> Update(Guid sessionId, SessionUpdateDTO request);
 

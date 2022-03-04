@@ -16,12 +16,19 @@ namespace TrackerWebAPI.Services
             _mapper = mapper;
         }
 
-        public async Task<SessionDTO> Create(SessionCreateDTO request)
+        public async Task<SessionDTO> Create(SessionCreateDTO request, string username)
         {
-            await ValidateCreateRequest(request);
-            var session = new Session(request);
+            var userId = _context.Users
+                .Where(u => u.Username == username)
+                .Select(u => u.UserId)
+                .FirstOrDefault();
+
+            var session = new Session(request, userId);
+
             _context.Sessions.Add(session);
+
             await _context.SaveChangesAsync();
+            
             return _mapper.Map<SessionDTO>(session);
         }
 
@@ -72,13 +79,6 @@ namespace TrackerWebAPI.Services
 
             await _context.SaveChangesAsync();
             return _mapper.Map<SessionDTO>(session);
-        }
-
-        private async Task ValidateCreateRequest(SessionCreateDTO request)
-        {
-            var user = await _context.Users.FindAsync(request.UserId);
-            if (user == null)
-                throw new Exception("User with given id wasn't found");
         }
     }
 }

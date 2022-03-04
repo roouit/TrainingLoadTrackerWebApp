@@ -8,10 +8,10 @@ namespace TrackerWebAPI.Models
         {
 
         }
-        public Session(SessionCreateDTO request)
+        public Session(SessionCreateDTO request, Guid userId)
         {
             SessionId = Guid.NewGuid();
-            UserId = request.UserId;
+            UserId = userId;
             Rpe = request.Rpe;
             Duration = request.Duration;
             Date = request.Date;

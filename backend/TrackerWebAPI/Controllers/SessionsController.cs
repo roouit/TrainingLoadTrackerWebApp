@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,15 +13,18 @@ using TrackerWebAPI.Services;
 
 namespace TrackerWebAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SessionsController : ControllerBase
     {
         private readonly ISessionService _sessionService;
+        private readonly ITokenService _tokenService;
 
-        public SessionsController(ISessionService sessionService)
+        public SessionsController(ISessionService sessionService, ITokenService tokenService)
         {
             _sessionService = sessionService;
+            _tokenService = tokenService;
         }
 
         [HttpGet("debug/full")]
@@ -34,15 +38,21 @@ namespace TrackerWebAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SessionDTO>>> GetSessions(string username)
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<ActionResult<IEnumerable<SessionDTO>>> GetSessions()
         {
-            // TODO: get username from JWT token?
+            var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+
+            if (string.IsNullOrWhiteSpace(username))
+                return Forbid("Error when fetching user identity");
+
             var sessionList = await _sessionService.GetSessions(username);
             return Ok(sessionList);
         }
 
-        // Is this endpoint needed? Sessions are fetched in batches 
         [HttpGet("{sessionId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<SessionDTO>> GetSession(Guid sessionId)
         {
             var session = await _sessionService.GetSession(sessionId);
@@ -61,18 +71,24 @@ namespace TrackerWebAPI.Controllers
             if (sessionDto == null)
                 return NotFound("Session not found");
 
-            var session = await _sessionService.Update(sessionId, request);
+            await _sessionService.Update(sessionId, request);
             return NoContent();
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<SessionDTO>> Create(SessionCreateDTO request)
         {
             try
             {
-                var session = await _sessionService.Create(request);
+                var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+
+                if (string.IsNullOrWhiteSpace(username))
+                    return Forbid("Error when fetching user identity");
+
+                var session = await _sessionService.Create(request, username);
                 return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
             }
             catch (Exception e)
@@ -86,8 +102,8 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteSession(Guid sessionId)
         {
-            var isSuccesful = await _sessionService.DeleteSession(sessionId);
-            if (!isSuccesful)
+            var isSuccessful = await _sessionService.DeleteSession(sessionId);
+            if (!isSuccessful)
             {
                 return NotFound("Session not found");
             }

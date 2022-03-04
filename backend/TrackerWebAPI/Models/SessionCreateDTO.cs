@@ -4,9 +4,6 @@ namespace TrackerWebAPI.Models
 {
     public class SessionCreateDTO
     {
-        [Required(ErrorMessage = "User id can't be empty")]
-        public Guid UserId { get; set; }
-
         [Required(ErrorMessage = "Rpe value can't be empty")]
         [Range(1, 10, ErrorMessage = "Rpe value must be between 1-10")]
         public int Rpe { get; set; }
