@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserRegisterDTO } from 'src/app/core/interfaces/UserRegisterDTO';
+import { UserApiService } from 'src/app/core/services/user-api.service';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ export class RegisterComponent implements OnInit {
   registerRequest: UserRegisterDTO;
   registerForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userApiService: UserApiService) {
     this.registerRequest = {
       username: '',
       password: '',
@@ -49,6 +50,11 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.registerForm.value);
+    this.userApiService
+      .register(Object.assign(this.registerRequest, this.registerForm.value))
+      .subscribe({
+        next: data => console.log(data),
+        error: err => console.log(err)
+      });
   }
 }

@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
+import { UserApiService } from './core/services/user-api.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -22,6 +23,8 @@ import { AddSessionComponent } from './core/components/add-session/add-session.c
 import { EditSessionDialogComponent } from './core/components/session-list/edit-session-dialog/edit-session-dialog.component';
 import { HeaderComponent } from './core/components/header/header.component';
 import { RegisterComponent } from './core/components/landing-page/register/register.component';
+import { LoginComponent } from './core/components/landing-page/login/login.component';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +35,8 @@ import { RegisterComponent } from './core/components/landing-page/register/regis
     AddSessionComponent,
     EditSessionDialogComponent,
     HeaderComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +50,10 @@ import { RegisterComponent } from './core/components/landing-page/register/regis
     MatInputModule,
     MatButtonModule,
   ],
-  providers: [SessionApiService],
+  providers: [
+    SessionApiService,
+    UserApiService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
