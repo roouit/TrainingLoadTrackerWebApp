@@ -1,0 +1,21 @@
+<h3 class="add-session-title">Uusi sessio</h3>
+<form class="add-session-form" [formGroup]="addSessionForm" (ngSubmit)="onSubmit()">
+  <div class="add-session-inputs">
+    <div class="date-input">
+      <label for="date">Päivä: </label>
+      <input id="date" type="text" formControlName="date" required>
+    </div>
+    <div class="duration-input">
+      <label for="duration">Kesto: </label>
+      <input id="duration" type="number" formControlName="duration" required>
+    </div>
+    <div class="rpe-input">
+      <label for="rpe">RPE: </label>
+      <input id="rpe" type="number" formControlName="rpe" required>
+    </div>
+  </div>
+  <div class="load-input">
+    <span>Kuorma: {{addSessionForm.value.duration * addSessionForm.value.rpe}}</span>
+  </div>
+  <button mat-raised-button class="btn-success add-session-btn" type="submit" [disabled]="!addSessionForm.valid">Lisää</button>
+</form>

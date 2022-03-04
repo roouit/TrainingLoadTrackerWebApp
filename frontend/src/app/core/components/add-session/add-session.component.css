@@ -1,0 +1,21 @@
+.add-session-title {
+  font-weight: 400;
+  padding-bottom: 10px;
+}
+
+.add-session-form input{
+  width: 60px;
+}
+
+.add-session-inputs {
+  width: 140px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.add-session-inputs div {
+  display: flex;
+  justify-content: space-between;
+}
