@@ -5,11 +5,16 @@ import { LandingPageComponent } from './core/components/landing-page/landing-pag
 import { LoginComponent } from './core/components/landing-page/login/login.component';
 import { RegisterComponent } from './core/components/landing-page/register/register.component';
 import { SessionListComponent } from './core/components/session-list/session-list.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: AddSessionComponent },
-  { path: 'sessions', component: SessionListComponent },
-  { path: 'login', component: LoginComponent},
+  { path: '', component: AddSessionComponent, canActivate: [AuthGuard] },
+  {
+    path: 'sessions',
+    component: SessionListComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 ];
 

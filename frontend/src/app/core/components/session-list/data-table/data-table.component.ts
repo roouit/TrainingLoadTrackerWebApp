@@ -3,6 +3,8 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
 import { Session } from '../../../interfaces/Session';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EditSessionDialogComponent } from '../edit-session-dialog/edit-session-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-data-table',
@@ -14,12 +16,22 @@ export class DataTableComponent implements OnInit {
 
   constructor(
     private sessionApiService: SessionApiService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.sessionApiService.getSessionList().subscribe((data) => {
-      this.sessionsData = data;
+    this.sessionApiService.getSessionList().subscribe({
+      next: (data) => {
+        this.sessionsData = data;
+      },
+      error: (err) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 401) {
+            this.router.navigate(['/login'])
+          }
+        }
+      },
     });
   }
 

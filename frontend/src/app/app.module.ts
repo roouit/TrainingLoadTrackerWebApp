@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -13,6 +13,10 @@ import { MatButtonModule } from '@angular/material/button';
 // Services
 import { SessionApiService } from './core/services/session-api.service';
 import { UserApiService } from './core/services/user-api.service';
+import { TokenInterceptorService } from './core/services/token-interceptor.service';
+
+// Guards
+import { AuthGuard } from './core/guards/auth.guard';
 
 // Components
 import { AppComponent } from './app.component';
@@ -25,7 +29,6 @@ import { HeaderComponent } from './core/components/header/header.component';
 import { RegisterComponent } from './core/components/landing-page/register/register.component';
 import { LoginComponent } from './core/components/landing-page/login/login.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +39,7 @@ import { LoginComponent } from './core/components/landing-page/login/login.compo
     EditSessionDialogComponent,
     HeaderComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +55,13 @@ import { LoginComponent } from './core/components/landing-page/login/login.compo
   ],
   providers: [
     SessionApiService,
-    UserApiService
+    UserApiService,
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

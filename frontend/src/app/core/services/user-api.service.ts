@@ -20,4 +20,13 @@ export class UserApiService {
   login(request: UserLoginDTO): Observable<string> {
     return this.http.post<string>(`${this.userApiUrl}/Login/`, request);
   }
+
+  // TODO: implement some validation for token form
+  loggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
 }
