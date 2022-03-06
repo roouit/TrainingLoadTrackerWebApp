@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserRegisterDTO } from 'src/app/core/interfaces/UserRegisterDTO';
 import { UserApiService } from 'src/app/core/services/user-api.service';
 
@@ -12,7 +13,7 @@ export class RegisterComponent implements OnInit {
   registerRequest: UserRegisterDTO;
   registerForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private userApiService: UserApiService) {
+  constructor(private fb: FormBuilder, private userApiService: UserApiService, private router: Router) {
     this.registerRequest = {
       username: '',
       password: '',
@@ -53,7 +54,9 @@ export class RegisterComponent implements OnInit {
     this.userApiService
       .register(Object.assign(this.registerRequest, this.registerForm.value))
       .subscribe({
-        next: (data) => console.log(data),
+        next: (data) => {
+          this.router.navigate(['/login'])
+        },
         error: (err) => console.log(err),
       });
   }
