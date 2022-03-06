@@ -1,14 +1,16 @@
-<h3 class="register-title">Kirjaudu</h3>
+<h4 class="register-title">Kirjaudu</h4>
 <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="login-inputs">
-    <div class="username-input">
-      <label for="username">Käyttäjätunnus: </label>
-      <input id="username" type="text" formControlName="username" required>
-    </div>
-    <div class="password-input">
-      <label for="password">Salasana: </label>
-      <input id="password" type="password" formControlName="password" required>
-    </div>
+    <mat-form-field class="username-input">
+      <mat-label>Käyttäjätunnus</mat-label>
+      <input matInput id="username" type="text" formControlName="username" required>
+      <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("username")}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="password-input">
+      <mat-label>Salasana</mat-label>
+      <input matInput id="password" type="password" formControlName="password" required>
+      <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("password")}}</mat-error>
+    </mat-form-field>
   </div>
   <button mat-raised-button class="btn-success login-btn" type="submit" [disabled]="!loginForm.valid">Kirjaudu sisään</button>
 </form>

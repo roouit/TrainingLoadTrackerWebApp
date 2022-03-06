@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.userApiService
       .login(Object.assign(this.loginRequest, this.loginForm.value))
       .subscribe({
@@ -37,5 +37,12 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => console.log(err),
       });
+  }
+
+  getErrorMessage(formKey: string): string | void {
+    if (this.loginForm.get(formKey)?.hasError('required')) {
+      return `Kenttä ei voi olla tyhjä`;
+    }
+    
   }
 }

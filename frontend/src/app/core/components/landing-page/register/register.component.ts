@@ -53,8 +53,49 @@ export class RegisterComponent implements OnInit {
     this.userApiService
       .register(Object.assign(this.registerRequest, this.registerForm.value))
       .subscribe({
-        next: data => console.log(data),
-        error: err => console.log(err)
+        next: (data) => console.log(data),
+        error: (err) => console.log(err),
       });
+  }
+
+  getErrorMessage(formKey: string): string | void {
+    if (this.registerForm.get(formKey)?.hasError('required')) {
+      return `Kenttä ei voi olla tyhjä`;
+    } else if (this.registerForm.get(formKey)?.hasError('email')) {
+      return `Sähköposti ei ole kunnollinen`;
+    } 
+    switch (formKey) {
+      case 'username':
+        if (this.registerForm.get(formKey)?.hasError('minlength')) {
+          return `Tunnuksessa pitää olla vähintään 2 merkkiä`;
+        } else if (this.registerForm.get(formKey)?.hasError('maxlength')) {
+          return `Tunnuksessa ei saa olla yli 128 merkkiä`;
+        }
+        break;
+      case 'password':
+        if (this.registerForm.get(formKey)?.hasError('minlength')) {
+          return `Salasanassa pitää olla vähintään 8 merkkiä`;
+        } else if (this.registerForm.get(formKey)?.hasError('maxlength')) {
+          return `Salasanassa ei saa olla yli 55 merkkiä`;
+        }
+        break;
+      case 'email':
+        if (this.registerForm.get(formKey)?.hasError('maxlength')) {
+          return `Sähköpostissa ei saa olla yli 256 merkkiä`;
+        }
+        break;
+      case 'firstName':
+        if (this.registerForm.get(formKey)?.hasError('maxlength')) {
+          return `Etunimessä ei saa olla yli 256 merkkiä`;
+        }
+        break;
+      case 'lastName':
+        if (this.registerForm.get(formKey)?.hasError('maxlength')) {
+          return `Sukunimessä ei saa olla yli 256 merkkiä`;
+        }
+        break;
+      default:
+        break;
+    }
   }
 }

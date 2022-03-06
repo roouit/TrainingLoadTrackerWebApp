@@ -1,26 +1,31 @@
-<h3 class="register-title">Rekisteröidy</h3>
+<h4 class="register-title">Rekisteröidy</h4>
 <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="register-inputs">
-    <div class="username-input">
-      <label for="username">Käyttäjätunnus: </label>
-      <input id="username" type="text" formControlName="username" required>
-    </div>
-    <div class="password-input">
-      <label for="password">Salasana: </label>
-      <input id="password" type="password" formControlName="password" required>
-    </div>
-    <div class="email-input">
-      <label for="email">Sähköposti: </label>
-      <input id="email" type="email" formControlName="email" required>
-    </div>
-    <div class="first-name-input">
-      <label for="first-name">Etunimi: </label>
-      <input id="first-name" type="text" formControlName="firstName">
-    </div>
-    <div class="last-name-input">
-      <label for="last-name">Sukunimi: </label>
-      <input id="last-name" type="text" formControlName="lastName">
-    </div>
+    <mat-form-field class="username-input">
+      <mat-label>Käyttäjätunnus</mat-label>
+      <input matInput id="username" type="text" formControlName="username" required>
+      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("username")}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="password-input">
+      <mat-label>Salasana</mat-label>
+      <input matInput id="password" type="password" formControlName="password" required>
+      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("password")}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="email-input">
+      <mat-label>Sähköposti</mat-label>
+      <input matInput id="email" type="email" formControlName="email" required>
+      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("email")}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="first-name-input">
+      <mat-label>Etunimi</mat-label>
+      <input matInput id="first-name" type="text" formControlName="firstName">
+      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("firstName")}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="last-name-input">
+      <mat-label>Sukunimi</mat-label>
+      <input matInput id="last-name" type="text" formControlName="lastName">
+      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("lastName")}}</mat-error>
+    </mat-form-field>
   </div>
   <button mat-raised-button class="btn-success register-user-btn" type="submit" [disabled]="!registerForm.valid">Rekisteröidy</button>
 </form>
