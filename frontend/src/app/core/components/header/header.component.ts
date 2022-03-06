@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { state, style, transition, animate, trigger } from '@angular/animations';
+import { UserApiService } from '../../services/user-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   host: {
@@ -30,7 +32,7 @@ import { state, style, transition, animate, trigger } from '@angular/animations'
 export class HeaderComponent implements OnInit {
   isMenuVisible: boolean = false;
 
-  constructor() {}
+  constructor(public userApiService: UserApiService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -43,5 +45,10 @@ export class HeaderComponent implements OnInit {
     if (!($event.target as HTMLElement).classList.contains('nav-menu')){
       this.isMenuVisible = false;
     }
+  }
+
+  logout() {
+    this.userApiService.logout()
+    this.router.navigate(['/login'])
   }
 }

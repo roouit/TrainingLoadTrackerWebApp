@@ -1,8 +1,20 @@
 <div id="header">
-    <h5 class="app-title">TLOAD Tracker</h5>
-    <img class="menu-icon" (click)="toggleMenu($event)" src="../../../../assets/menu_icon.svg" alt="menu icon">
-    <div class="nav-menu" [@toggleMenu]="isMenuVisible ? 'showMenu' : 'hideMenu'">
-        <a [routerLink]="['/']">Aloitus</a>
-        <a [routerLink]="['/sessions']">Historia</a>
-    </div>
+  <h5 class="app-title">TLOAD Tracker</h5>
+  <img
+    class="menu-icon"
+    (click)="toggleMenu($event)"
+    src="../../../../assets/menu_icon.svg"
+    alt="menu icon"
+  />
+  <div class="nav-menu" [@toggleMenu]="isMenuVisible ? 'showMenu' : 'hideMenu'">
+    <a *ngIf="!userApiService.loggedIn()" [routerLink]="['/login']">Kirjaudu</a>
+    <a *ngIf="!userApiService.loggedIn()" [routerLink]="['/register']"
+      >Rekisteröidy</a
+    >
+    <a *ngIf="userApiService.loggedIn()" [routerLink]="['/']">Aloitus</a>
+    <a *ngIf="userApiService.loggedIn()" [routerLink]="['/sessions']"
+      >Historia</a
+    >
+    <a *ngIf="userApiService.loggedIn()" (click)="logout()">Kirjaudu ulos</a>
+  </div>
 </div>

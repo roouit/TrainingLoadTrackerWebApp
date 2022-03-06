@@ -21,6 +21,10 @@ export class UserApiService {
     return this.http.post<string>(`${this.userApiUrl}/Login/`, request);
   }
 
+  logout(): void {
+    localStorage.removeItem('token');
+  }
+
   // TODO: implement some validation for token form
   loggedIn(): boolean {
     return !!localStorage.getItem('token');
