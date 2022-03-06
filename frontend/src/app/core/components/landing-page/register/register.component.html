@@ -1,27 +1,27 @@
 <h4 class="register-title">Rekisteröidy</h4>
 <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="register-inputs">
-    <mat-form-field class="username-input">
+    <mat-form-field class="username-input" appearance="standard" floatLabel="always">
       <mat-label>Käyttäjätunnus</mat-label>
-      <input matInput id="username" type="text" formControlName="username" required>
+      <input matInput id="username" type="text" formControlName="username" required >
       <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("username")}}</mat-error>
     </mat-form-field>
-    <mat-form-field class="password-input">
+    <mat-form-field class="password-input" appearance="standard" floatLabel="always">
       <mat-label>Salasana</mat-label>
       <input matInput id="password" type="password" formControlName="password" required>
       <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("password")}}</mat-error>
     </mat-form-field>
-    <mat-form-field class="email-input">
+    <mat-form-field class="email-input" appearance="standard" floatLabel="always">
       <mat-label>Sähköposti</mat-label>
       <input matInput id="email" type="email" formControlName="email" required>
       <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("email")}}</mat-error>
     </mat-form-field>
-    <mat-form-field class="first-name-input">
+    <mat-form-field class="first-name-input" appearance="standard" floatLabel="always">
       <mat-label>Etunimi</mat-label>
       <input matInput id="first-name" type="text" formControlName="firstName">
       <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("firstName")}}</mat-error>
     </mat-form-field>
-    <mat-form-field class="last-name-input">
+    <mat-form-field class="last-name-input" appearance="standard" floatLabel="always">
       <mat-label>Sukunimi</mat-label>
       <input matInput id="last-name" type="text" formControlName="lastName">
       <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("lastName")}}</mat-error>
@@ -29,3 +29,4 @@
   </div>
   <button mat-raised-button class="btn-success register-user-btn" type="submit" [disabled]="!registerForm.valid">Rekisteröidy</button>
 </form>
+<a [routerLink]="['/login']">Minulla on jo tunnukset</a>

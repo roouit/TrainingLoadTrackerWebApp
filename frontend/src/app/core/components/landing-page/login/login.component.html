@@ -1,12 +1,12 @@
 <h4 class="register-title">Kirjaudu</h4>
 <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="login-inputs">
-    <mat-form-field class="username-input">
+    <mat-form-field class="username-input" appearance="standard" floatLabel="always">
       <mat-label>Käyttäjätunnus</mat-label>
       <input matInput id="username" type="text" formControlName="username" required>
       <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("username")}}</mat-error>
     </mat-form-field>
-    <mat-form-field class="password-input">
+    <mat-form-field class="password-input" appearance="standard" floatLabel="always">
       <mat-label>Salasana</mat-label>
       <input matInput id="password" type="password" formControlName="password" required>
       <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("password")}}</mat-error>
@@ -14,3 +14,4 @@
   </div>
   <button mat-raised-button class="btn-success login-btn" type="submit" [disabled]="!loginForm.valid">Kirjaudu sisään</button>
 </form>
+<a [routerLink]="['/register']">En ole vielä rekisteröitynyt</a>

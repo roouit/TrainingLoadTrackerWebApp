@@ -1,5 +1,11 @@
 .register-form {
   padding-top: 15px;
+  padding-bottom: 5px;
+}
+
+.register-form + a {
+  font-size: 0.8em;
+  color: #2D89B0;
 }
 
 .register-inputs {
@@ -7,6 +13,5 @@
   flex-direction: column;
   margin: 0 auto;
   width: 280px;
-  gap: 10px;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 }
