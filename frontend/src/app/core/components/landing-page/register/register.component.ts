@@ -12,6 +12,8 @@ import { UserApiService } from 'src/app/core/services/user-api.service';
 export class RegisterComponent implements OnInit {
   registerRequest: UserRegisterDTO;
   registerForm!: FormGroup;
+  hasErrors: boolean = false;
+  errorMessage: string = '';
 
   constructor(private fb: FormBuilder, private userApiService: UserApiService, private router: Router) {
     this.registerRequest = {
@@ -57,8 +59,13 @@ export class RegisterComponent implements OnInit {
         next: (data) => {
           this.router.navigate(['/login'])
         },
-        error: (err) => console.log(err),
+        error: (err) => this.handleError(err),
       });
+  }
+
+  handleError(err: any): void {
+    this.errorMessage = err.error
+    this.hasErrors = true
   }
 
   getErrorMessage(formKey: string): string | void {

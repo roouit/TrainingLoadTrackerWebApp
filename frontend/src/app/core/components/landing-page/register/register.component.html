@@ -1,4 +1,5 @@
 <h4 class="register-title">Rekisteröidy</h4>
+<div class="error-message" *ngIf="hasErrors">{{errorMessage}}</div>
 <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="register-inputs">
     <mat-form-field class="username-input" appearance="standard" floatLabel="always">

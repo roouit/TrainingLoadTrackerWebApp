@@ -12,8 +12,14 @@ import { UserApiService } from 'src/app/core/services/user-api.service';
 export class LoginComponent implements OnInit {
   loginRequest: UserLoginDTO;
   loginForm!: FormGroup;
+  hasErrors: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private userApiService: UserApiService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private userApiService: UserApiService,
+    private router: Router
+  ) {
     this.loginRequest = {
       username: '',
       password: '',
@@ -33,16 +39,20 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (token) => {
           localStorage.setItem('token', token);
-          this.router.navigate([''])
+          this.router.navigate(['']);
         },
-        error: (err) => console.log(err),
+        error: (err) => this.handleError(err),
       });
+  }
+
+  handleError(err: any): void {
+    this.errorMessage = err.error;
+    this.hasErrors = true;
   }
 
   getErrorMessage(formKey: string): string | void {
     if (this.loginForm.get(formKey)?.hasError('required')) {
       return `Kenttä ei voi olla tyhjä`;
     }
-    
   }
 }
