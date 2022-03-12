@@ -12,8 +12,8 @@ import { UserApiService } from 'src/app/core/services/user-api.service';
 export class LoginComponent implements OnInit {
   loginRequest: UserLoginDTO;
   loginForm!: FormGroup;
-  hasErrors: boolean = false;
-  errorMessage: string = '';
+  setError!: Function;
+  setMessage!: Function;
 
   constructor(
     private fb: FormBuilder,
@@ -46,8 +46,9 @@ export class LoginComponent implements OnInit {
   }
 
   handleError(err: any): void {
-    this.errorMessage = err.error;
-    this.hasErrors = true;
+    if (this.setError) {
+      this.setError(err.error);
+    }
   }
 
   getErrorMessage(formKey: string): string | void {

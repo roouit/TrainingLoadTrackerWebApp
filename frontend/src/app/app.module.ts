@@ -26,8 +26,9 @@ import { DataTableComponent } from './core/components/session-list/data-table/da
 import { AddSessionComponent } from './core/components/add-session/add-session.component';
 import { EditSessionDialogComponent } from './core/components/session-list/edit-session-dialog/edit-session-dialog.component';
 import { HeaderComponent } from './core/components/header/header.component';
-import { RegisterComponent } from './core/components/landing-page/register/register.component';
-import { LoginComponent } from './core/components/landing-page/login/login.component';
+import { RegisterComponent } from './core/components/auth/register/register.component';
+import { LoginComponent } from './core/components/auth/login/login.component';
+import { AuthComponent } from './core/components/auth/auth.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { LoginComponent } from './core/components/landing-page/login/login.compo
     HeaderComponent,
     RegisterComponent,
     LoginComponent,
+    AuthComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserRegisterDTO } from 'src/app/core/interfaces/UserRegisterDTO';
@@ -12,10 +12,14 @@ import { UserApiService } from 'src/app/core/services/user-api.service';
 export class RegisterComponent implements OnInit {
   registerRequest: UserRegisterDTO;
   registerForm!: FormGroup;
-  hasErrors: boolean = false;
-  errorMessage: string = '';
+  setError!: Function;
+  setMessage!: Function;
 
-  constructor(private fb: FormBuilder, private userApiService: UserApiService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private userApiService: UserApiService,
+    private router: Router
+  ) {
     this.registerRequest = {
       username: '',
       password: '',
@@ -57,15 +61,17 @@ export class RegisterComponent implements OnInit {
       .register(Object.assign(this.registerRequest, this.registerForm.value))
       .subscribe({
         next: (data) => {
-          this.router.navigate(['/login'])
+          this.setMessage('Registration successful. You can now login.')
+          this.router.navigate(['/auth/login']);
         },
         error: (err) => this.handleError(err),
       });
   }
 
   handleError(err: any): void {
-    this.errorMessage = err.error
-    this.hasErrors = true
+    if (this.setError) {
+      this.setError(err.error)
+    }
   }
 
   getErrorMessage(formKey: string): string | void {
@@ -73,7 +79,7 @@ export class RegisterComponent implements OnInit {
       return `Kenttä ei voi olla tyhjä`;
     } else if (this.registerForm.get(formKey)?.hasError('email')) {
       return `Sähköposti ei ole kunnollinen`;
-    } 
+    }
     switch (formKey) {
       case 'username':
         if (this.registerForm.get(formKey)?.hasError('minlength')) {

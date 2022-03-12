@@ -60,3 +60,9 @@ p {
   color: rgb(245, 22, 22);
   padding-top: 5px;
 }
+
+.generic-message {
+  font-size: 0.8em;
+  color: rgb(12, 141, 12);
+  padding-top: 5px;
+}

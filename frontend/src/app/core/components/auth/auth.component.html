@@ -1,0 +1,4 @@
+<h4 class="auth-title">{{title}}</h4>
+<div class="generic-message" *ngIf="hasMessage">{{genericMessage}}</div>
+<div class="error-message" *ngIf="hasError">{{errorMessage}}</div>
+<router-outlet (activate)="passFunctionsToChild($event)"></router-outlet>

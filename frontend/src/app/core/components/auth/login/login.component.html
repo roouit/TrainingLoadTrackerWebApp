@@ -1,5 +1,3 @@
-<h4 class="register-title">Kirjaudu</h4>
-<div class="error-message" *ngIf="hasErrors">{{errorMessage}}</div>
 <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="login-inputs">
     <mat-form-field class="username-input" appearance="standard" floatLabel="always">
@@ -15,4 +13,4 @@
   </div>
   <button mat-raised-button class="btn-success login-btn" type="submit" [disabled]="!loginForm.valid">Kirjaudu sisään</button>
 </form>
-<a [routerLink]="['/register']">En ole vielä rekisteröitynyt</a>
+<a [routerLink]="['/auth/register']">En ole vielä rekisteröitynyt</a>

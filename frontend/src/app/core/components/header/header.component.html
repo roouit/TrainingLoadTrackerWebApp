@@ -7,8 +7,8 @@
     alt="menu icon"
   />
   <div class="nav-menu" [@toggleMenu]="isMenuVisible ? 'showMenu' : 'hideMenu'">
-    <a *ngIf="!userApiService.loggedIn()" [routerLink]="['/login']">Kirjaudu</a>
-    <a *ngIf="!userApiService.loggedIn()" [routerLink]="['/register']"
+    <a *ngIf="!userApiService.loggedIn()" [routerLink]="['/auth/login']">Kirjaudu</a>
+    <a *ngIf="!userApiService.loggedIn()" [routerLink]="['/auth/register']"
       >Rekisteröidy</a
     >
     <a *ngIf="userApiService.loggedIn()" [routerLink]="['/']">Aloitus</a>
