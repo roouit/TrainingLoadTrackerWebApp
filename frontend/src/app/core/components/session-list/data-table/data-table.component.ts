@@ -28,7 +28,7 @@ export class DataTableComponent implements OnInit {
       error: (err) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
-            this.router.navigate(['/login'])
+            this.router.navigate(['/auth/login'])
           }
         }
       },

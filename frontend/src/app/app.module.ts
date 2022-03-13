@@ -9,6 +9,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatSliderModule } from '@angular/material/slider';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -29,6 +32,7 @@ import { HeaderComponent } from './core/components/header/header.component';
 import { RegisterComponent } from './core/components/auth/register/register.component';
 import { LoginComponent } from './core/components/auth/login/login.component';
 import { AuthComponent } from './core/components/auth/auth.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -54,6 +58,9 @@ import { AuthComponent } from './core/components/auth/auth.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatSliderModule,
   ],
   providers: [
     SessionApiService,
@@ -64,6 +71,7 @@ import { AuthComponent } from './core/components/auth/auth.component';
       useClass: TokenInterceptorService,
       multi: true,
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'fi' },
   ],
   bootstrap: [AppComponent],
 })
