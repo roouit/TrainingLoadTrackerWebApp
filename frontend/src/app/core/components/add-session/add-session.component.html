@@ -1,5 +1,6 @@
-<h3 class="add-session-title">Uusi sessio</h3>
-
+<h5 class="add-session-title">{{title}}</h5>
+<div class="generic-message" *ngIf="genericMessage">{{genericMessage}}</div>
+<div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
 <form
   class="add-session-form"
   [formGroup]="addSessionForm"
@@ -23,8 +24,8 @@
       <input matInput id="rpe" (input)="onInputChange($event)" type="number" formControlName="rpe">
     </div>
 
-    <mat-form-field class="date-input" appearance="legacy" floatLabel="always">
-      <input matInput [matDatepicker]="picker" formControlName="date" />
+    <mat-form-field class="date-input" (click)="picker.open()" appearance="legacy" floatLabel="always">
+      <input matInput [max]="today" [matDatepicker]="picker" formControlName="date" />
       <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
       <mat-datepicker touchUi #picker></mat-datepicker>
     </mat-form-field>

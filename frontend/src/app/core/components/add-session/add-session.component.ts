@@ -9,8 +9,12 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
   styleUrls: ['./add-session.component.css'],
 })
 export class AddSessionComponent implements OnInit {
+  title: string = 'Uusi harjoitus';
+  today: string = new Date().toISOString();
+  genericMessage: string = '';
+  errorMessage: string = '';
   addSessionForm = this.fb.group({
-    date: [new Date().toISOString(), Validators.required],
+    date: [this.today, Validators.required],
     duration: [
       0,
       [Validators.required, Validators.min(1), Validators.max(4320)],
@@ -32,9 +36,33 @@ export class AddSessionComponent implements OnInit {
       rpe: this.addSessionForm.value.rpe,
     };
 
-    this.sessionApiService
-      .addSession(newSessionCandidate)
-      .subscribe((data) => console.log(data));
+    this.sessionApiService.addSession(newSessionCandidate).subscribe({
+      next: (data) => {
+        this.resetMessages();
+        this.genericMessage = 'Uusi harjoitus lisätty!';
+        this.resetForm();
+      },
+      error: (err) => {
+        const property = Object.keys(err.error.errors)[0]
+        this.resetMessages();
+        this.errorMessage = `Virhe harjoitusta lisättäessä: ${
+          err.error.errors[property] ?? 'tuntematon virhe'
+        }`;
+      },
+    });
+  }
+
+  resetForm(): void {
+    this.addSessionForm.setValue({
+      date: this.today,
+      duration: 0,
+      rpe: 0,
+    });
+  }
+
+  resetMessages(): void {
+    this.errorMessage = '';
+    this.genericMessage = '';
   }
 
   onSliderChange(event: any) {

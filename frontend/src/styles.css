@@ -58,7 +58,7 @@ p {
 .error-message {
   font-size: 0.8em;
   color: rgb(245, 22, 22);
-  padding-top: 5px;
+  padding: 5px 35px 0 35px;
 }
 
 .generic-message {
