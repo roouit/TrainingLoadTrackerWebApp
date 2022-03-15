@@ -5,6 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { EditSessionDialogComponent } from '../edit-session-dialog/edit-session-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-data-table',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class DataTableComponent implements OnInit {
   sessionsData!: Session[];
+  columnsToDisplay = ['date', 'duration', 'rpe', 'load'];
 
   constructor(
     private sessionApiService: SessionApiService,
@@ -23,16 +25,31 @@ export class DataTableComponent implements OnInit {
   ngOnInit(): void {
     this.sessionApiService.getSessionList().subscribe({
       next: (data) => {
-        this.sessionsData = data;
+        this.sessionsData = this.sortByDate(data);
       },
       error: (err) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
-            this.router.navigate(['/auth/login'])
+            this.router.navigate(['/auth/login']);
           }
         }
       },
     });
+  }
+
+  sortByDate(data: Session[]): Session[] {
+    return data
+      .map((row) => {
+        return {
+          ...row,
+          date: new Date(row.date),
+        };
+      })
+      .sort((a, b) => +b.date - +a.date);
+  }
+
+  getFormattedDate(date: string): string {
+    return moment(date).format('DD.MM.y');
   }
 
   getLoad(id: number | undefined): number {
@@ -55,11 +72,12 @@ export class DataTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((val) => {
       if (val.action === 'delete') {
-        const indexToDel = this.sessionsData.findIndex(session => session.id === val.id);
+        const indexToDel = this.sessionsData.findIndex(
+          (session) => session.id === val.id
+        );
         if (indexToDel !== -1) {
           this.sessionsData.splice(indexToDel, 1);
         }
-        
       }
     });
   }

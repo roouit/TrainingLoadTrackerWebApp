@@ -1,0 +1,32 @@
+.session-table {
+  width: 100%;
+  text-align: start;
+}
+
+.mat-row .mat-cell {
+  cursor: pointer;
+}
+
+.session-data-row {
+  height: 40px;
+}
+
+.mat-column-load {
+  width: 50px;
+  text-align: center;
+}
+
+.mat-column-rpe {
+  width: 50px;
+  text-align: center;
+}
+
+.mat-column-duration {
+  width: 50px;
+  text-align: center;
+}
+
+.mat-column-date {
+  width: 50px;
+  text-align: center;
+}
