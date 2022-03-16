@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ViewChild, Component, OnInit } from '@angular/core';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
 import { Session } from '../../../interfaces/Session';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -6,6 +6,9 @@ import { EditSessionDialogComponent } from '../edit-session-dialog/edit-session-
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-data-table',
@@ -13,8 +16,10 @@ import * as moment from 'moment';
   styleUrls: ['./data-table.component.css'],
 })
 export class DataTableComponent implements OnInit {
-  sessionsData!: Session[];
+  dataSource!: MatTableDataSource<Session>;
   columnsToDisplay = ['date', 'duration', 'rpe', 'load'];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private sessionApiService: SessionApiService,
@@ -25,7 +30,22 @@ export class DataTableComponent implements OnInit {
   ngOnInit(): void {
     this.sessionApiService.getSessionList().subscribe({
       next: (data) => {
-        this.sessionsData = this.sortByDate(data);
+        this.dataSource = new MatTableDataSource(this.sortByDate(data));
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = (session, property) => {
+          switch (property) {
+            case 'load': {
+              return session.duration * session.rpe;
+            }
+            case 'date': {
+              return Date.parse(session.date.toString());
+            }
+            default: {
+              return parseInt(session[property as keyof Session].toString());
+            }
+          }
+        };
       },
       error: (err) => {
         if (err instanceof HttpErrorResponse) {
@@ -52,12 +72,6 @@ export class DataTableComponent implements OnInit {
     return moment(date).format('DD.MM.y');
   }
 
-  getLoad(id: number | undefined): number {
-    if (id == undefined) return 0;
-    const session = this.sessionsData.find((session) => session.id == id);
-    return session ? session.duration * session.rpe : 0;
-  }
-
   openDialog(session: Session) {
     const dialogConfig = new MatDialogConfig();
 
@@ -72,11 +86,11 @@ export class DataTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((val) => {
       if (val.action === 'delete') {
-        const indexToDel = this.sessionsData.findIndex(
+        const indexToDel = this.dataSource.data.findIndex(
           (session) => session.id === val.id
         );
         if (indexToDel !== -1) {
-          this.sessionsData.splice(indexToDel, 1);
+          this.dataSource.data.splice(indexToDel, 1);
         }
       }
     });

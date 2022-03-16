@@ -15,6 +15,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -66,6 +67,7 @@ import { AuthComponent } from './core/components/auth/auth.component';
     MatSliderModule,
     MatTableModule,
     MatSortModule,
+    MatPaginatorModule,
   ],
   providers: [
     SessionApiService,

@@ -12,21 +12,17 @@
 }
 
 .mat-column-load {
-  width: 50px;
-  text-align: center;
+  width: 20%;
 }
 
 .mat-column-rpe {
-  width: 50px;
-  text-align: center;
+  width: 20%;
 }
 
 .mat-column-duration {
-  width: 50px;
-  text-align: center;
+  width: 20%;
 }
 
 .mat-column-date {
-  width: 50px;
-  text-align: center;
+  width: 40%;
 }
