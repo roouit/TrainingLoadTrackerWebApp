@@ -1,22 +1,35 @@
 <h2 mat-dialog-title>Muokkaa sessiota</h2>
 
-<mat-dialog-content [formGroup]="sessionEditform">
-  <mat-form-field>
-    <mat-label>Päivä</mat-label>
-    <input matInput type="text" formControlName="date">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Kesto</mat-label>
-    <input matInput type="number" formControlName="duration">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>RPE</mat-label>
-    <input matInput type="number" formControlName="rpe">
-  </mat-form-field>
+<mat-dialog-content [formGroup]="sessionEditForm">
+  <div class="add-session-inputs">
+    
+    <div class="duration-input">
+      <div class="slider">
+        <mat-slider id="duration" color="primary" formControlName="duration" (input)="onSliderChange($event)" step="1" min="1" max="120" aria-label="units"></mat-slider>
+        <div class="slider-label">Kesto</div>
+      </div>
+      <input matInput id="duration" (input)="onInputChange($event)" type="number" formControlName="duration">
+    </div>
+
+    <div class="rpe-input">
+      <div class="slider">
+        <mat-slider id="rpe" color="primary" formControlName="rpe" (input)="onSliderChange($event)" step="1" min="1" max="10" aria-label="units"></mat-slider>
+        <div class="slider-label">RPE</div>
+      </div>
+      <input matInput id="rpe" (input)="onInputChange($event)" type="number" formControlName="rpe">
+    </div>
+
+    <mat-form-field class="date-input" (click)="picker.open()" appearance="legacy" floatLabel="always">
+      <input matInput [max]="today" [matDatepicker]="picker" formControlName="date" />
+      <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
+      <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
     <button mat-raised-button (click)="close()">Sulje</button>
-    <button mat-raised-button class="btn-success" (click)="save()">Tallenna</button>
+    <button mat-raised-button class="btn-success" (click)="save()" [disabled]="!sessionEditForm.valid">Tallenna</button>
     <button mat-raised-button class="btn-remove" (click)="delete()">Poista</button>
 </mat-dialog-actions>

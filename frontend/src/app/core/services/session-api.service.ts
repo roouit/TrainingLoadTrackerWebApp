@@ -15,20 +15,22 @@ export class SessionApiService {
     return this.http.get<Session[]>(`${this.sessionApiUrl}/sessions/`);
   }
 
-  addSession(data: {date: Date, duration: number, rpe: number}): Observable<Session> {
+  addSession(data: {
+    date: Date;
+    duration: number;
+    rpe: number;
+  }): Observable<Session> {
     return this.http.post<Session>(`${this.sessionApiUrl}/sessions/`, data);
   }
 
   editSession(data: Session): Observable<Session> {
     return this.http.put<Session>(
-      `${this.sessionApiUrl}/sessions/${data.id}`,
+      `${this.sessionApiUrl}/sessions/${data.sessionId}`,
       data
     );
   }
 
-  deleteSession(id: number) {
-    return this.http.delete(
-      `${this.sessionApiUrl}/sessions/${id}`
-    );
+  deleteSession(sessionId: string) {
+    return this.http.delete(`${this.sessionApiUrl}/sessions/${sessionId}`);
   }
 }

@@ -1,5 +1,5 @@
 export interface Session {
-  readonly id: number,
+  readonly sessionId: string,
   date: Date,
   duration: number,
   rpe: number

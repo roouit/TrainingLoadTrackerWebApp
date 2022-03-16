@@ -10,8 +10,9 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
   styleUrls: ['./edit-session-dialog.component.css'],
 })
 export class EditSessionDialogComponent implements OnInit {
-  sessionEditform!: FormGroup;
+  sessionEditForm!: FormGroup;
   session: Session;
+  today: string = new Date().toISOString();
 
   constructor(
     private sessionApiService: SessionApiService,
@@ -23,26 +24,59 @@ export class EditSessionDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sessionEditform = this.fb.group({
+    this.sessionEditForm = this.fb.group({
       date: [this.session.date, Validators.required],
-      duration: [this.session.duration, Validators.required],
-      rpe: [this.session.rpe, Validators.required],
+      duration: [this.session.duration, [Validators.required, Validators.min(1), Validators.max(4320)]],
+      rpe: [this.session.rpe, [Validators.required, Validators.min(1), Validators.max(10)]],
     });
   }
 
+  onSliderChange(event: any) {
+    this.updateFormValue(
+      event.source._elementRef.nativeElement.id,
+      event.value
+    );
+  }
+
+  onInputChange(event: any) {
+    if (event.data === null || ',.'.includes(event.data)) return;
+
+    const inputId = event.srcElement.id;
+    const inputValue: number = Math.round(event.srcElement.value);
+    let validatedValue: number = inputValue;
+
+    if (inputId === 'duration') {
+      validatedValue = Math.min(Math.max(inputValue, 1), 4320);
+    } else if (inputId === 'rpe') {
+      validatedValue = Math.min(Math.max(inputValue, 1), 10);
+    }
+
+    this.updateFormValue(inputId, validatedValue);
+  }
+
+  updateFormValue(target: string, value: any) {
+    const patchObject: any = {};
+    patchObject[target] = value;
+    this.sessionEditForm.patchValue(patchObject);
+  }
+
   save(): void {
+    const newObject = Object.assign(this.session, {
+      ...this.sessionEditForm.value,
+      date: this.sessionEditForm.value.date.toISOString(),
+    });
     this.sessionApiService
-      .editSession(Object.assign(this.session, this.sessionEditform.value))
-      .subscribe((data) => console.log(data));
-    this.dialogRef.close(this.sessionEditform.value);
+      .editSession(newObject)
+      .subscribe();
+    this.dialogRef.close(this.sessionEditForm.value);
   }
 
   delete(): void {
-    if (this.session.id === undefined) return;
+    if (this.session.sessionId === undefined) return;
     this.sessionApiService
-      .deleteSession(this.session.id)
-      .subscribe(data => console.log(data));
-    this.dialogRef.close({action: 'delete', id: this.session.id});
+      .deleteSession(this.session.sessionId)
+      .subscribe();
+    this.dialogRef.close({ action: 'delete', id: this.session.sessionId });
   }
 
   close(): void {

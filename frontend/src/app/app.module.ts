@@ -49,7 +49,7 @@ import { AuthComponent } from './core/components/auth/auth.component';
     HeaderComponent,
     RegisterComponent,
     LoginComponent,
-    AuthComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,

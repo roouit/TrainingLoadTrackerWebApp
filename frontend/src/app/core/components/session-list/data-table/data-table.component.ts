@@ -86,11 +86,10 @@ export class DataTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((val) => {
       if (val.action === 'delete') {
-        const indexToDel = this.dataSource.data.findIndex(
-          (session) => session.id === val.id
-        );
-        if (indexToDel !== -1) {
-          this.dataSource.data.splice(indexToDel, 1);
+        if (typeof val.id !== 'undefined' && val.id !== '') {
+          this.dataSource.data = this.dataSource.data.filter(
+            (session) => session.sessionId !== val.id
+          );
         }
       }
     });

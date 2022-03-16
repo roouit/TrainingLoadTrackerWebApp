@@ -1,0 +1,50 @@
+.add-session-inputs {
+  width: 200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-session-inputs > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+}
+
+.slider mat-slider {
+  width: 160px;
+  height: 32px;
+}
+
+.slider-label {
+  font-size: 0.7em;
+  color: #666666;
+}
+
+.add-session-inputs > div input {
+  border: 1px solid rgb(126, 126, 126);
+  border-radius: 5px;
+  width: 30px;
+  height: 20px;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 0.6em;
+  
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.date-input {
+  width: 190px;
+  padding-left: 5px;
+  align-self: center;
+}
