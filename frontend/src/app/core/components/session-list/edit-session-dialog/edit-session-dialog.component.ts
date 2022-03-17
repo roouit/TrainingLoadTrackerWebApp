@@ -71,14 +71,6 @@ export class EditSessionDialogComponent implements OnInit {
     this.dialogRef.close(this.sessionEditForm.value);
   }
 
-  delete(): void {
-    if (this.session.sessionId === undefined) return;
-    this.sessionApiService
-      .deleteSession(this.session.sessionId)
-      .subscribe();
-    this.dialogRef.close({ action: 'delete', id: this.session.sessionId });
-  }
-
   close(): void {
     this.dialogRef.close();
   }

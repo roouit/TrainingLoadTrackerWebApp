@@ -37,6 +37,7 @@ import { HeaderComponent } from './core/components/header/header.component';
 import { RegisterComponent } from './core/components/auth/register/register.component';
 import { LoginComponent } from './core/components/auth/login/login.component';
 import { AuthComponent } from './core/components/auth/auth.component';
+import { ConfirmDeleteDialogComponent } from './core/components/session-list/confirm-delete-dialog/confirm-delete-dialog.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { AuthComponent } from './core/components/auth/auth.component';
     HeaderComponent,
     RegisterComponent,
     LoginComponent,
-    AuthComponent
+    AuthComponent,
+    ConfirmDeleteDialogComponent
   ],
   imports: [
     BrowserModule,

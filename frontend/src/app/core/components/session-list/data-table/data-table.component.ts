@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
   selector: 'app-data-table',
@@ -72,7 +73,21 @@ export class DataTableComponent implements OnInit {
     return moment(date).format('DD.MM.y');
   }
 
-  openDialog(session: Session) {
+  delete(row: Session): void {
+    if (row.sessionId === undefined) return;
+    this.sessionApiService.deleteSession(row.sessionId).subscribe({
+      next: () => {
+        this.dataSource.data = this.dataSource.data.filter(
+          (session) => session.sessionId !== row.sessionId
+        );
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  openEditSessionDialog(session: Session) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
@@ -84,14 +99,23 @@ export class DataTableComponent implements OnInit {
       dialogConfig
     );
 
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
+  openConfirmDeleteDialog(session: Session) {
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      width: '250px',
+      restoreFocus: false,
+    });
+
     dialogRef.afterClosed().subscribe((val) => {
       if (val.action === 'delete') {
-        if (typeof val.id !== 'undefined' && val.id !== '') {
-          this.dataSource.data = this.dataSource.data.filter(
-            (session) => session.sessionId !== val.id
-          );
-        }
+        this.delete(session)
       }
+    });
+
+    dialogRef.backdropClick().subscribe(() => {
+      dialogRef.close({action: 'close'});
     });
   }
 }

@@ -26,10 +26,10 @@
   <ng-container matColumnDef="buttons">
     <th mat-header-cell *matHeaderCellDef></th>
     <td class="action-button-cell" mat-cell *matCellDef="let row">
-      <button class="action-button" (click)="openDialog(row)" mat-icon-button aria-label="Button with an edit icon">
+      <button class="action-button" (click)="openEditSessionDialog(row)" mat-icon-button aria-label="Button with an edit icon">
         <mat-icon class="edit-icon">edit</mat-icon>
       </button>
-      <button class="action-button" mat-icon-button aria-label="Button with a delete icon">
+      <button class="action-button" (click)="openConfirmDeleteDialog(row)" mat-icon-button aria-label="Button with a delete icon">
         <mat-icon class="delete-icon">delete</mat-icon>
       </button>
     </td>
