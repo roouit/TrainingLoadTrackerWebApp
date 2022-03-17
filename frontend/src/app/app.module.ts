@@ -16,6 +16,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -68,6 +69,7 @@ import { AuthComponent } from './core/components/auth/auth.component';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatIconModule
   ],
   providers: [
     SessionApiService,

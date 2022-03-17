@@ -17,7 +17,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class DataTableComponent implements OnInit {
   dataSource!: MatTableDataSource<Session>;
-  columnsToDisplay = ['date', 'duration', 'rpe', 'load'];
+  columnsToDisplay = ['date', 'duration', 'rpe', 'load', 'buttons'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 

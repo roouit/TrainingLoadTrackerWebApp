@@ -23,16 +23,31 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="buttons">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td class="action-button-cell" mat-cell *matCellDef="let row">
+      <button class="action-button" (click)="openDialog(row)" mat-icon-button aria-label="Button with an edit icon">
+        <mat-icon class="edit-icon">edit</mat-icon>
+      </button>
+      <button class="action-button" mat-icon-button aria-label="Button with a delete icon">
+        <mat-icon class="delete-icon">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
   <tr
     mat-row
     class="session-data-row"
-    (click)="openDialog(row)"
     *matRowDef="let row; columns: columnsToDisplay"
-  ></tr>
+  >
+    
+</tr>
+
 </table>
 <mat-paginator class="session-table-paginator"
   [pageSize]="15"
   showFirstLastButtons
   hidePageSize="true"
 ></mat-paginator>
+
