@@ -61,17 +61,32 @@ export class EditSessionDialogComponent implements OnInit {
   }
 
   save(): void {
-    const newObject = Object.assign(this.session, {
-      ...this.sessionEditForm.value,
-      date: this.sessionEditForm.value.date.toISOString(),
-    });
-    this.sessionApiService
-      .editSession(newObject)
-      .subscribe();
-    this.dialogRef.close(this.sessionEditForm.value);
+    // Copy original session and update the copy
+    const updatedSession = Object.assign(
+      {
+        ...this.session,
+      },
+      {
+        ...this.sessionEditForm.value,
+        date: this.sessionEditForm.value.date.toISOString(),
+      }
+    );
+
+    try {
+      this.sessionApiService.editSession(updatedSession).subscribe();
+
+      // Update values in table
+      Object.assign(this.session, updatedSession);
+
+      this.dialogRef.close({ updated: true });
+    } catch (error) {
+      console.log(error)
+
+      this.close('Virhe harjoitusta päivittäessä.')
+    }
   }
 
-  close(): void {
-    this.dialogRef.close();
+  close(message?: string): void {
+    this.dialogRef.close({ updated: false, message: message });
   }
 }

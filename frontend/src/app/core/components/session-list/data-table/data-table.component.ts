@@ -17,6 +17,8 @@ import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-d
   styleUrls: ['./data-table.component.css'],
 })
 export class DataTableComponent implements OnInit {
+  genericMessage: string = '';
+  errorMessage: string = '';
   dataSource!: MatTableDataSource<Session>;
   columnsToDisplay = ['date', 'duration', 'rpe', 'load', 'buttons'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -73,6 +75,11 @@ export class DataTableComponent implements OnInit {
     return moment(date).format('DD.MM.y');
   }
 
+  resetMessages(): void {
+    this.errorMessage = '';
+    this.genericMessage = '';
+  }
+
   delete(row: Session): void {
     if (row.sessionId === undefined) return;
     this.sessionApiService.deleteSession(row.sessionId).subscribe({
@@ -80,18 +87,23 @@ export class DataTableComponent implements OnInit {
         this.dataSource.data = this.dataSource.data.filter(
           (session) => session.sessionId !== row.sessionId
         );
+        this.resetMessages();
+        this.genericMessage = 'Harjoitus poistettu.';
       },
       error: (err) => {
-        console.log(err);
+        this.resetMessages();
+        this.errorMessage = 'Virhe harjoitusta poistettaessa.';
       },
     });
   }
 
   openEditSessionDialog(session: Session) {
+    this.resetMessages();
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
+    dialogConfig.restoreFocus = false;
+    dialogConfig.autoFocus = 'btn-success';
     dialogConfig.data = session;
 
     const dialogRef = this.dialog.open(
@@ -99,10 +111,19 @@ export class DataTableComponent implements OnInit {
       dialogConfig
     );
 
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe((val) => {
+      if (!val.updated) {
+        this.resetMessages();
+        this.errorMessage = val.message || 'Virhe harjoitusta päivittäessä.';
+        return;
+      } 
+      this.resetMessages();
+      this.genericMessage = 'Harjoitus päivitetty.';
+    });
   }
 
   openConfirmDeleteDialog(session: Session) {
+    this.resetMessages();
     const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
       width: '250px',
       restoreFocus: false,
@@ -110,12 +131,12 @@ export class DataTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((val) => {
       if (val.action === 'delete') {
-        this.delete(session)
+        this.delete(session);
       }
     });
 
     dialogRef.backdropClick().subscribe(() => {
-      dialogRef.close({action: 'close'});
+      dialogRef.close({ action: 'close' });
     });
   }
 }

@@ -3,10 +3,6 @@
   text-align: start;
 }
 
-.mat-row .mat-cell {
-  cursor: pointer;
-}
-
 .session-data-row {
   height: 40px;
 }
