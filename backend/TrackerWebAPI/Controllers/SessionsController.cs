@@ -110,5 +110,24 @@ namespace TrackerWebAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("loadsummary")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<LoadSummaryDTO>> GetLoadSummary()
+        {
+            try
+            {
+                var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+
+                var summary = await _sessionService.GetLoadSummary(username);
+
+                return Ok(summary);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

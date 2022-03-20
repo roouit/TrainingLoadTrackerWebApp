@@ -48,13 +48,8 @@ namespace TrackerWebAPI.Services
 
         public async Task<IEnumerable<Session>> GetFullSessions(string username)
         {
-            var userId = _context.Users
-                .Where(u => u.Username == username)
-                .Select(u => u.UserId)
-                .FirstOrDefault();
-
             return await _context.Sessions
-                .Where(s => s.UserId == userId)
+                .Where(s => s.UserId == GetUserIdForUsername(username))
                 .ToListAsync();
         }
 
@@ -79,6 +74,47 @@ namespace TrackerWebAPI.Services
 
             await _context.SaveChangesAsync();
             return _mapper.Map<SessionDTO>(session);
+        }
+
+        public async Task<LoadSummaryDTO> GetLoadSummary(string username)
+        {
+            var chronicCutoffDate = DateTime.Now.AddDays(-28);
+            var acuteCutoffDate = DateTime.Now.AddDays(-7);
+            var userId = GetUserIdForUsername(username);
+
+            var summary = await GetLinearLoadSummary(userId, chronicCutoffDate, acuteCutoffDate);
+
+            return summary;
+        }
+
+        private Guid GetUserIdForUsername(string username)
+        {
+            return _context.Users
+                .Where(u => u.Username == username)
+                .Select(u => u.UserId)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Calculates workload values with Rolling Average method. Each session is equally important in the calculation.
+        /// </summary>
+        private async Task<LoadSummaryDTO> GetLinearLoadSummary(Guid userId, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
+        {
+            var chronicSessions = await _context.Sessions
+                .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate)
+                .ToListAsync();
+
+            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 4;
+
+            var acuteSessions = chronicSessions
+                .Where(s => s.Date >= acuteCutoffDate)
+                .ToList();
+
+            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum();
+
+            var ratio = acuteLoadAverage / (float)chronicLoadAverage;
+
+            return new LoadSummaryDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage);
         }
     }
 }

@@ -16,5 +16,7 @@ namespace TrackerWebAPI.Services
         public Task<SessionDTO> Update(Guid sessionId, SessionUpdateDTO request);
 
         public Task<bool> DeleteSession(Guid sessionId);
+
+        public Task<LoadSummaryDTO> GetLoadSummary(string username);
     }
 }
