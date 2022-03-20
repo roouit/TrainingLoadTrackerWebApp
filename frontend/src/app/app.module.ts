@@ -18,6 +18,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -34,12 +35,12 @@ import { LandingPageComponent } from './core/components/landing-page/landing-pag
 import { DataTableComponent } from './core/components/session-list/data-table/data-table.component';
 import { AddSessionComponent } from './core/components/landing-page/add-session/add-session.component';
 import { EditSessionDialogComponent } from './core/components/session-list/edit-session-dialog/edit-session-dialog.component';
-import { HeaderComponent } from './core/components/header/header.component';
 import { RegisterComponent } from './core/components/auth/register/register.component';
 import { LoginComponent } from './core/components/auth/login/login.component';
 import { AuthComponent } from './core/components/auth/auth.component';
 import { ConfirmDeleteDialogComponent } from './core/components/session-list/confirm-delete-dialog/confirm-delete-dialog.component';
 import { LoadSummaryComponent } from './core/components/landing-page/load-summary/load-summary.component';
+import { SideNavigationComponent } from './core/components/side-navigation/side-navigation.component';
 
 
 @NgModule({
@@ -50,12 +51,12 @@ import { LoadSummaryComponent } from './core/components/landing-page/load-summar
     DataTableComponent,
     AddSessionComponent,
     EditSessionDialogComponent,
-    HeaderComponent,
     RegisterComponent,
     LoginComponent,
     AuthComponent,
     ConfirmDeleteDialogComponent,
     LoadSummaryComponent,
+    SideNavigationComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,6 +77,7 @@ import { LoadSummaryComponent } from './core/components/landing-page/load-summar
     MatPaginatorModule,
     MatIconModule,
     MatCardModule,
+    MatSidenavModule,
   ],
   providers: [
     SessionApiService,

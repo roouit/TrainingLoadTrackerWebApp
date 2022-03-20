@@ -1,0 +1,35 @@
+<button
+  class="close-button"
+  (click)="sidenav.toggle()"
+  mat-icon-button
+  aria-label="Button with close icon"
+>
+  <mat-icon class="close-icon">close</mat-icon>
+</button>
+<div class="nav-links">
+  <a
+    *ngIf="!userApiService.loggedIn()"
+    (click)="sidenav.toggle()"
+    [routerLink]="['/auth/login']"
+    >Kirjaudu</a
+  >
+  <a
+    *ngIf="!userApiService.loggedIn()"
+    (click)="sidenav.toggle()"
+    [routerLink]="['/auth/register']"
+    >Rekisteröidy</a
+  >
+  <a
+    *ngIf="userApiService.loggedIn()"
+    (click)="sidenav.toggle()"
+    [routerLink]="['/']"
+    >Etusivu</a
+  >
+  <a
+    *ngIf="userApiService.loggedIn()"
+    (click)="sidenav.toggle()"
+    [routerLink]="['/sessions']"
+    >Harjoitukset</a
+  >
+  <a *ngIf="userApiService.loggedIn()" (click)="logout()">Kirjaudu ulos</a>
+</div>

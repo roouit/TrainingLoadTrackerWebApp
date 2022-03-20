@@ -1,7 +1,29 @@
-<div id="wrapper">
-  <app-header></app-header>
-  <div class="page-content">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+<mat-sidenav-container>
 
+  <mat-sidenav
+    #sidenav="matSidenav"
+    position="end"
+    class="mat-elevation-z8"
+    autoFocus=false
+  >
+    <app-side-navigation [sidenav]="sidenav"></app-side-navigation>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div id="wrapper">
+      <div id="header">
+        <h5 class="app-title">{{title}}</h5>
+        <img
+          class="menu-icon"
+          (click)="sidenav.toggle()"
+          src="../../../../assets/menu_icon.svg"
+          alt="menu icon"
+        />
+      </div>
+      <div class="page-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

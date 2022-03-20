@@ -1,0 +1,24 @@
+.close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.nav-links {
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.nav-links a {
+  padding-top: 12px;
+  font-size: 1.2em;
+  text-decoration: none;
+  color: #000000;
+}
+
+.nav-links a:hover {
+  color: #b9b9b9;
+  cursor: pointer;
+}
