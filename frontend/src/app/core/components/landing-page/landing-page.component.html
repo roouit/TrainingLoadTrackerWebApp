@@ -1,2 +1,2 @@
-<app-load-summary></app-load-summary>
-<app-add-session></app-add-session>
+<app-load-summary [summary]="summary"></app-load-summary>
+<app-add-session (sessionAddedEvent)="getLoadSummary()"></app-add-session>

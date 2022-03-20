@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
 
@@ -20,13 +20,14 @@ export class AddSessionComponent implements OnInit {
     ],
     rpe: [0, [Validators.required, Validators.min(1), Validators.max(10)]],
   });
+  @Output() sessionAddedEvent = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
     private sessionApiService: SessionApiService
   ) {}
 
-  ngOnInit(): void {  }
+  ngOnInit(): void {}
 
   onSubmit() {
     const newSessionCandidate = {
@@ -40,9 +41,10 @@ export class AddSessionComponent implements OnInit {
         this.resetMessages();
         this.genericMessage = 'Uusi harjoitus lisätty!';
         this.resetForm();
+        this.sessionAddedEvent.emit();
       },
       error: (err) => {
-        const property = Object.keys(err.error.errors)[0]
+        const property = Object.keys(err.error.errors)[0];
         this.resetMessages();
         this.errorMessage = `Virhe harjoitusta lisättäessä: ${
           err.error.errors[property] ?? 'tuntematon virhe'

@@ -1,12 +1,12 @@
 <div class="summary-container">
   <div class="ratio-text">ACWR-suhde
-    <span class="ratio-value" [ngStyle]="{'color': getRatioColor()}">{{getRoundedRatio()}}</span>
+    <span *ngIf="loaded" class="ratio-value" [ngStyle]="{'color': getRatioColor()}">{{getRoundedRatio()}}</span>
   </div>
   <div class="load-text">Akuutti kuorma
-    <span class="load-value">{{summary.acute}}</span>
+    <span *ngIf="loaded" class="load-value">{{summary.acute}}</span>
   </div>
   <div class="load-text">Krooninen kuorma
-    <span class="load-value">{{summary.chronic}}</span>
+    <span *ngIf="loaded" class="load-value">{{summary.chronic}}</span>
   </div>
   <mat-card class="summary-description" [ngStyle]="{'background-color': descriptionBgColor}">{{description}}</mat-card>
 </div>
