@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { Observable } from 'rxjs';
 import { UserDTO } from '../interfaces/UserDTO';
 import { UserLoginDTO } from '../interfaces/UserLoginDTO';
@@ -25,9 +26,25 @@ export class UserApiService {
     localStorage.removeItem('token');
   }
 
-  // TODO: implement some validation for token form
   loggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    const token: string | null = this.getToken();
+
+    if (token === null) return false;
+    
+    const decoded: JwtPayload = jwtDecode<JwtPayload>(token);
+    let eat!: Date;
+
+    if (typeof decoded.exp === 'number') {
+      eat = new Date(parseInt(decoded.exp.toString()) * 1000);
+    }
+    
+    if (eat && eat < new Date()) {
+      // Remove token from storage, if expired
+      this.logout();
+      return false;
+    }
+    
+    return true;
   }
 
   getToken(): string | null {
