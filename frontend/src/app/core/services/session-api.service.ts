@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LoadSummaryDTO } from '../interfaces/LoadSummaryDTO';
 import { Session } from '../interfaces/Session';
 
 @Injectable({
@@ -32,5 +33,9 @@ export class SessionApiService {
 
   deleteSession(sessionId: string) {
     return this.http.delete(`${this.sessionApiUrl}/sessions/${sessionId}`);
+  }
+
+  getLoadSummary(): Observable<LoadSummaryDTO> {
+    return this.http.get<LoadSummaryDTO>(`${this.sessionApiUrl}/sessions/loadsummary`);
   }
 }

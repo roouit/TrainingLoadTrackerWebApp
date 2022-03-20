@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -31,13 +32,14 @@ import { AppComponent } from './app.component';
 import { SessionListComponent } from './core/components/session-list/session-list.component';
 import { LandingPageComponent } from './core/components/landing-page/landing-page.component';
 import { DataTableComponent } from './core/components/session-list/data-table/data-table.component';
-import { AddSessionComponent } from './core/components/add-session/add-session.component';
+import { AddSessionComponent } from './core/components/landing-page/add-session/add-session.component';
 import { EditSessionDialogComponent } from './core/components/session-list/edit-session-dialog/edit-session-dialog.component';
 import { HeaderComponent } from './core/components/header/header.component';
 import { RegisterComponent } from './core/components/auth/register/register.component';
 import { LoginComponent } from './core/components/auth/login/login.component';
 import { AuthComponent } from './core/components/auth/auth.component';
 import { ConfirmDeleteDialogComponent } from './core/components/session-list/confirm-delete-dialog/confirm-delete-dialog.component';
+import { LoadSummaryComponent } from './core/components/landing-page/load-summary/load-summary.component';
 
 
 @NgModule({
@@ -52,7 +54,8 @@ import { ConfirmDeleteDialogComponent } from './core/components/session-list/con
     RegisterComponent,
     LoginComponent,
     AuthComponent,
-    ConfirmDeleteDialogComponent
+    ConfirmDeleteDialogComponent,
+    LoadSummaryComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +74,8 @@ import { ConfirmDeleteDialogComponent } from './core/components/session-list/con
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule,
   ],
   providers: [
     SessionApiService,
