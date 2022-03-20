@@ -1,4 +1,3 @@
-import { isNull } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
@@ -27,7 +26,7 @@ export class AddSessionComponent implements OnInit {
     private sessionApiService: SessionApiService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {  }
 
   onSubmit() {
     const newSessionCandidate = {
