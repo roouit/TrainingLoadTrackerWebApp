@@ -31,5 +31,11 @@
     [routerLink]="['/sessions']"
     >Harjoitukset</a
   >
+  <a
+    *ngIf="userApiService.loggedIn()"
+    (click)="sidenav.toggle()"
+    [routerLink]="['/analyze']"
+    >Analysoi</a
+  >
   <a *ngIf="userApiService.loggedIn()" (click)="logout()">Kirjaudu ulos</a>
 </div>

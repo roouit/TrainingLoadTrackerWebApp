@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -41,6 +42,8 @@ import { AuthComponent } from './core/components/auth/auth.component';
 import { ConfirmDeleteDialogComponent } from './core/components/session-list/confirm-delete-dialog/confirm-delete-dialog.component';
 import { LoadSummaryComponent } from './core/components/landing-page/load-summary/load-summary.component';
 import { SideNavigationComponent } from './core/components/side-navigation/side-navigation.component';
+import { AnalyticsComponent } from './core/components/analytics/analytics.component';
+import { CombinedChartComponent } from './core/components/analytics/combined-chart/combined-chart.component';
 
 
 @NgModule({
@@ -57,6 +60,8 @@ import { SideNavigationComponent } from './core/components/side-navigation/side-
     ConfirmDeleteDialogComponent,
     LoadSummaryComponent,
     SideNavigationComponent,
+    AnalyticsComponent,
+    CombinedChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +83,7 @@ import { SideNavigationComponent } from './core/components/side-navigation/side-
     MatIconModule,
     MatCardModule,
     MatSidenavModule,
+    NgxChartsModule,
   ],
   providers: [
     SessionApiService,

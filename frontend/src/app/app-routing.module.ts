@@ -6,6 +6,7 @@ import { RegisterComponent } from './core/components/auth/register/register.comp
 import { SessionListComponent } from './core/components/session-list/session-list.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AuthComponent } from './core/components/auth/auth.component';
+import { AnalyticsComponent } from './core/components/analytics/analytics.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, canActivate: [AuthGuard] },
@@ -28,10 +29,15 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'analyze',
+    component: AnalyticsComponent,
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
