@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { LoadSummaryDTO } from '../interfaces/LoadSummaryDTO';
 import { Session } from '../interfaces/Session';
 
@@ -8,12 +9,12 @@ import { Session } from '../interfaces/Session';
   providedIn: 'root',
 })
 export class SessionApiService {
-  private readonly sessionApiUrl = 'https://localhost:7286/api';
+  private readonly baseUrl = `${environment.uri}/sessions`;
 
   constructor(private http: HttpClient) {}
 
   getSessionList(): Observable<Session[]> {
-    return this.http.get<Session[]>(`${this.sessionApiUrl}/sessions/`);
+    return this.http.get<Session[]>(`${this.baseUrl}`);
   }
 
   addSession(data: {
@@ -21,21 +22,23 @@ export class SessionApiService {
     duration: number;
     rpe: number;
   }): Observable<Session> {
-    return this.http.post<Session>(`${this.sessionApiUrl}/sessions/`, data);
+    return this.http.post<Session>(`${this.baseUrl}`, data);
   }
 
   editSession(data: Session): Observable<Session> {
     return this.http.put<Session>(
-      `${this.sessionApiUrl}/sessions/${data.sessionId}`,
+      `${this.baseUrl}/${data.sessionId}`,
       data
     );
   }
 
   deleteSession(sessionId: string) {
-    return this.http.delete(`${this.sessionApiUrl}/sessions/${sessionId}`);
+    return this.http.delete(`${this.baseUrl}/${sessionId}`);
   }
 
   getLoadSummary(): Observable<LoadSummaryDTO> {
-    return this.http.get<LoadSummaryDTO>(`${this.sessionApiUrl}/sessions/loadsummary`);
+    return this.http.get<LoadSummaryDTO>(
+      `${this.baseUrl}/loadsummary`
+    );
   }
 }

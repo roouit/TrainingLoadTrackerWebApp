@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { UserDTO } from '../interfaces/UserDTO';
 import { UserLoginDTO } from '../interfaces/UserLoginDTO';
 import { UserRegisterDTO } from '../interfaces/UserRegisterDTO';
@@ -10,16 +11,17 @@ import { UserRegisterDTO } from '../interfaces/UserRegisterDTO';
   providedIn: 'root',
 })
 export class UserApiService {
-  private readonly userApiUrl = 'https://localhost:7286/api/Users';
+  private readonly baseUrl =
+    `${environment.uri}/Users`;
 
   constructor(private http: HttpClient) {}
 
   register(request: UserRegisterDTO): Observable<UserDTO> {
-    return this.http.post<UserDTO>(`${this.userApiUrl}/Register/`, request);
+    return this.http.post<UserDTO>(`${this.baseUrl}/Register/`, request);
   }
 
   login(request: UserLoginDTO): Observable<string> {
-    return this.http.post<string>(`${this.userApiUrl}/Login/`, request);
+    return this.http.post<string>(`${this.baseUrl}/Login/`, request);
   }
 
   logout(): void {
@@ -30,20 +32,20 @@ export class UserApiService {
     const token: string | null = this.getToken();
 
     if (token === null) return false;
-    
+
     const decoded: JwtPayload = jwtDecode<JwtPayload>(token);
     let eat!: Date;
 
     if (typeof decoded.exp === 'number') {
       eat = new Date(parseInt(decoded.exp.toString()) * 1000);
     }
-    
+
     if (eat && eat < new Date()) {
       // Remove token from storage, if expired
       this.logout();
       return false;
     }
-    
+
     return true;
   }
 
