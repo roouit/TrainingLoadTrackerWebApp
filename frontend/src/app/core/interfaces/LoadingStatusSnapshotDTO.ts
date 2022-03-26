@@ -3,9 +3,10 @@ export enum WorkloadCalculateMethod {
   ExponentiallyWeightedMovingAverage,
 }
 
-export interface LoadSummaryDTO {
+export interface LoadingStatusSnapshotDTO {
   method: WorkloadCalculateMethod;
   acute: number;
   chronic: number;
   ratio: number;
+  snapshotDate: Date;
 }

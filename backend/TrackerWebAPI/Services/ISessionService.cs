@@ -17,6 +17,8 @@ namespace TrackerWebAPI.Services
 
         public Task<bool> DeleteSession(Guid sessionId);
 
-        public Task<LoadSummaryDTO> GetLoadSummary(string username);
+        public Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string username, DateTime snapshotDate);
+
+        public Task<LoadingStatusSnapshotDTO[]> GetLoadingStatusHistory(string username);
     }
 }

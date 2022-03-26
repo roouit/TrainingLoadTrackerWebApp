@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadSummaryDTO } from '../../interfaces/LoadSummaryDTO';
+import { LoadingStatusSnapshotDTO } from '../../interfaces/LoadingStatusSnapshotDTO';
 import { SessionApiService } from '../../services/session-api.service';
 
 @Component({
@@ -8,16 +8,16 @@ import { SessionApiService } from '../../services/session-api.service';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent implements OnInit {
-  summary!: LoadSummaryDTO;
+  summary!: LoadingStatusSnapshotDTO;
 
   constructor(private sessionApiService: SessionApiService) {}
 
   ngOnInit(): void {
-    this.getLoadSummary()
+    this.getLoadSummary();
   }
 
   getLoadSummary() {
-    this.sessionApiService.getLoadSummary().subscribe({
+    this.sessionApiService.getCurrentLoadingStatus().subscribe({
       next: (data) => {
         this.summary = data;
       },

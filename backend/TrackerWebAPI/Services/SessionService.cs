@@ -76,15 +76,20 @@ namespace TrackerWebAPI.Services
             return _mapper.Map<SessionDTO>(session);
         }
 
-        public async Task<LoadSummaryDTO> GetLoadSummary(string username)
+        public async Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string username, DateTime snapshotDate)
         {
-            var chronicCutoffDate = DateTime.Now.AddDays(-28);
-            var acuteCutoffDate = DateTime.Now.AddDays(-7);
+            var chronicCutoffDate = snapshotDate.AddDays(-28);
+            var acuteCutoffDate = snapshotDate.AddDays(-7);
             var userId = GetUserIdForUsername(username);
 
-            var summary = await GetLinearLoadSummary(userId, chronicCutoffDate, acuteCutoffDate);
+            var summary = await GetLinearLoadingStatusSnapshot(userId, snapshotDate, chronicCutoffDate, acuteCutoffDate);
 
             return summary;
+        }
+
+        public async Task<LoadingStatusSnapshotDTO[]> GetLoadingStatusHistory(string username)
+        {
+            throw new NotImplementedException();
         }
 
         private Guid GetUserIdForUsername(string username)
@@ -98,7 +103,7 @@ namespace TrackerWebAPI.Services
         /// <summary>
         /// Calculates workload values with Rolling Average method. Each session is equally important in the calculation.
         /// </summary>
-        private async Task<LoadSummaryDTO> GetLinearLoadSummary(Guid userId, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
+        private async Task<LoadingStatusSnapshotDTO> GetLinearLoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
         {
             var chronicSessions = await _context.Sessions
                 .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate)
@@ -114,7 +119,7 @@ namespace TrackerWebAPI.Services
 
             var ratio = acuteLoadAverage / (float)chronicLoadAverage;
 
-            return new LoadSummaryDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage);
+            return new LoadingStatusSnapshotDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage, snapshotDate);
         }
     }
 }

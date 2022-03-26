@@ -111,16 +111,35 @@ namespace TrackerWebAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("loadsummary")]
+        [HttpGet("analytics/current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<LoadSummaryDTO>> GetLoadSummary()
+        public async Task<ActionResult<LoadingStatusSnapshotDTO>> GetCurrentLoadingStatus()
         {
             try
             {
                 var username = _tokenService.GetUsernameFromIdentity(HttpContext);
 
-                var summary = await _sessionService.GetLoadSummary(username);
+                var summary = await _sessionService.GetLoadingStatusSnapshot(username, DateTime.Now);
+
+                return Ok(summary);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("analytics/history")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<LoadingStatusSnapshotDTO[]>> GetCombinedAnalytics()
+        {
+            try
+            {
+                var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+
+                var summary = await _sessionService.GetLoadingStatusHistory(username);
 
                 return Ok(summary);
             }

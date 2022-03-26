@@ -2,7 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { LoadSummaryDTO } from '../interfaces/LoadSummaryDTO';
+import { LoadingStatusSnapshotDTO } from '../interfaces/LoadingStatusSnapshotDTO';
 import { Session } from '../interfaces/Session';
 
 @Injectable({
@@ -26,19 +26,16 @@ export class SessionApiService {
   }
 
   editSession(data: Session): Observable<Session> {
-    return this.http.put<Session>(
-      `${this.baseUrl}/${data.sessionId}`,
-      data
-    );
+    return this.http.put<Session>(`${this.baseUrl}/${data.sessionId}`, data);
   }
 
   deleteSession(sessionId: string) {
     return this.http.delete(`${this.baseUrl}/${sessionId}`);
   }
 
-  getLoadSummary(): Observable<LoadSummaryDTO> {
-    return this.http.get<LoadSummaryDTO>(
-      `${this.baseUrl}/loadsummary`
+  getCurrentLoadingStatus(): Observable<LoadingStatusSnapshotDTO> {
+    return this.http.get<LoadingStatusSnapshotDTO>(
+      `${this.baseUrl}/analytics/current`
     );
   }
 }

@@ -1,17 +1,17 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { LoadSummaryDTO } from 'src/app/core/interfaces/LoadSummaryDTO';
+import { LoadingStatusSnapshotDTO } from 'src/app/core/interfaces/LoadingStatusSnapshotDTO';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
 
 @Component({
   selector: 'app-load-summary',
   templateUrl: './load-summary.component.html',
-  styleUrls: ['./load-summary.component.css']
+  styleUrls: ['./load-summary.component.css'],
 })
 export class LoadSummaryComponent {
-  @Input() summary!: LoadSummaryDTO;
+  @Input() summary!: LoadingStatusSnapshotDTO;
   loaded: boolean = false;
   description: string = '';
-  descriptionBgColor: string = 'white'
+  descriptionBgColor: string = 'white';
 
   constructor(private sessionApiService: SessionApiService) {}
 
@@ -24,7 +24,7 @@ export class LoadSummaryComponent {
 
   getRoundedRatio(): number {
     if (!this.loaded) return 0;
-    const numString = this.summary.ratio as unknown as string
+    const numString = this.summary.ratio as unknown as string;
     return +(Math.round(parseFloat(numString + 'e+2')) + 'e-2');
   }
 
@@ -34,7 +34,7 @@ export class LoadSummaryComponent {
     if (this.summary.ratio >= 0.8 && this.summary.ratio <= 1.3) {
       return 'green';
     } else if (this.summary.ratio < 0.7 || this.summary.ratio > 1.5) {
-       return 'red';
+      return 'red';
     }
     return '#ffd000'; // Orange-ish
   }
@@ -56,7 +56,7 @@ export class LoadSummaryComponent {
         'Harjoittelusi on ollut selkeässä kasvussa ja olet jo hieman optimaalisen tason yläpuolella.  Varmista, ettet nosta harjoittelun määrää tai intensiteettiä liian nopeasti.';
     } else if (this.summary.ratio < 0.8) {
       this.descriptionBgColor = '#ffffdb';
-      this.description = 
+      this.description =
         'Olet harjoitellut normaalia vähemmän tai kevyemmin. Pidä huolta, että palaat harjoitteluun maltillisesti.';
     } else if (this.summary.ratio > 1.0) {
       this.descriptionBgColor = '#e7ffe7';
