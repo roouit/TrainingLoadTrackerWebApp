@@ -87,9 +87,27 @@ namespace TrackerWebAPI.Services
             return summary;
         }
 
-        public async Task<LoadingStatusSnapshotDTO[]> GetLoadingStatusHistory(string username)
+        public async Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(string username)
         {
-            throw new NotImplementedException();
+            var userId = GetUserIdForUsername(username);
+
+            var firstSessionDate = await _context.Sessions
+                .Where(s => s.UserId == userId)
+                .OrderBy(s => s.Date)
+                .Select(s => s.Date)
+                .FirstAsync();
+
+            var snapshots = new List<LoadingStatusSnapshotDTO>();
+
+            var currentDate = firstSessionDate;
+
+            while (currentDate <= DateTime.Now)
+            {
+                snapshots.Add(await GetLinearLoadingStatusSnapshot(userId, currentDate, currentDate.AddDays(-28), currentDate.AddDays(-7)));
+                currentDate = currentDate.AddDays(1);
+            }
+
+            return snapshots;
         }
 
         private Guid GetUserIdForUsername(string username)
@@ -106,7 +124,7 @@ namespace TrackerWebAPI.Services
         private async Task<LoadingStatusSnapshotDTO> GetLinearLoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
         {
             var chronicSessions = await _context.Sessions
-                .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate)
+                .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
                 .ToListAsync();
 
             var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 4;

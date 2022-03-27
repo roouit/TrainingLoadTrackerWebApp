@@ -133,7 +133,7 @@ namespace TrackerWebAPI.Controllers
         [HttpGet("analytics/history")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<LoadingStatusSnapshotDTO[]>> GetCombinedAnalytics()
+        public async Task<ActionResult<IEnumerable<LoadingStatusSnapshotDTO>>> GetCombinedAnalytics()
         {
             try
             {

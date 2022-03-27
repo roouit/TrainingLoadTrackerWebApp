@@ -19,6 +19,6 @@ namespace TrackerWebAPI.Services
 
         public Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string username, DateTime snapshotDate);
 
-        public Task<LoadingStatusSnapshotDTO[]> GetLoadingStatusHistory(string username);
+        public Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(string username);
     }
 }

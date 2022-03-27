@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
+import { SessionApiService } from 'src/app/core/services/session-api.service';
 
 @Component({
   selector: 'app-combined-chart',
@@ -81,9 +82,14 @@ export class CombinedChartComponent implements OnInit {
     domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
   };
 
-  constructor() {}
+  constructor(private sessionApiService: SessionApiService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sessionApiService.getLoadingStatusHistory().subscribe({
+      next: (data) => console.log(data),
+      error: (error) => console.log(error)
+    })
+  }
 
   onSelect(data: any): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));

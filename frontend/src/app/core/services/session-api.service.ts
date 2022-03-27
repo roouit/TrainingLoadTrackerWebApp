@@ -38,4 +38,10 @@ export class SessionApiService {
       `${this.baseUrl}/analytics/current`
     );
   }
+
+  getLoadingStatusHistory(): Observable<LoadingStatusSnapshotDTO[]> {
+    return this.http.get<LoadingStatusSnapshotDTO[]>(
+      `${this.baseUrl}/analytics/history`
+    );
+  }
 }
