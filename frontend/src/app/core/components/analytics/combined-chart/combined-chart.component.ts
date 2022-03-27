@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
+import { LoadingStatusSnapshotDTO } from 'src/app/core/interfaces/LoadingStatusSnapshotDTO';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
+import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-combined-chart',
@@ -8,98 +9,99 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
   styleUrls: ['./combined-chart.component.css'],
 })
 export class CombinedChartComponent implements OnInit {
-  multi: any[] = [
-    {
-      name: 'Akuutti',
-      series: [
-        {
-          name: '1990',
-          value: 62000000,
-        },
-        {
-          name: '2010',
-          value: 73000000,
-        },
-        {
-          name: '2011',
-          value: 89400000,
-        },
-      ],
-    },
-
-    {
-      name: 'Krooninen',
-      series: [
-        {
-          name: '1990',
-          value: 250000000,
-        },
-        {
-          name: '2010',
-          value: 309000000,
-        },
-        {
-          name: '2011',
-          value: 311000000,
-        },
-      ],
-    },
-
-    {
-      name: 'Suhde',
-      series: [
-        {
-          name: '1990',
-          value: 58000000,
-        },
-        {
-          name: '2010',
-          value: 50000020,
-        },
-        {
-          name: '2011',
-          value: 58000000,
-        },
-      ],
-    }
-  ];
-  view: [number, number] = [375, 300];
-
-  // options
-  legend: boolean = true;
-  legendPosition: LegendPosition = LegendPosition.Below;
-  showLabels: boolean = true;
-  animations: boolean = true;
-  xAxis: boolean = true;
-  yAxis: boolean = false;
-  showYAxisLabel: boolean = true;
-  showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Year';
-  yAxisLabel: string = 'Population';
-  timeline: boolean = true;
-
-  colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
-  };
+  combinedChart!: Chart;
 
   constructor(private sessionApiService: SessionApiService) {}
 
   ngOnInit(): void {
+    this.combinedChart = new Chart('combined-chart', {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Akuutti',
+            data: [],
+            backgroundColor: 'rgba(255, 99, 232, 0.2)',
+            borderColor: 'rgba(155, 99, 132, 1)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Krooninen',
+            data: [],
+            backgroundColor: 'rgba(155, 199, 232, 0.2)',
+            borderColor: 'rgba(155, 199, 232, 1)',
+            borderWidth: 1,
+          },
+          {
+            label: 'Suhde',
+            data: [],
+            backgroundColor: 'rgba(20, 99, 232, 0.2)',
+            borderColor: 'rgba(20, 99, 232, 1)',
+            borderWidth: 1,
+            yAxisID: 'secondary'
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+          secondary: {
+            beginAtZero: true,
+            max: 2,
+            position: 'right',
+            grid: {
+              drawOnChartArea: false
+            }
+          },
+        },
+      },
+    });
     this.sessionApiService.getLoadingStatusHistory().subscribe({
-      next: (data) => console.log(data),
-      error: (error) => console.log(error)
+      next: (data) => {
+        this.setDataForChart(data);
+      },
+      error: (error) => console.log(error),
+    });
+  }
+
+  setDataForChart(data: LoadingStatusSnapshotDTO[]): void {
+    const chartData: any = {
+      date: [],
+      acute: [],
+      chronic: [],
+      ratio: [],
+    };
+
+    for (const snapshot of data) {
+      chartData.date.push(snapshot.snapshotDate.toString().split('T')[0]);
+      chartData.acute.push(snapshot.acute);
+      chartData.chronic.push(snapshot.chronic);
+      chartData.ratio.push(snapshot.ratio);
+    }
+    console.log(chartData);
+    this.combinedChart.data.labels = chartData.date;
+    this.combinedChart.data.datasets.forEach((dataset) => {
+      switch (dataset.label) {
+        case 'Akuutti':
+          dataset.data = chartData.acute;
+          break;
+        case 'Krooninen':
+          dataset.data = chartData.chronic;
+          break;
+        case 'Suhde':
+          dataset.data = chartData.ratio;
+          break;
+        default:
+          break;
+      }
     })
+    this.combinedChart.update();
   }
 
-  onSelect(data: any): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
-
-  onActivate(data: any): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
-
-  onDeactivate(data: any): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+  formatXTicks(): string {
+    return '';
   }
 }

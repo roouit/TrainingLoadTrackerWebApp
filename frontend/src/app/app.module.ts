@@ -19,7 +19,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -44,7 +43,6 @@ import { LoadSummaryComponent } from './core/components/landing-page/load-summar
 import { SideNavigationComponent } from './core/components/side-navigation/side-navigation.component';
 import { AnalyticsComponent } from './core/components/analytics/analytics.component';
 import { CombinedChartComponent } from './core/components/analytics/combined-chart/combined-chart.component';
-
 
 @NgModule({
   declarations: [
@@ -83,7 +81,6 @@ import { CombinedChartComponent } from './core/components/analytics/combined-cha
     MatIconModule,
     MatCardModule,
     MatSidenavModule,
-    NgxChartsModule,
   ],
   providers: [
     SessionApiService,
