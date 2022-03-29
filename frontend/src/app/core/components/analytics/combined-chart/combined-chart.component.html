@@ -1,3 +1,9 @@
 <div class="combined-chart-container">
-  <canvas id="combined-chart" width="400" height="400"></canvas>
+  <canvas id="combined-chart" [ngStyle]="{'display': d.loaded ? 'block' : 'none' }" width="400" height="400"></canvas>
+  <div class="chart-toggles">
+    <mat-slide-toggle id="showRatio" [checked]="d.showRatio" (change)="onSlideToggleChange($event)">Näytä suhde</mat-slide-toggle>
+    <mat-slide-toggle id="showAcute" [checked]="d.showAcute" (change)="onSlideToggleChange($event)">Näytä akuutti</mat-slide-toggle>
+    <mat-slide-toggle id="showChronic" [checked]="d.showChronic" (change)="onSlideToggleChange($event)">Näytä krooninen</mat-slide-toggle>
+    <mat-slide-toggle id="showExercises" [checked]="d.showExercises" (change)="onSlideToggleChange($event)">Näytä harjoitukset</mat-slide-toggle>
+  </div>
 </div>

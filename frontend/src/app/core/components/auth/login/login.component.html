@@ -13,4 +13,5 @@
   </div>
   <button mat-raised-button class="btn-success login-btn" type="submit" [disabled]="!loginForm.valid">Kirjaudu sisään</button>
 </form>
+  <button mat-raised-button class="btn-success login-btn" (click)="autoLogin()">Käytä oletustiliä</button><br>
 <a [routerLink]="['/auth/register']">En ole vielä rekisteröitynyt</a>

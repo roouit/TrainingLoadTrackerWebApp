@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -81,6 +82,7 @@ import { CombinedChartComponent } from './core/components/analytics/combined-cha
     MatIconModule,
     MatCardModule,
     MatSidenavModule,
+    MatSlideToggleModule,
   ],
   providers: [
     SessionApiService,
