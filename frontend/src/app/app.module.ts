@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MtxSliderModule } from '@ng-matero/extensions/slider';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -83,6 +84,7 @@ import { CombinedChartComponent } from './core/components/analytics/combined-cha
     MatCardModule,
     MatSidenavModule,
     MatSlideToggleModule,
+    MtxSliderModule,
   ],
   providers: [
     SessionApiService,

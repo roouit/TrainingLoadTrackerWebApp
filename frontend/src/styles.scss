@@ -1,3 +1,25 @@
+@use '@ng-matero/extensions' as mtx;
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$my-app-primary: mat.define-palette(mat.$indigo-palette);
+$my-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-app-warn: mat.define-palette(mat.$red-palette);
+
+$theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-app-primary,
+      accent: $my-app-accent,
+      warn: $my-app-warn,
+    ),
+  )
+);
+
+@include mtx.all-component-themes($theme);
+@include mtx.all-experimental-component-themes($theme);
+
 * {
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
