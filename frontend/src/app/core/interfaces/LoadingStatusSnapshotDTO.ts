@@ -9,4 +9,5 @@ export interface LoadingStatusSnapshotDTO {
   chronic: number;
   ratio: number;
   snapshotDate: Date;
+  dailyLoad: number;
 }

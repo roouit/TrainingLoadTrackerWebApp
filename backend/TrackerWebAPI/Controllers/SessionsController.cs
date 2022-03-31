@@ -120,7 +120,7 @@ namespace TrackerWebAPI.Controllers
             {
                 var username = _tokenService.GetUsernameFromIdentity(HttpContext);
 
-                var summary = await _sessionService.GetLoadingStatusSnapshot(username, DateTime.Now);
+                var summary = await _sessionService.GetLoadingStatusSnapshot(username, DateTime.Now.Date);
 
                 return Ok(summary);
             }

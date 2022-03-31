@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-add-session',
@@ -9,7 +10,7 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
 })
 export class AddSessionComponent implements OnInit {
   title: string = 'Uusi harjoitus';
-  today: string = new Date().toISOString();
+  today: moment.Moment = moment(new Date());
   genericMessage: string = '';
   errorMessage: string = '';
   addSessionForm = this.fb.group({
@@ -31,7 +32,7 @@ export class AddSessionComponent implements OnInit {
 
   onSubmit() {
     const newSessionCandidate = {
-      date: this.addSessionForm.value.date,
+      date: this.addSessionForm.value.date.format('Y-MM-DD'),
       duration: this.addSessionForm.value.duration,
       rpe: this.addSessionForm.value.rpe,
     };

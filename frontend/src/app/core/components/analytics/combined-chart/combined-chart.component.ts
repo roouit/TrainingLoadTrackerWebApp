@@ -34,7 +34,6 @@ export class CombinedChartComponent implements OnInit {
   constructor(private sessionApiService: SessionApiService) {}
 
   ngOnInit(): void {
-    console.log(this.d.showRatio);
     this.sessionApiService.getLoadingStatusHistory().subscribe({
       next: (data) => {
         this.setData(data);
@@ -51,6 +50,7 @@ export class CombinedChartComponent implements OnInit {
       this.data.acute.push(snapshot.acute);
       this.data.chronic.push(snapshot.chronic);
       this.data.ratio.push(snapshot.ratio);
+      this.data.exercises.push(snapshot.dailyLoad);
     }
   }
 
@@ -89,11 +89,7 @@ export class CombinedChartComponent implements OnInit {
           },
           {
             label: 'Harjoitus',
-            data: [
-              200, 0, 200, 0, 0, 200, 0, 400, 600, 0, 400, 0, 500, 300, 0, 200,
-              400, 0, 800, 100, 200, 0, 200, 0, 0, 200, 0, 400, 600, 0, 400, 0,
-              500, 300, 0, 200, 400, 0, 800, 100,
-            ].slice(-28),
+            data: this.data.exercises.slice(-28),
             backgroundColor: 'rgba(120, 99, 132, 0.2)',
             borderColor: 'rgba(120, 199, 132, 1)',
             type: 'bar',

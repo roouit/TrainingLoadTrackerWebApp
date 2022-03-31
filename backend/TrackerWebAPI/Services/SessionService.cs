@@ -101,7 +101,7 @@ namespace TrackerWebAPI.Services
 
             var currentDate = firstSessionDate;
 
-            while (currentDate <= DateTime.Now)
+            while (currentDate <= DateTime.Now.Date)
             {
                 snapshots.Add(await GetLinearLoadingStatusSnapshot(userId, currentDate, currentDate.AddDays(-28), currentDate.AddDays(-7)));
                 currentDate = currentDate.AddDays(1);
@@ -127,17 +127,22 @@ namespace TrackerWebAPI.Services
                 .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
                 .ToListAsync();
 
-            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 4;
+            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 28;
 
             var acuteSessions = chronicSessions
                 .Where(s => s.Date >= acuteCutoffDate)
                 .ToList();
 
-            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum();
+            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum() / 7;
 
             var ratio = acuteLoadAverage / (float)chronicLoadAverage;
 
-            return new LoadingStatusSnapshotDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage, snapshotDate);
+            var dailyLoad = chronicSessions
+                .Where(s => s.Date == snapshotDate)
+                .Select(s => s.Rpe * s.Duration)
+                .FirstOrDefault(0);
+
+            return new LoadingStatusSnapshotDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage, snapshotDate, dailyLoad);
         }
     }
 }
