@@ -33,10 +33,6 @@ export class CombinedChartComponent implements OnInit {
 
   rs: any = {
     step: 1,
-    // min:
-    //   Date.parse(new Date().toISOString().split('T')[0]) -
-    //   60 * 24 * 60 * 60 * 1000,
-    // max: Date.parse(new Date().toISOString().split('T')[0]),
     min: -60,
     max: 0,
     value: [-this.chartRange, 0],
@@ -78,7 +74,7 @@ export class CombinedChartComponent implements OnInit {
   }
 
   onSliderChange(event: any) {
-    this.rs.value = event.value
+    this.rs.value = event.value;
   }
 
   onSliderRelease(event: any) {
@@ -128,9 +124,23 @@ export class CombinedChartComponent implements OnInit {
     }
   }
 
+  // plugin = {
+  //   id: 'custom_canvas_background_color',
+  //   beforeDraw: (chart: any) => {
+  //     const ctx = chart.canvas.getContext('2d');
+  //     ctx.save();
+  //     ctx.globalCompositeOperation = 'destination-over';
+  //     ctx.fillStyle = 'lightGreen';
+  //     ctx.fillRect(44, 100, 308, chart.height);
+  //     ctx.restore();
+  //   },
+  // };
+
   initChart(): void {
     this.combinedChart = new Chart('combined-chart', {
       type: 'line',
+      // plugins: [this.plugin],
+
       data: {
         labels: this.data.date.slice(-this.chartRange),
         datasets: [
@@ -153,35 +163,71 @@ export class CombinedChartComponent implements OnInit {
           {
             label: 'Suhde',
             data: this.data.ratio.slice(-this.chartRange),
-            backgroundColor: 'rgba(20, 99, 232, 0.2)',
-            borderColor: 'rgba(20, 99, 232, 1)',
+            backgroundColor: 'lightGreen',
+            borderColor: 'green',
             borderWidth: 1,
             yAxisID: 'secondary',
             hidden: !this.d.showRatio,
+            tension: 0.4,
+            pointRadius: 2,
           },
           {
             label: 'Harjoitus',
             data: this.data.exercises.slice(-this.chartRange),
             backgroundColor: 'rgba(120, 99, 132, 0.2)',
-            borderColor: 'rgba(120, 199, 132, 1)',
+            borderColor: 'rgba(20, 20, 20, 1)',
+            borderWidth: 1,
             type: 'bar',
             hidden: !this.d.showExercises,
           },
         ],
       },
       options: {
+        plugins: {
+          legend: {
+            labels: {
+              usePointStyle: true,
+              pointStyle: 'line',
+            },
+          },
+        },
         scales: {
           x: {
             type: 'time',
             ticks: {
               callback: function (value, index, ticks) {
-                return format(ticks[index].value, 'd.M');
+                const last = parseInt(
+                  format(ticks[ticks.length - 1].value, 'D', {
+                    useAdditionalDayOfYearTokens: true,
+                  })
+                );
+                const current = parseInt(
+                  format(ticks[index].value, 'D', {
+                    useAdditionalDayOfYearTokens: true,
+                  })
+                );
+
+                if ((last - current) % 7 === 0) {
+                  return format(ticks[index].value, 'd.M');
+                }
+                return null;
               },
+              maxRotation: 0,
             },
             time: {
               displayFormats: {
                 month: 'M',
                 day: 'dd',
+              },
+              stepSize: 1,
+            },
+            grid: {
+              offset: false,
+              color: function (context) {
+                if (context.tick.label === format(new Date(), 'd.M')) {
+                  return '';
+                }
+                return '#E5E5E5';
               },
             },
           },
@@ -196,13 +242,21 @@ export class CombinedChartComponent implements OnInit {
             suggestedMax: 2,
             position: 'right',
             grid: {
-              drawOnChartArea: false,
+              color: '#80b679',
+              drawTicks: false,
+              borderDash: [8, 4],
+              borderWidth: 1,
             },
             ticks: {
               callback: function (value, index, ticks) {
-                return value;
+                console.log(ticks);
+                console.log(typeof value);
+                if ([0.8, 1.3].indexOf(value as number) !== -1) {
+                  return value;
+                }
+                return null;
               },
-              stepSize: 0.2,
+              stepSize: 0.1,
             },
           },
         },
