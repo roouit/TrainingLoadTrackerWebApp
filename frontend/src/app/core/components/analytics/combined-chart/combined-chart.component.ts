@@ -4,6 +4,7 @@ import { SessionApiService } from 'src/app/core/services/session-api.service';
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 import { format } from 'date-fns';
+import { fi } from 'date-fns/locale';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 
@@ -14,6 +15,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class CombinedChartComponent implements OnInit {
   chartRange: number = 14;
+  pointRadius: number = 3;
+  chartLastDate: string = format(new Date(), 'd.M');
   combinedChart!: Chart;
   data: any = {
     date: [],
@@ -80,21 +83,41 @@ export class CombinedChartComponent implements OnInit {
   onSliderRelease(event: any) {
     this.chartRange = event.value[1] - event.value[0];
 
+    this.chartLastDate = 
+      format(
+        Date.parse(
+          this.data.date[
+            this.rs.value[1]
+              ? this.data.date.length + (this.rs.value[1] - 1)
+              : this.data.date.length - 1
+          ]
+        ),
+        'd.M'
+      );
+
+    this.pointRadius = this.chartRange > 21 ? 1 : 3;
+    if (
+      typeof this.combinedChart.options.elements?.point?.radius !== 'undefined'
+    ) {
+      this.combinedChart.options.elements.point.radius = this.pointRadius;
+    }
+
     this.combinedChart.data.labels = this.data.date.slice(
       this.rs.value[0],
       this.rs.value[1] || this.data.date.length
     );
-    this.combinedChart.data.datasets[0].data = this.data.acute.slice(
+    this.combinedChart.data.datasets[0].data = this.data.ratio.slice(
+      this.rs.value[0],
+      this.rs.value[1] || this.data.ratio.length
+    );
+
+    this.combinedChart.data.datasets[1].data = this.data.acute.slice(
       this.rs.value[0],
       this.rs.value[1] || this.data.acute.length
     );
-    this.combinedChart.data.datasets[1].data = this.data.chronic.slice(
+    this.combinedChart.data.datasets[2].data = this.data.chronic.slice(
       this.rs.value[0],
       this.rs.value[1] || this.data.chronic.length
-    );
-    this.combinedChart.data.datasets[2].data = this.data.ratio.slice(
-      this.rs.value[0],
-      this.rs.value[1] || this.data.ratio.length
     );
     this.combinedChart.data.datasets[3].data = this.data.exercises.slice(
       this.rs.value[0],
@@ -111,11 +134,11 @@ export class CombinedChartComponent implements OnInit {
    */
   getDatasetIndex(toggleChangeName: string): number {
     switch (toggleChangeName) {
-      case 'showAcute':
-        return 0;
-      case 'showChronic':
-        return 1;
       case 'showRatio':
+        return 0;
+      case 'showAcute':
+        return 1;
+      case 'showChronic':
         return 2;
       case 'showExercises':
         return 3;
@@ -140,62 +163,87 @@ export class CombinedChartComponent implements OnInit {
     this.combinedChart = new Chart('combined-chart', {
       type: 'line',
       // plugins: [this.plugin],
-
       data: {
         labels: this.data.date.slice(-this.chartRange),
         datasets: [
           {
+            label: 'Suhde',
+            data: this.data.ratio.slice(-this.chartRange),
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            yAxisID: 'secondary',
+            hidden: !this.d.showRatio,
+          },
+          {
             label: 'Akuutti',
             data: this.data.acute.slice(-this.chartRange),
-            backgroundColor: 'rgba(255, 99, 232, 0.2)',
-            borderColor: 'rgba(155, 99, 132, 1)',
-            borderWidth: 1,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
             hidden: !this.d.showAcute,
           },
           {
             label: 'Krooninen',
             data: this.data.chronic.slice(-this.chartRange),
-            backgroundColor: 'rgba(155, 199, 232, 0.2)',
-            borderColor: 'rgba(155, 199, 232, 1)',
-            borderWidth: 1,
+            backgroundColor: 'rgba(77, 133, 211, 0.2)',
+            borderColor: 'rgba(77, 133, 211, 1)',
             hidden: !this.d.showChronic,
           },
           {
-            label: 'Suhde',
-            data: this.data.ratio.slice(-this.chartRange),
-            backgroundColor: 'lightGreen',
-            borderColor: 'green',
-            borderWidth: 1,
-            yAxisID: 'secondary',
-            hidden: !this.d.showRatio,
-            tension: 0.4,
-            pointRadius: 2,
-          },
-          {
+            type: 'bar',
             label: 'Harjoitus',
             data: this.data.exercises.slice(-this.chartRange),
-            backgroundColor: 'rgba(120, 99, 132, 0.2)',
-            borderColor: 'rgba(20, 20, 20, 1)',
+            backgroundColor: 'rgba(160, 160, 160, 0.2)',
+            borderColor: 'rgba(160, 160, 160, 1)',
             borderWidth: 1,
-            type: 'bar',
+            borderRadius: 2,
             hidden: !this.d.showExercises,
           },
         ],
       },
       options: {
+        elements: {
+          point: {
+            radius: this.pointRadius,
+          },
+          line: {
+            tension: 0.2,
+            borderWidth: 1,
+          },
+        },
         plugins: {
           legend: {
             labels: {
               usePointStyle: true,
-              pointStyle: 'line',
+              pointStyle: 'circle',
+              font: {
+                size: 10,
+              },
+              padding: 15,
+              boxWidth: 8,
+            },
+          },
+          tooltip: {
+            callbacks: {
+              // "Mar 31, 2022, 12:00:00 a.m."
+              title: (context) => {
+                context[0].label.split('');
+                console.log(context[0].label.split(' '));
+                return context[0].label;
+              },
             },
           },
         },
         scales: {
           x: {
+            adapters: {
+              date: {
+                locale: fi,
+              },
+            },
             type: 'time',
             ticks: {
-              callback: function (value, index, ticks) {
+              source: 'labels',
+              callback: (value, index, ticks) => {
                 const last = parseInt(
                   format(ticks[ticks.length - 1].value, 'D', {
                     useAdditionalDayOfYearTokens: true,
@@ -219,12 +267,13 @@ export class CombinedChartComponent implements OnInit {
                 month: 'M',
                 day: 'dd',
               },
-              stepSize: 1,
+              tooltipFormat: 'd.M.Y, cccc',
             },
             grid: {
-              offset: false,
-              color: function (context) {
-                if (context.tick.label === format(new Date(), 'd.M')) {
+              offset: false, // grid lines are "at the label"
+              color: (context) => {
+                // Don't draw grid line on the last label
+                if (context.tick.label === this.chartLastDate) {
                   return '';
                 }
                 return '#E5E5E5';
@@ -233,25 +282,24 @@ export class CombinedChartComponent implements OnInit {
           },
           y: {
             beginAtZero: true,
+            suggestedMax: 600,
             grid: {
               display: false,
             },
           },
           secondary: {
             beginAtZero: true,
-            suggestedMax: 2,
+            max: 2,
             position: 'right',
             grid: {
-              color: '#80b679',
-              drawTicks: false,
+              color: ['', '#80b679', '#e5e5e5', '#80b679', ''],
+              drawTicks: true,
               borderDash: [8, 4],
               borderWidth: 1,
             },
             ticks: {
               callback: function (value, index, ticks) {
-                console.log(ticks);
-                console.log(typeof value);
-                if ([0.8, 1.3].indexOf(value as number) !== -1) {
+                if ([0, 0.8, 1.0, 1.3, 2].indexOf(value as number) !== -1) {
                   return value;
                 }
                 return null;

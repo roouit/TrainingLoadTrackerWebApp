@@ -127,13 +127,13 @@ namespace TrackerWebAPI.Services
                 .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
                 .ToListAsync();
 
-            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 4;
+            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 28;
 
             var acuteSessions = chronicSessions
                 .Where(s => s.Date >= acuteCutoffDate)
                 .ToList();
 
-            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum();
+            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum() / 7;
 
             var ratio = acuteLoadAverage / (float)chronicLoadAverage;
 
