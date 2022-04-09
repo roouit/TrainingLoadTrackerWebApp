@@ -9,12 +9,21 @@ namespace TrackerWebAPI.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public SessionService(DataContext context, IMapper mapper)
+        // TODO: implement these three in user settings
+        private readonly int _chronicDefaultRange = 28;
+        private readonly int _acuteDefaultRange = 7;
+        private readonly bool _useEWMA = true;
+
+        public SessionService(DataContext context, IMapper mapper, IUserService userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
+
+        #region Session CRUD
 
         public async Task<SessionDTO> Create(SessionCreateDTO request, string username)
         {
@@ -49,7 +58,7 @@ namespace TrackerWebAPI.Services
         public async Task<IEnumerable<Session>> GetFullSessions(string username)
         {
             return await _context.Sessions
-                .Where(s => s.UserId == GetUserIdForUsername(username))
+                .Where(s => s.UserId == _userService.GetUserIdForUsername(username))
                 .ToListAsync();
         }
 
@@ -68,6 +77,7 @@ namespace TrackerWebAPI.Services
         public async Task<SessionDTO> Update(Guid sessionId, SessionUpdateDTO request)
         {
             var session = await _context.Sessions.FindAsync(sessionId);
+            if (session == null) throw new ArgumentNullException(nameof(session));
             session.Rpe = request.Rpe;
             session.Duration = request.Duration;
             session.Date = request.Date;
@@ -76,65 +86,101 @@ namespace TrackerWebAPI.Services
             return _mapper.Map<SessionDTO>(session);
         }
 
+        #endregion
+
+        #region Analytics
+
         public async Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string username, DateTime snapshotDate)
         {
-            var chronicCutoffDate = snapshotDate.AddDays(-28);
-            var acuteCutoffDate = snapshotDate.AddDays(-7);
-            var userId = GetUserIdForUsername(username);
+            var userId = _userService.GetUserIdForUsername(username);
 
-            var summary = await GetEWMALoadingStatusSnapshot(userId, snapshotDate, chronicCutoffDate, acuteCutoffDate);
+            var allSessions = await _context.Sessions
+                .Where(s => s.UserId == userId)
+                .OrderBy(s => s.Date)
+                .ToListAsync();
 
-            return summary;
+            var firstSessionDate = allSessions.First().Date;
+
+            var summary = GetRALoadingStatusSnapshot(snapshotDate, 28, 7, allSessions);
+
+            if (_useEWMA)
+            {
+                var chronicToUse = 14;
+                if ((snapshotDate - firstSessionDate).Days > 14 && (snapshotDate - firstSessionDate).Days <= _chronicDefaultRange)
+                {
+                    chronicToUse = (snapshotDate - firstSessionDate).Days;
+                }
+                return GetEWMALoadingStatusSnapshot(snapshotDate, chronicToUse != _chronicDefaultRange ? chronicToUse : _chronicDefaultRange, _acuteDefaultRange, allSessions);
+            }
+
+            var range = (snapshotDate - firstSessionDate).Days;
+            var chronic = Math.Min(range, _chronicDefaultRange);
+            var acute = Math.Min((int)Math.Round(range / 2.0), _acuteDefaultRange);
+
+            return GetRALoadingStatusSnapshot(snapshotDate, chronic == 0 ? 1 : chronic, acute == 0 ? 1 : acute, allSessions);
         }
 
         public async Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(string username)
         {
-            var userId = GetUserIdForUsername(username);
+            var userId = _userService.GetUserIdForUsername(username);
 
-            var firstSessionDate = await _context.Sessions
+            var allSessions = await _context.Sessions
                 .Where(s => s.UserId == userId)
                 .OrderBy(s => s.Date)
-                .Select(s => s.Date)
-                .FirstAsync();
+                .ToListAsync();
+
+            var firstSessionDate = allSessions.First().Date;
 
             var snapshots = new List<LoadingStatusSnapshotDTO>();
 
             var currentDate = firstSessionDate;
 
+            // Loop over all dates between first session and today
             while (currentDate <= DateTime.Now.Date)
             {
-                // TODO: Must be refactored so that sessions are fetched here once and correct part is injected to this method
-                snapshots.Add(await GetEWMALoadingStatusSnapshot(userId, currentDate, currentDate.AddDays(-28), currentDate.AddDays(-7)));
+                if (_useEWMA)
+                {
+                    var chronicToUse = 14;
+                    if ((currentDate - firstSessionDate).Days > 14 && (currentDate - firstSessionDate).Days <= _chronicDefaultRange)
+                    {
+                        chronicToUse = (currentDate - firstSessionDate).Days;
+                    }
+
+                    snapshots.Add(GetEWMALoadingStatusSnapshot(currentDate, chronicToUse != _chronicDefaultRange ? chronicToUse : _chronicDefaultRange, _acuteDefaultRange, allSessions));
+                }
+                else
+                {
+                    var range = (currentDate - firstSessionDate).Days;
+                    var chronic = Math.Min(range, _chronicDefaultRange);
+                    var acute = Math.Min((int)Math.Round(range / 2.0), _acuteDefaultRange);
+
+                    snapshots.Add(GetRALoadingStatusSnapshot(currentDate, chronic == 0 ? 1 : chronic, acute == 0 ? 1 : acute, allSessions));
+                }
                 currentDate = currentDate.AddDays(1);
             }
 
             return snapshots;
         }
 
-        private Guid GetUserIdForUsername(string username)
-        {
-            return _context.Users
-                .Where(u => u.Username == username)
-                .Select(u => u.UserId)
-                .FirstOrDefault();
-        }
-
         /// <summary>
         /// Calculates workload values with Rolling Average method. Each session is equally important in the calculation.
         /// </summary>
-        private async Task<LoadingStatusSnapshotDTO> GetRALoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
+        private static LoadingStatusSnapshotDTO GetRALoadingStatusSnapshot(DateTime snapshotDate, int chronicCutoff, int acuteCutoff, IEnumerable<Session> sessions)
         {
-            var chronicSessions = await _context.Sessions
-                .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
-                .ToListAsync();
+            var chronicCutoffDate = snapshotDate.AddDays(-chronicCutoff);
+            var acuteCutoffDate = snapshotDate.AddDays(-acuteCutoff);
 
-            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / 28;
+            var chronicSessions = sessions
+                .Where(s => s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
+                .ToList();
 
             var acuteSessions = chronicSessions
                 .Where(s => s.Date >= acuteCutoffDate)
                 .ToList();
 
-            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum() / 7;
+            var chronicLoadAverage = chronicSessions.Select(s => s.Rpe * s.Duration).Sum() / chronicCutoff;
+
+            var acuteLoadAverage = acuteSessions.Select(s => s.Rpe * s.Duration).Sum() / acuteCutoff;
 
             var ratio = acuteLoadAverage / (float)chronicLoadAverage;
 
@@ -146,11 +192,14 @@ namespace TrackerWebAPI.Services
             return new LoadingStatusSnapshotDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage, snapshotDate, dailyLoad);
         }
 
-        private async Task<LoadingStatusSnapshotDTO> GetEWMALoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
+        private static LoadingStatusSnapshotDTO GetEWMALoadingStatusSnapshot(DateTime snapshotDate, int chronicCutoff, int acuteCutoff, IEnumerable<Session> sessions)
         {
-            var chronicSessions = await _context.Sessions
-                .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
-                .ToListAsync();
+            var chronicCutoffDate = snapshotDate.AddDays(-chronicCutoff);
+            var acuteCutoffDate = snapshotDate.AddDays(-acuteCutoff);
+
+            var chronicSessions = sessions
+                .Where(s => s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
+                .ToList();
 
             var acuteSessions = chronicSessions
                 .Where(s => s.Date >= acuteCutoffDate)
@@ -160,15 +209,15 @@ namespace TrackerWebAPI.Services
             // TODO: Using 0 is probably not good, find the next oldest load?
             var initialChronicLoad = chronicSessions
                 .Where(s => s.Date == chronicCutoffDate)
-                .Select(s => s.Rpe * s.Duration * (2.0 / (28.0 + 1.0)))
+                .Select(s => s.Rpe * s.Duration * (2.0 / (chronicCutoff + 1.0)))
                 .FirstOrDefault(0);
 
-            var chronicEWMAs = CalculateEWMA(chronicSessions, initialChronicLoad, chronicCutoffDate, snapshotDate, 28);
+            var chronicEWMAs = CalculateEWMA(chronicSessions, initialChronicLoad, chronicCutoffDate, snapshotDate, chronicCutoff);
 
             // Chronic load affects the initial acute load
             var initialAcuteLoad = chronicEWMAs[acuteCutoffDate];
 
-            var acuteEWMAs = CalculateEWMA(acuteSessions, initialAcuteLoad, acuteCutoffDate, snapshotDate, 7);
+            var acuteEWMAs = CalculateEWMA(acuteSessions, initialAcuteLoad, acuteCutoffDate, snapshotDate, acuteCutoff);
 
             var ratio = acuteEWMAs[snapshotDate] / chronicEWMAs[snapshotDate];
 
@@ -209,5 +258,7 @@ namespace TrackerWebAPI.Services
                 }
             }
         }
+
+        #endregion
     }
 }

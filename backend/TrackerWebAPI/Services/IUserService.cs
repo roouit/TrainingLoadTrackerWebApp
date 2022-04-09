@@ -19,5 +19,7 @@ namespace TrackerWebAPI.Services
         public bool UserExists(string username);
 
         public bool EmailExists(string email);
+
+        public Guid GetUserIdForUsername(string username);
     }
 }

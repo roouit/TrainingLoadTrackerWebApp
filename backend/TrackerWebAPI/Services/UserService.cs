@@ -80,6 +80,14 @@ namespace TrackerWebAPI.Services
             return _context.Users.Any(user => user.Email == email);
         }
 
+        public Guid GetUserIdForUsername(string username)
+        {
+            return _context.Users
+                .Where(u => u.Username == username)
+                .Select(u => u.UserId)
+                .FirstOrDefault();
+        }
+
         private void ValidateRegisterRequest(UserRegisterDTO request)
         {
             // Username can contain basic Latin letters (including åÅäÄöÖ), digits

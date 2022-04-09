@@ -67,12 +67,20 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutSession(Guid sessionId, SessionUpdateDTO request)
         {
-            var sessionDto = await _sessionService.GetSession(sessionId);
-            if (sessionDto == null)
-                return NotFound("Session not found");
+            try
+            {
+                var sessionDto = await _sessionService.GetSession(sessionId);
+                if (sessionDto == null)
+                    return NotFound("Session not found");
 
-            await _sessionService.Update(sessionId, request);
-            return NoContent();
+                await _sessionService.Update(sessionId, request);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPost]
