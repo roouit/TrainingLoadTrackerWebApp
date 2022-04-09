@@ -82,7 +82,7 @@ namespace TrackerWebAPI.Services
             var acuteCutoffDate = snapshotDate.AddDays(-7);
             var userId = GetUserIdForUsername(username);
 
-            var summary = await GetLinearLoadingStatusSnapshot(userId, snapshotDate, chronicCutoffDate, acuteCutoffDate);
+            var summary = await GetEWMALoadingStatusSnapshot(userId, snapshotDate, chronicCutoffDate, acuteCutoffDate);
 
             return summary;
         }
@@ -103,7 +103,8 @@ namespace TrackerWebAPI.Services
 
             while (currentDate <= DateTime.Now.Date)
             {
-                snapshots.Add(await GetLinearLoadingStatusSnapshot(userId, currentDate, currentDate.AddDays(-28), currentDate.AddDays(-7)));
+                // TODO: Must be refactored so that sessions are fetched here once and correct part is injected to this method
+                snapshots.Add(await GetEWMALoadingStatusSnapshot(userId, currentDate, currentDate.AddDays(-28), currentDate.AddDays(-7)));
                 currentDate = currentDate.AddDays(1);
             }
 
@@ -121,7 +122,7 @@ namespace TrackerWebAPI.Services
         /// <summary>
         /// Calculates workload values with Rolling Average method. Each session is equally important in the calculation.
         /// </summary>
-        private async Task<LoadingStatusSnapshotDTO> GetLinearLoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
+        private async Task<LoadingStatusSnapshotDTO> GetRALoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
         {
             var chronicSessions = await _context.Sessions
                 .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
@@ -143,6 +144,70 @@ namespace TrackerWebAPI.Services
                 .FirstOrDefault(0);
 
             return new LoadingStatusSnapshotDTO(acuteLoadAverage, chronicLoadAverage, ratio, WorkloadCalculateMethod.RollingAverage, snapshotDate, dailyLoad);
+        }
+
+        private async Task<LoadingStatusSnapshotDTO> GetEWMALoadingStatusSnapshot(Guid userId, DateTime snapshotDate, DateTime chronicCutoffDate, DateTime acuteCutoffDate)
+        {
+            var chronicSessions = await _context.Sessions
+                .Where(s => s.UserId == userId && s.Date >= chronicCutoffDate && s.Date <= snapshotDate)
+                .ToListAsync();
+
+            var acuteSessions = chronicSessions
+                .Where(s => s.Date >= acuteCutoffDate)
+                .ToList();
+
+            // Initial load is 0, if no training on cutoff date
+            // TODO: Using 0 is probably not good, find the next oldest load?
+            var initialChronicLoad = chronicSessions
+                .Where(s => s.Date == chronicCutoffDate)
+                .Select(s => s.Rpe * s.Duration * (2.0 / (28.0 + 1.0)))
+                .FirstOrDefault(0);
+
+            var chronicEWMAs = CalculateEWMA(chronicSessions, initialChronicLoad, chronicCutoffDate, snapshotDate, 28);
+
+            // Chronic load affects the initial acute load
+            var initialAcuteLoad = chronicEWMAs[acuteCutoffDate];
+
+            var acuteEWMAs = CalculateEWMA(acuteSessions, initialAcuteLoad, acuteCutoffDate, snapshotDate, 7);
+
+            var ratio = acuteEWMAs[snapshotDate] / chronicEWMAs[snapshotDate];
+
+            var dailyLoad = acuteSessions
+                .Where(s => s.Date == snapshotDate)
+                .Select(s => s.Rpe * s.Duration)
+                .FirstOrDefault(0);
+
+            return new LoadingStatusSnapshotDTO(acuteEWMAs[snapshotDate], chronicEWMAs[snapshotDate], ratio, WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage, snapshotDate, dailyLoad);
+        }
+
+        private static Dictionary<DateTime, double> CalculateEWMA(IEnumerable<Session> sessions, double initialEWMA, DateTime start, DateTime end, int lambdaConstant)
+        {
+            var dict = new Dictionary<DateTime, double>()
+            {
+                { start, initialEWMA }
+            };
+            var lambda = 2.0 / (lambdaConstant + 1.0);
+            var previousEWMA = initialEWMA;
+            var currentDate = start.AddDays(1);
+            
+            while (true)
+            {
+                var nextLoad = sessions
+                    .Where(s => s.Date == currentDate)
+                    .Select(s => s.Rpe * s.Duration)
+                    .FirstOrDefault(0);
+
+                previousEWMA = nextLoad * lambda + ((1 - lambda) * previousEWMA);
+
+                dict.Add(currentDate, previousEWMA);
+
+                currentDate = currentDate.AddDays(1);
+
+                if (currentDate > end)
+                {
+                    return dict;
+                }
+            }
         }
     }
 }

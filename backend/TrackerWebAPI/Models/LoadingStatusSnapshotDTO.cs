@@ -8,7 +8,7 @@
 
     public class LoadingStatusSnapshotDTO
     {
-        public LoadingStatusSnapshotDTO(int acute, int chronic, float ratio, WorkloadCalculateMethod method, DateTime snapshotDate, int dailyLoad)
+        public LoadingStatusSnapshotDTO(double acute, double chronic, double ratio, WorkloadCalculateMethod method, DateTime snapshotDate, int dailyLoad)
         {
             Method = method;
             Acute = acute;
@@ -19,9 +19,9 @@
         }
         public WorkloadCalculateMethod Method { get; set; }
         public DateTime SnapshotDate { get; set; }
-        public int Acute { get; set; }
-        public int Chronic { get; set; }
-        public float Ratio { get; set; }
+        public double Acute { get; set; }
+        public double Chronic { get; set; }
+        public double Ratio { get; set; }
         public int DailyLoad { get; set; }
     }
 }
