@@ -1,0 +1,49 @@
+.settings .mat-expansion-panel {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.settings .mat-expansion-panel-header-description {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.account-settings {
+  display: flex;
+  flex-direction: column;
+  /* align-items: flex-start; */
+}
+
+.settings div .mat-divider {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.account-settings-subsection {
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.setting-title {
+  color: #2D89B0;
+  font-size: 0.9em;
+  margin-bottom: 15px;
+}
+
+.delete-account {
+  color: red;
+  font-size: 0.9em;
+}
+
+app-update-account {
+  width: 100%;
+}
+
+app-change-password {
+  width: 100%;
+}
+

@@ -21,6 +21,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MtxSliderModule } from '@ng-matero/extensions/slider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -45,6 +47,9 @@ import { LoadSummaryComponent } from './core/components/landing-page/load-summar
 import { SideNavigationComponent } from './core/components/side-navigation/side-navigation.component';
 import { AnalyticsComponent } from './core/components/analytics/analytics.component';
 import { CombinedChartComponent } from './core/components/analytics/combined-chart/combined-chart.component';
+import { SettingsComponent } from './core/components/settings/settings.component';
+import { ChangePasswordComponent } from './core/components/settings/change-password/change-password.component';
+import { UpdateAccountComponent } from './core/components/settings/update-account/update-account.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +67,9 @@ import { CombinedChartComponent } from './core/components/analytics/combined-cha
     SideNavigationComponent,
     AnalyticsComponent,
     CombinedChartComponent,
+    SettingsComponent,
+    ChangePasswordComponent,
+    UpdateAccountComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +93,8 @@ import { CombinedChartComponent } from './core/components/analytics/combined-cha
     MatSidenavModule,
     MatSlideToggleModule,
     MtxSliderModule,
+    MatExpansionModule,
+    MatDividerModule,
   ],
   providers: [
     SessionApiService,

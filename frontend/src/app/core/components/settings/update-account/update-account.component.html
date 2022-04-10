@@ -1,0 +1,8 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="legacy" floatLabel="always">
+    <mat-label>Sähköposti</mat-label>
+    <input matInput type="email" formControlName="email" required="false">
+    <mat-error *ngIf="form.invalid">{{getErrorMessage("email")}}</mat-error>
+  </mat-form-field>
+  <button mat-raised-button class="btn-success save-btn" type="submit" [disabled]="!form.valid">Tallenna</button>
+</form>

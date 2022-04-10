@@ -1,0 +1,13 @@
+.form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.save-btn {
+  height: 30px;
+  line-height: 30px;
+  font-size: 0.8em;
+  margin-top: 10px;
+}

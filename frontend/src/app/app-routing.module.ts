@@ -7,6 +7,7 @@ import { SessionListComponent } from './core/components/session-list/session-lis
 import { AuthGuard } from './core/guards/auth.guard';
 import { AuthComponent } from './core/components/auth/auth.component';
 import { AnalyticsComponent } from './core/components/analytics/analytics.component';
+import { SettingsComponent } from './core/components/settings/settings.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, canActivate: [AuthGuard] },
@@ -32,6 +33,11 @@ const routes: Routes = [
   {
     path: 'analyze',
     component: AnalyticsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
     canActivate: [AuthGuard],
   },
 ];
