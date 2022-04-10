@@ -11,3 +11,9 @@
   font-size: 0.8em;
   margin-top: 10px;
 }
+
+@media (max-width: 400px) {
+  .form {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,60 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.form > div:last-of-type {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.save-btn {
+  height: 30px;
+  line-height: 30px;
+  font-size: 0.8em;
+  margin-top: 10px;
+}
+
+.number-input {
+  width: 65%;
+  max-width: 200px;
+  min-width: 180px;
+}
+
+.number-input .type-suffix {
+  margin-left: 5px;
+}
+
+.mat-select {
+  font-size: 0.8em !important;
+}
+
+.calculate-select {
+  width: 65%;
+}
+
+@media (max-width: 400px) {
+  .form > div:last-of-type {
+    flex-direction: column;
+  }
+  .calculate-select {
+    width: 100%;
+  }
+  .mat-select {
+    font-size: 0.7em !important;
+  }
+  .number-input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+@media (min-width: 600px) {
+  .mat-select {
+    font-size: 1em !important;
+  }
+}

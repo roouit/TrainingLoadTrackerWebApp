@@ -11,7 +11,15 @@
 .account-settings {
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
+}
+
+.calculation-settings {
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
 }
 
 .settings div .mat-divider {
@@ -32,18 +40,17 @@
   color: #2D89B0;
   font-size: 0.9em;
   margin-bottom: 15px;
+  text-align: start;
 }
 
 .delete-account {
   color: red;
   font-size: 0.9em;
+  cursor: pointer;
 }
 
-app-update-account {
+app-update-account,
+app-change-password,
+app-update-calculations {
   width: 100%;
 }
-
-app-change-password {
-  width: 100%;
-}
-

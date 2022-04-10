@@ -23,6 +23,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MtxSliderModule } from '@ng-matero/extensions/slider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSelectModule } from '@angular/material/select';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -50,6 +51,7 @@ import { CombinedChartComponent } from './core/components/analytics/combined-cha
 import { SettingsComponent } from './core/components/settings/settings.component';
 import { ChangePasswordComponent } from './core/components/settings/change-password/change-password.component';
 import { UpdateAccountComponent } from './core/components/settings/update-account/update-account.component';
+import { UpdateCalculationsComponent } from './core/components/settings/update-calculations/update-calculations.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import { UpdateAccountComponent } from './core/components/settings/update-accoun
     SettingsComponent,
     ChangePasswordComponent,
     UpdateAccountComponent,
+    UpdateCalculationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,6 +98,7 @@ import { UpdateAccountComponent } from './core/components/settings/update-accoun
     MtxSliderModule,
     MatExpansionModule,
     MatDividerModule,
+    MatSelectModule,
   ],
   providers: [
     SessionApiService,
