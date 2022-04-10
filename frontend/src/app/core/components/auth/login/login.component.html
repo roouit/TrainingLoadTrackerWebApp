@@ -1,9 +1,9 @@
 <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="login-inputs">
-    <mat-form-field class="username-input" appearance="standard" floatLabel="always">
-      <mat-label>Käyttäjätunnus</mat-label>
-      <input matInput id="username" type="text" formControlName="username" required>
-      <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("username")}}</mat-error>
+    <mat-form-field class="email-input" appearance="standard" floatLabel="always">
+      <mat-label>Sähköposti</mat-label>
+      <input matInput id="email" type="email" formControlName="email" required>
+      <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("email")}}</mat-error>
     </mat-form-field>
     <mat-form-field class="password-input" appearance="standard" floatLabel="always">
       <mat-label>Salasana</mat-label>

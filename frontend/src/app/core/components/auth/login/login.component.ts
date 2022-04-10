@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.loginRequest = {
-      username: '',
+      email: '',
       password: '',
     };
   }
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: [this.loginRequest.username, Validators.required],
+      email: [this.loginRequest.email, Validators.required],
       password: [this.loginRequest.password, Validators.required],
     });
   }
