@@ -25,12 +25,9 @@ namespace TrackerWebAPI.Services
 
         #region Session CRUD
 
-        public async Task<SessionDTO> Create(SessionCreateDTO request, string username)
+        public async Task<SessionDTO> Create(SessionCreateDTO request, string email)
         {
-            var userId = _context.Users
-                .Where(u => u.Username == username)
-                .Select(u => u.UserId)
-                .FirstOrDefault();
+            var userId = _userService.GetUserIdForEmail(email);
 
             var session = new Session(request, userId);
 
@@ -55,16 +52,16 @@ namespace TrackerWebAPI.Services
             return true;
         }
 
-        public async Task<IEnumerable<Session>> GetFullSessions(string username)
+        public async Task<IEnumerable<Session>> GetFullSessions(string email)
         {
             return await _context.Sessions
-                .Where(s => s.UserId == _userService.GetUserIdForUsername(username))
+                .Where(s => s.UserId == _userService.GetUserIdForEmail(email))
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<SessionDTO>> GetSessions(string username)
+        public async Task<IEnumerable<SessionDTO>> GetSessions(string email)
         {
-            var sessionList = await GetFullSessions(username);
+            var sessionList = await GetFullSessions(email);
             return _mapper.Map<List<SessionDTO>>(sessionList);
         }
 
@@ -90,9 +87,9 @@ namespace TrackerWebAPI.Services
 
         #region Analytics
 
-        public async Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string username, DateTime snapshotDate)
+        public async Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string email, DateTime snapshotDate)
         {
-            var userId = _userService.GetUserIdForUsername(username);
+            var userId = _userService.GetUserIdForEmail(email);
 
             var allSessions = await _context.Sessions
                 .Where(s => s.UserId == userId)
@@ -120,9 +117,9 @@ namespace TrackerWebAPI.Services
             return GetRALoadingStatusSnapshot(snapshotDate, chronic == 0 ? 1 : chronic, acute == 0 ? 1 : acute, allSessions);
         }
 
-        public async Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(string username)
+        public async Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(string email)
         {
-            var userId = _userService.GetUserIdForUsername(username);
+            var userId = _userService.GetUserIdForEmail(email);
 
             var allSessions = await _context.Sessions
                 .Where(s => s.UserId == userId)

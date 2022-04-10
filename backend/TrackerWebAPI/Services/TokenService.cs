@@ -18,7 +18,7 @@ namespace TrackerWebAPI.Services
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
@@ -29,7 +29,7 @@ namespace TrackerWebAPI.Services
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddDays(60),
                 signingCredentials: cred);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -37,14 +37,14 @@ namespace TrackerWebAPI.Services
             return jwt;
         }
 
-        public string GetUsernameFromIdentity(HttpContext context)
+        public string GetEmailFromIdentity(HttpContext context)
         {
             var identity = context.User.Identity as ClaimsIdentity;
 
             if (identity == null)
                 return string.Empty;
 
-            return identity.FindFirst(ClaimTypes.Name).Value;
+            return identity.FindFirst(ClaimTypes.Email)?.Value;
         }
     }
 }

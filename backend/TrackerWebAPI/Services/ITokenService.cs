@@ -6,6 +6,6 @@ namespace TrackerWebAPI.Services
     {
         public string CreateToken(User user, HttpContext context);
 
-        public string GetUsernameFromIdentity(HttpContext context);
+        public string GetEmailFromIdentity(HttpContext context);
     }
 }

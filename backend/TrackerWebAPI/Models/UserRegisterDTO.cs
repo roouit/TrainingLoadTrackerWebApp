@@ -4,11 +4,6 @@ namespace TrackerWebAPI.Models
 {
     public class UserRegisterDTO
     {
-        [Required(ErrorMessage = "Username can't be empty")]
-        [MinLength(2, ErrorMessage = "Username must have at least 2 characters")]
-        [MaxLength(128, ErrorMessage = "Maximum length of a username is 128 characters")]
-        public string Username { get; set; }
-
         [Required(ErrorMessage = "Password can't be empty")]
         [MinLength(8, ErrorMessage = "Password must have at least 8 characters")]
         [MaxLength(55, ErrorMessage = "Maximum length of a password is 55 characters")]
@@ -19,10 +14,15 @@ namespace TrackerWebAPI.Models
         [MaxLength(256, ErrorMessage = "Maximum length of an email address is 256 characters")]
         public string Email { get; set; }
 
-        [MaxLength(128, ErrorMessage = "Maximum length of a first name is 128 characters")]
-        public string? FirstName { get; set; }
+        [Required(ErrorMessage = "Acute range can't be empty")]
+        [Range(3, 15, ErrorMessage = "Acute range must be between 3-15 days")]
+        public int AcuteRange { get; set; }
 
-        [MaxLength(128, ErrorMessage = "Maximum length of a last name is 128 characters")]
-        public string? LastName { get; set; }
+        [Required(ErrorMessage = "Chronic range can't be empty")]
+        [Range(7, 50, ErrorMessage = "Chronic range must be between 7-50 days")]
+        public int ChronicRange { get; set; }
+
+        [Required(ErrorMessage = "Calculate method can't be empty")]
+        public WorkloadCalculateMethod CalculationMethod { get; set; }
     }
 }

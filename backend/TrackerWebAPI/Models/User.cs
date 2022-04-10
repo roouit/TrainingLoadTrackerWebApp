@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TrackerWebAPI.Models
 {
-    [Index(nameof(Username), IsUnique = true)]
     [Index(nameof(PasswordHash), IsUnique = true)]
     [Index(nameof(Email), IsUnique = true)]
     public class User
@@ -15,20 +14,16 @@ namespace TrackerWebAPI.Models
         public User(UserRegisterDTO request, string passwordHash)
         {
             UserId = Guid.NewGuid();
-            Username = request.Username;
             PasswordHash = passwordHash;
             Email = request.Email;
-            FirstName = request.FirstName != null ? request.FirstName.Trim() : "";
-            LastName = request.LastName != null ? request.LastName.Trim() : "";
+            AcuteRange = request.AcuteRange;
+            ChronicRange = request.ChronicRange;
+            CalculationMethod = request.CalculationMethod;
         }
+
         [Required]
         [Key]
         public Guid UserId { get; set; }
-
-        [Required]
-        [MinLength(2)]
-        [MaxLength(128)]
-        public string Username { get; set; }
 
         [Required]
         [MinLength(59)]
@@ -40,11 +35,16 @@ namespace TrackerWebAPI.Models
         [MaxLength(256)]
         public string Email { get; set; }
 
-        [MaxLength(128)]
-        public string FirstName { get; set; }
+        [Required]
+        [Range(3, 15)]
+        public int AcuteRange { get; set; }
 
-        [MaxLength(128)]
-        public string LastName { get; set; }
+        [Required]
+        [Range(7, 50)]
+        public int ChronicRange { get; set; }
+
+        [Required]
+        public WorkloadCalculateMethod CalculationMethod { get; set; }
 
         public virtual ICollection<Session> Sessions { get; set; }
     }

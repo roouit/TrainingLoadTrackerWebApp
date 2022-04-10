@@ -27,10 +27,10 @@ export class LoginComponent implements OnInit {
   }
 
   autoLogin(): void {
-    // Valid until 29.6.
+    // Valid until 9.6.
     localStorage.setItem(
       'token',
-      'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoicm9vcGUiLCJleHAiOjE2NTYzMzIxNDEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzI4NiIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzI4NiJ9.BX3C1f8BrRmt_sH-b1WMzsoHlIC0PLLPg-87TwVuXNGWimKWjEPX65T-Xh6uVft9ICMEuxEgPQCxUsoTKOWLOg'
+      'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJyb291aXRAZ21haWwuY29tIiwiZXhwIjoxNjU0Nzc4MTAwLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjcyODYiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjcyODYifQ.Krx7EcfWDWuXpmkKJPGa_GQE0n1uaJyeUHcnkZ2w753XO54bNBrrsYjFWN-H3_cAzoWgp9b9rnfVibcS5AtzGw'
     );
     this.router.navigate(['']);
   }

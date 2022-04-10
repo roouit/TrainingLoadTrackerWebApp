@@ -1,13 +1,6 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
 using TrackerWebAPI.Services;
 
@@ -29,10 +22,10 @@ namespace TrackerWebAPI.Controllers
 
         [HttpGet("debug/full")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Session>>> GetFullSessions(string username)
+        public async Task<ActionResult<IEnumerable<Session>>> GetFullSessions(string email)
         {
             // TODO: get username from JWT token?
-            var sessionList = await _sessionService.GetFullSessions(username);
+            var sessionList = await _sessionService.GetFullSessions(email);
             return Ok(sessionList);
         }
 
@@ -41,12 +34,12 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<IEnumerable<SessionDTO>>> GetSessions()
         {
-            var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+            var email = _tokenService.GetEmailFromIdentity(HttpContext);
 
-            if (string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(email))
                 return Forbid("Error when fetching user identity");
 
-            var sessionList = await _sessionService.GetSessions(username);
+            var sessionList = await _sessionService.GetSessions(email);
             return Ok(sessionList);
         }
 
@@ -91,12 +84,12 @@ namespace TrackerWebAPI.Controllers
         {
             try
             {
-                var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+                var email = _tokenService.GetEmailFromIdentity(HttpContext);
 
-                if (string.IsNullOrWhiteSpace(username))
+                if (string.IsNullOrWhiteSpace(email))
                     return Forbid("Error when fetching user identity");
 
-                var session = await _sessionService.Create(request, username);
+                var session = await _sessionService.Create(request, email);
                 return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
             }
             catch (Exception e)
@@ -126,9 +119,9 @@ namespace TrackerWebAPI.Controllers
         {
             try
             {
-                var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+                var email = _tokenService.GetEmailFromIdentity(HttpContext);
 
-                var summary = await _sessionService.GetLoadingStatusSnapshot(username, DateTime.Now.Date);
+                var summary = await _sessionService.GetLoadingStatusSnapshot(email, DateTime.Now.Date);
 
                 return Ok(summary);
             }
@@ -145,9 +138,9 @@ namespace TrackerWebAPI.Controllers
         {
             try
             {
-                var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+                var email = _tokenService.GetEmailFromIdentity(HttpContext);
 
-                var summary = await _sessionService.GetLoadingStatusHistory(username);
+                var summary = await _sessionService.GetLoadingStatusHistory(email);
 
                 return Ok(summary);
             }

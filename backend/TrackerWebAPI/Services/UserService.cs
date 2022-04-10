@@ -1,10 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Text.RegularExpressions;
 using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
 
@@ -27,23 +22,22 @@ namespace TrackerWebAPI.Services
 
         public async Task<string> Login(UserLoginDTO request, HttpContext context)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
             return isPasswordValid ? _tokenService.CreateToken(user, context) : null;
         }
 
         public async Task<UserDTO> Register(UserRegisterDTO request)
         {
-            ValidateRegisterRequest(request);
             var user = new User(request, BCrypt.Net.BCrypt.HashPassword(request.Password));
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<bool> DeleteUser(string username)
+        public async Task<bool> DeleteUser(string email)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
                 return false;
@@ -55,9 +49,9 @@ namespace TrackerWebAPI.Services
             return true;
         }
 
-        public async Task<UserDTO> GetUser(string username)
+        public async Task<UserDTO> GetUser(string email)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return _mapper.Map<UserDTO>(user);
         }
 
@@ -70,41 +64,17 @@ namespace TrackerWebAPI.Services
             return await _context.Users.ToListAsync();
         }
 
-        public bool UserExists(string username)
-        {
-            return _context.Users.Any(user => user.Username == username);
-        }
-
         public bool EmailExists(string email)
         {
             return _context.Users.Any(user => user.Email == email);
         }
 
-        public Guid GetUserIdForUsername(string username)
+        public Guid GetUserIdForEmail(string email)
         {
             return _context.Users
-                .Where(u => u.Username == username)
+                .Where(u => u.Email == email)
                 .Select(u => u.UserId)
                 .FirstOrDefault();
-        }
-
-        private void ValidateRegisterRequest(UserRegisterDTO request)
-        {
-            // Username can contain basic Latin letters (including åÅäÄöÖ), digits
-            // and symbols -_ (symbols can't be the first character)
-            var usernameRegex = @"^[a-zA-Z0-9äÄöÖåÅ]{1}[a-zA-Z0-9_äÄöÖåÅ-]+$";
-
-            // This supports most of special characters
-            var nameRegex = @"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$";
-
-            if (!Regex.Match(request.Username, usernameRegex).Success)
-                throw new Exception("Username is not valid");
-
-            if (request.FirstName != null && !string.IsNullOrWhiteSpace(request.FirstName) && !Regex.Match(request.FirstName, nameRegex).Success)
-                throw new Exception("First name is not valid");
-
-            if (request.LastName != null && !string.IsNullOrWhiteSpace(request.LastName) && !Regex.Match(request.LastName, nameRegex).Success)
-                throw new Exception("Last name is not valid");
         }
     }
 }

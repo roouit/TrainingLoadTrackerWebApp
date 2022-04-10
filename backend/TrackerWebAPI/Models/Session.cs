@@ -30,7 +30,7 @@ namespace TrackerWebAPI.Models
         public int Rpe { get; set; }
 
         [Required]
-        [Range(1, 4320)]
+        [Range(1, 1000000)]
         public int Duration { get; set; }
 
         [Required]

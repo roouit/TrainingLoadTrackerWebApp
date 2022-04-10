@@ -9,7 +9,7 @@ namespace TrackerWebAPI.Models
         public int Rpe { get; set; }
 
         [Required(ErrorMessage = "Duration value can't be empty")]
-        [Range(1, 4320, ErrorMessage = "Duration value must be between 1-4320 minutes")]
+        [Range(1, 1000000, ErrorMessage = "Duration value must be between 1-1000000 minutes")]
         public int Duration { get; set; }
 
         [Required(ErrorMessage = "Date value can't be empty")]

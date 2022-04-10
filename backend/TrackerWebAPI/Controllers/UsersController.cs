@@ -1,14 +1,6 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
 using TrackerWebAPI.Services;
 
@@ -34,16 +26,13 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDTO>> Register(UserRegisterDTO request)
         {
-            if (_userService.UserExists(request.Username))
-                return BadRequest("Username is already taken");
-
             if (_userService.EmailExists(request.Email))
                 return BadRequest("Email is already in use");
 
             try
             {
                 var user = await _userService.Register(request);
-                return CreatedAtAction(nameof(GetUser), new { username = user.Username }, user);
+                return CreatedAtAction(nameof(GetUser), new { email = user.Email }, user);
             }
             catch (Exception e)
             {
@@ -59,7 +48,7 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<string>> Login(UserLoginDTO request)
         {
-            if (!_userService.UserExists(request.Username))
+            if (!_userService.EmailExists(request.Email))
                 return Unauthorized("Login information isn't correct");
 
             var token = await _userService.Login(request, HttpContext);
@@ -84,12 +73,12 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetUser()
         {
-            var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+            var email = _tokenService.GetEmailFromIdentity(HttpContext);
 
-            if (string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(email))
                 return Forbid("Error when fetching user identity");
 
-            var user = await _userService.GetUser(username);
+            var user = await _userService.GetUser(email);
 
             if (user == null)
             {
@@ -105,12 +94,12 @@ namespace TrackerWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser()
         {
-            var username = _tokenService.GetUsernameFromIdentity(HttpContext);
+            var email = _tokenService.GetEmailFromIdentity(HttpContext);
 
-            if (string.IsNullOrWhiteSpace(username))
+            if (string.IsNullOrWhiteSpace(email))
                 return Forbid("Error when fetching user identity");
 
-            var isSuccesful = await _userService.DeleteUser(username);
+            var isSuccesful = await _userService.DeleteUser(email);
 
             if (!isSuccesful)
                 return NotFound("User not found");
