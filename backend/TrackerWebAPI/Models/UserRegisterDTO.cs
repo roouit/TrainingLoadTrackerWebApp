@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace TrackerWebAPI.Models
 {
@@ -22,7 +23,7 @@ namespace TrackerWebAPI.Models
         [Range(7, 50, ErrorMessage = "Chronic range must be between 7-50 days")]
         public int ChronicRange { get; set; }
 
-        [Required(ErrorMessage = "Calculate method can't be empty")]
+        [JsonProperty(Required = Required.Always)]
         public WorkloadCalculateMethod CalculationMethod { get; set; }
     }
 }

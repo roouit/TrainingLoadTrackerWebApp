@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
       email: '',
       acuteRange: 7,
       chronicRange: 28,
-      calculateMethod: WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage
+      calculationMethod: WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage
     };
   }
 
@@ -52,8 +52,8 @@ export class RegisterComponent implements OnInit {
         this.registerRequest.chronicRange,
         [Validators.required, Validators.min(7), Validators.max(50)],
       ],
-      calculateMethod: [
-        this.registerRequest.calculateMethod,
+      calculationMethod: [
+        this.registerRequest.calculationMethod,
         [Validators.required, Validators.min(0), Validators.max(1)],
       ],
     });

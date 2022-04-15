@@ -5,5 +5,5 @@ export interface UserRegisterDTO {
   email: string;
   acuteRange: number;
   chronicRange: number;
-  calculateMethod: WorkloadCalculateMethod;
+  calculationMethod: WorkloadCalculateMethod;
 }
