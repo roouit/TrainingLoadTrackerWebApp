@@ -12,8 +12,8 @@ using TrackerWebAPI.Data;
 namespace TrackerWebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220301073733_ChangeIdNamesToMatch")]
-    partial class ChangeIdNamesToMatch
+    [Migration("20220415061517_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,30 +55,24 @@ namespace TrackerWebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AcuteRange")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CalculationMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChronicRange")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
 
                     b.HasKey("UserId");
 
@@ -86,9 +80,6 @@ namespace TrackerWebAPI.Migrations
                         .IsUnique();
 
                     b.HasIndex("PasswordHash")
-                        .IsUnique();
-
-                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Users");
