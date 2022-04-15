@@ -6,6 +6,7 @@ import 'chartjs-adapter-date-fns';
 import { format } from 'date-fns';
 import { fi } from 'date-fns/locale';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import Helpers from 'src/app/core/utils/helpers';
 
 
 @Component({
@@ -83,17 +84,16 @@ export class CombinedChartComponent implements OnInit {
   onSliderRelease(event: any) {
     this.chartRange = event.value[1] - event.value[0];
 
-    this.chartLastDate = 
-      format(
-        Date.parse(
-          this.data.date[
-            this.rs.value[1]
-              ? this.data.date.length + (this.rs.value[1] - 1)
-              : this.data.date.length - 1
-          ]
-        ),
-        'd.M'
-      );
+    this.chartLastDate = format(
+      Date.parse(
+        this.data.date[
+          this.rs.value[1]
+            ? this.data.date.length + (this.rs.value[1] - 1)
+            : this.data.date.length - 1
+        ]
+      ),
+      'd.M'
+    );
 
     this.pointRadius = this.chartRange > 21 ? 1 : 3;
     if (
@@ -147,17 +147,12 @@ export class CombinedChartComponent implements OnInit {
     }
   }
 
-  // plugin = {
-  //   id: 'custom_canvas_background_color',
-  //   beforeDraw: (chart: any) => {
-  //     const ctx = chart.canvas.getContext('2d');
-  //     ctx.save();
-  //     ctx.globalCompositeOperation = 'destination-over';
-  //     ctx.fillStyle = 'lightGreen';
-  //     ctx.fillRect(44, 100, 308, chart.height);
-  //     ctx.restore();
-  //   },
-  // };
+  getRoundedRatio(num: number, decimals: number): string {
+    const numString = num as unknown as string;
+    return +(
+      Math.round(parseFloat(numString + `e+${decimals}`)) + `e-${decimals}`
+    ) as unknown as string;
+  }
 
   initChart(): void {
     this.combinedChart = new Chart('combined-chart', {
@@ -227,8 +222,32 @@ export class CombinedChartComponent implements OnInit {
               // "Mar 31, 2022, 12:00:00 a.m."
               title: (context) => {
                 context[0].label.split('');
-                console.log(context[0].label.split(' '));
                 return context[0].label;
+              },
+              label: (context) => {
+                let label = context.dataset.label || '';
+
+                if (label) {
+                  label += ': ';
+                }
+
+                if (context.parsed.y !== null) {
+                  switch (context.datasetIndex) {
+                    case 0:
+                      
+                      label += Helpers.roundToDecimals(context.parsed.y, 2);
+                      break
+                    case 1:
+                    case 2:
+                      label += Helpers.roundToDecimals(context.parsed.y, 1);
+                      break
+                    default:
+                      label += context.parsed.y;
+                      break;
+                  }
+                }
+                
+                return label;
               },
             },
           },

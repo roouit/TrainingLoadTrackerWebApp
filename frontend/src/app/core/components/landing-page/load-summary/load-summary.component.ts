@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { LoadingStatusSnapshotDTO } from 'src/app/core/interfaces/LoadingStatusSnapshotDTO';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
+import Helpers from 'src/app/core/utils/helpers';
 
 @Component({
   selector: 'app-load-summary',
@@ -22,10 +23,9 @@ export class LoadSummaryComponent {
     }
   }
 
-  getRoundedRatio(): number {
-    if (!this.loaded) return 0;
-    const numString = this.summary.ratio as unknown as string;
-    return +(Math.round(parseFloat(numString + 'e+2')) + 'e-2');
+  getRoundedRatio(): string {
+    if (!this.loaded) return '0';
+    return Helpers.roundToDecimals(this.summary.ratio, 2);
   }
 
   getRatioColor(): string {
