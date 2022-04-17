@@ -3,16 +3,17 @@ import { Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ChangePasswordDTO } from '../interfaces/ChangePasswordDTO';
 import { UserDTO } from '../interfaces/UserDTO';
 import { UserLoginDTO } from '../interfaces/UserLoginDTO';
 import { UserRegisterDTO } from '../interfaces/UserRegisterDTO';
+import { UserUpdateDTO } from '../interfaces/UserUpdateDTO';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserApiService {
-  private readonly baseUrl =
-    `${environment.uri}/Users`;
+  private readonly baseUrl = `${environment.uri}/Users`;
 
   constructor(private http: HttpClient) {}
 
@@ -22,6 +23,14 @@ export class UserApiService {
 
   login(request: UserLoginDTO): Observable<string> {
     return this.http.post<string>(`${this.baseUrl}/Login/`, request);
+  }
+
+  getUser(): Observable<UserDTO> {
+    return this.http.get<UserDTO>(`${this.baseUrl}`);
+  }
+
+  update(data: UserUpdateDTO): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}`, data);
   }
 
   logout(): void {

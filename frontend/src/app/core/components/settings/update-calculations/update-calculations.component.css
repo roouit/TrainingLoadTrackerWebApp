@@ -5,9 +5,13 @@
   margin-bottom: 15px;
 }
 
-.form > div:last-of-type {
+.div-with-button {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+}
+
+.messages {
   width: 100%;
 }
 
@@ -37,7 +41,7 @@
 }
 
 @media (max-width: 400px) {
-  .form > div:last-of-type {
+  .div-with-button {
     flex-direction: column;
   }
   .calculate-select {

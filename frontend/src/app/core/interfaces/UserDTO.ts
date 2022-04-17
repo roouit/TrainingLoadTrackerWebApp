@@ -1,6 +1,8 @@
+import { WorkloadCalculateMethod } from "./LoadingStatusSnapshotDTO";
+
 export interface UserDTO {
-  username: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  acuteRange: number;
+  chronicRange: number;
+  calculationMethod: WorkloadCalculateMethod
 }

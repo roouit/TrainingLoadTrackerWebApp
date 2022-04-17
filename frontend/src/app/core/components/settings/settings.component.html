@@ -11,7 +11,7 @@
 
     <div class="account-settings-subsection">
       <div class="setting-title">Muuta kuormittumisen laskennan asetuksia</div>
-      <app-update-calculations></app-update-calculations>
+      <app-update-calculations [userData]="userData"></app-update-calculations>
     </div>
   </mat-expansion-panel>
 
@@ -28,7 +28,7 @@
     <div class="account-settings">
       <div class="account-settings-subsection">
         <div class="setting-title">Muuta omia tietojasi</div>
-        <app-update-account></app-update-account>
+        <app-update-account [userData]="userData"></app-update-account>
       </div>
 
       <mat-divider></mat-divider>

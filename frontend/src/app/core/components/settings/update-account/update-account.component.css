@@ -1,7 +1,14 @@
 .form {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   margin-bottom: 15px;
+  width: 100%;
+}
+
+.div-with-button {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -13,7 +20,7 @@
 }
 
 @media (max-width: 400px) {
-  .form {
+  .div-with-button {
     flex-direction: column;
   }
 }

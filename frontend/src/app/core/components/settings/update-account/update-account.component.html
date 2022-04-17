@@ -1,8 +1,14 @@
 <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="legacy" floatLabel="always">
+  <div class="div-with-button">
+    <mat-form-field appearance="legacy" floatLabel="always">
     <mat-label>Sähköposti</mat-label>
-    <input matInput type="email" formControlName="email" required="false">
+    <input matInput type="email" name="email" formControlName="email" required="false" (input)="handleChange($event)">
     <mat-error *ngIf="form.invalid">{{getErrorMessage("email")}}</mat-error>
   </mat-form-field>
-  <button mat-raised-button class="btn-success save-btn" type="submit" [disabled]="!form.valid">Tallenna</button>
+  <button mat-raised-button class="btn-success save-btn" type="submit" [disabled]="!(changed && form.valid)">Tallenna</button>
+  </div>
+  <div class="messages">
+    <div class="generic-message" *ngIf="genericMessage">{{genericMessage}}</div>
+    <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
+  </div>
 </form>

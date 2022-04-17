@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserDTO } from 'src/app/core/interfaces/UserDTO';
+import { UserApiService } from 'src/app/core/services/user-api.service';
 
 @Component({
   selector: 'app-update-account',
@@ -7,24 +9,77 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./update-account.component.css'],
 })
 export class UpdateAccountComponent implements OnInit {
+  @Input() userData!: UserDTO;
+  previousUserData!: UserDTO;
+  loaded: boolean = false;
+  changed: boolean = false;
   form!: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  genericMessage: string = '';
+  errorMessage: string = '';
+
+  constructor(
+    private fb: FormBuilder,
+    private userApiService: UserApiService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      email: ['roouit@gmail.com', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['userData'].currentValue) {
+      this.form.setValue({
+        email: this.userData.email,
+      });
+      this.previousUserData = {...this.userData}
+      this.loaded = true;
+    }
+  }
+
+  handleChange(event: any): void {
+    if (this.genericMessage) {
+      this.resetMessages()
+    }
+
+    if (this.previousUserData[event.target.name as keyof UserDTO] !== event.target.value) {
+      this.changed = true;
+    } else {
+      this.changed = false
+    }
+  }
+
   onSubmit(): void {
-    // TODO: Implement send
-    console.log('lähetä');
+    this.resetMessages();
+    this.userApiService
+      .update({
+        email: this.form.value.email,
+      })
+      .subscribe({
+        next: (data) => {
+          this.resetMessages();
+          this.genericMessage = 'Tiedot päivitetty';
+          this.previousUserData.email = this.form.value.email;
+          this.changed = false;
+        },
+        error: (err) => {
+          this.resetMessages();
+          this.errorMessage = 'Päivitys epäonnistui';
+        },
+      });
+  }
+
+  resetMessages(): void {
+    this.errorMessage = '';
+    this.genericMessage = '';
   }
 
   getErrorMessage(formKey: string): string | void {
-    // TODO: Implement all validator checks
     if (this.form.get(formKey)?.hasError('required')) {
       return `Kenttä ei voi olla tyhjä`;
+    } else if (this.form.get(formKey)?.hasError('email')) {
+      return 'Sähköposti ei ole kunnollinen'
     }
   }
 }
