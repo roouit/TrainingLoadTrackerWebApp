@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using TrackerWebAPI.Models.DTO;
 
 namespace TrackerWebAPI.Models
 {

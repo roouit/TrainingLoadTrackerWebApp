@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TrackerWebAPI.Data;
 using TrackerWebAPI.Models;
+using TrackerWebAPI.Models.DTO;
 
 namespace TrackerWebAPI.Services
 {
@@ -35,9 +36,9 @@ namespace TrackerWebAPI.Services
             return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<bool> DeleteUser(string email)
+        public async Task<bool> DeleteUser(Guid UserId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == UserId);
             if (user == null)
             {
                 return false;
@@ -49,15 +50,36 @@ namespace TrackerWebAPI.Services
             return true;
         }
 
+        public async Task Update(Guid userId, UserUpdateDTO request)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            if (request.Email != null)
+                user.Email = request.Email;
+
+            if (request.AcuteRange != null)
+                user.AcuteRange = (int)request.AcuteRange;
+
+            if (request.ChronicRange != null)
+                user.ChronicRange = (int)request.ChronicRange;
+
+            if (request.CalculationMethod != null)
+                user.CalculationMethod = (WorkloadCalculateMethod)request.CalculationMethod;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<UserDTO> GetUser(string email)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<User> GetUser(Guid userId)
+        public async Task<UserDTO> GetUser(Guid userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            return _mapper.Map<UserDTO>(user);
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -67,6 +89,11 @@ namespace TrackerWebAPI.Services
         public bool EmailExists(string email)
         {
             return _context.Users.Any(user => user.Email == email);
+        }
+
+        public bool UserExists(Guid userId)
+        {
+            return _context.Users.Any(user => user.UserId == userId);
         }
 
         public Guid GetUserIdForEmail(string email)

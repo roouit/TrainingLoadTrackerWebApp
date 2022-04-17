@@ -18,7 +18,8 @@ namespace TrackerWebAPI.Services
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
@@ -37,14 +38,33 @@ namespace TrackerWebAPI.Services
             return jwt;
         }
 
-        public string GetEmailFromIdentity(HttpContext context)
+        public string? GetEmailFromIdentity(HttpContext context)
         {
-            var identity = context.User.Identity as ClaimsIdentity;
+            var identity = GetIdentity(context);
 
-            if (identity == null)
-                return string.Empty;
+            if (identity != null)
+                return identity.FindFirst(ClaimTypes.Email)?.Value;
 
-            return identity.FindFirst(ClaimTypes.Email)?.Value;
+            return null;
+        }
+
+        public Guid? GetIdFromIdentity(HttpContext context)
+        {
+            var identity = GetIdentity(context);
+
+            if (identity != null)
+            {
+                string? Id = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (Id != null)
+                    return Guid.Parse(Id);
+            }
+
+            return null;
+        }
+
+        private static ClaimsIdentity? GetIdentity(HttpContext context)
+        {
+            return context.User.Identity as ClaimsIdentity;
         }
     }
 }

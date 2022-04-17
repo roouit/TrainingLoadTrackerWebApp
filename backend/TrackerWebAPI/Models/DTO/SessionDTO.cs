@@ -1,4 +1,4 @@
-﻿namespace TrackerWebAPI.Models
+﻿namespace TrackerWebAPI.Models.DTO
 {
     public class SessionDTO
     {

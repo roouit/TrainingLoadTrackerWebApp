@@ -1,4 +1,5 @@
 ﻿using TrackerWebAPI.Models;
+using TrackerWebAPI.Models.DTO;
 
 namespace TrackerWebAPI.Services
 {
@@ -6,7 +7,7 @@ namespace TrackerWebAPI.Services
     {
         public Task<UserDTO> GetUser(string email);
 
-        public Task<User> GetUser(Guid userId);
+        public Task<UserDTO> GetUser(Guid userId);
 
         public Task<IEnumerable<User>> GetUsers();
 
@@ -14,9 +15,13 @@ namespace TrackerWebAPI.Services
 
         public Task<string> Login(UserLoginDTO request, HttpContext context);
 
-        public Task<bool> DeleteUser(string email);
+        public Task<bool> DeleteUser(Guid userId);
+
+        public Task Update(Guid userId, UserUpdateDTO request);
 
         public bool EmailExists(string email);
+
+        public bool UserExists(Guid userId);
 
         public Guid GetUserIdForEmail(string email);
     }

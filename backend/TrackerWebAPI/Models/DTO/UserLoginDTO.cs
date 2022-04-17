@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrackerWebAPI.Models
+namespace TrackerWebAPI.Models.DTO
 {
     public class UserLoginDTO
     {

@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace TrackerWebAPI.Models
+namespace TrackerWebAPI.Models.DTO
 {
+
     public class UserRegisterDTO
     {
         [Required(ErrorMessage = "Password can't be empty")]
@@ -26,4 +27,5 @@ namespace TrackerWebAPI.Models
         [JsonProperty(Required = Required.Always)]
         public WorkloadCalculateMethod CalculationMethod { get; set; }
     }
+    
 }

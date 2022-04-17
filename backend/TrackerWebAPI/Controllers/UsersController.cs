@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrackerWebAPI.Models;
+using TrackerWebAPI.Models.DTO;
 using TrackerWebAPI.Services;
 
 namespace TrackerWebAPI.Controllers
@@ -59,26 +60,18 @@ namespace TrackerWebAPI.Controllers
             return Ok(token);
         }
 
-        [HttpGet("debug/full")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            var userList = await _userService.GetUsers();
-            return Ok(userList);
-        }
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDTO>> GetUser()
         {
-            var email = _tokenService.GetEmailFromIdentity(HttpContext);
+            var userId = _tokenService.GetIdFromIdentity(HttpContext);
 
-            if (string.IsNullOrWhiteSpace(email))
+            if (userId == null)
                 return Forbid("Error when fetching user identity");
 
-            var user = await _userService.GetUser(email);
+            var user = await _userService.GetUser((Guid)userId);
 
             if (user == null)
             {
@@ -88,18 +81,44 @@ namespace TrackerWebAPI.Controllers
             return Ok(user);
         }
 
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutSession(UserUpdateDTO request)
+        {
+            var userId = _tokenService.GetIdFromIdentity(HttpContext);
+
+            if (userId == null)
+                return Forbid("Error when fetching user identity");
+
+            if (!_userService.UserExists((Guid)userId))
+                return Unauthorized("Identity information isn't correct");
+
+            try
+            {
+                await _userService.Update((Guid)userId, request);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser()
         {
-            var email = _tokenService.GetEmailFromIdentity(HttpContext);
+            var userId = _tokenService.GetIdFromIdentity(HttpContext);
 
-            if (string.IsNullOrWhiteSpace(email))
+            if (userId == null)
                 return Forbid("Error when fetching user identity");
 
-            var isSuccesful = await _userService.DeleteUser(email);
+            var isSuccesful = await _userService.DeleteUser((Guid)userId);
 
             if (!isSuccesful)
                 return NotFound("User not found");

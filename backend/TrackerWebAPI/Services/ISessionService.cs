@@ -1,4 +1,5 @@
 ﻿using TrackerWebAPI.Models;
+using TrackerWebAPI.Models.DTO;
 
 namespace TrackerWebAPI.Services
 {
@@ -7,18 +8,18 @@ namespace TrackerWebAPI.Services
         public Task<SessionDTO> GetSession(Guid sessionId);
 
         // Created for debugging purposes
-        public Task<IEnumerable<Session>> GetFullSessions(string email);
+        public Task<IEnumerable<Session>> GetFullSessions(Guid userId);
 
-        public Task<IEnumerable<SessionDTO>> GetSessions(string email);
+        public Task<IEnumerable<SessionDTO>> GetSessions(Guid userId);
 
-        public Task<SessionDTO> Create(SessionCreateDTO request, string email);
+        public Task<SessionDTO> Create(SessionCreateDTO request, Guid userId);
 
         public Task<SessionDTO> Update(Guid sessionId, SessionUpdateDTO request);
 
         public Task<bool> DeleteSession(Guid sessionId);
 
-        public Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(string email, DateTime snapshotDate);
+        public Task<LoadingStatusSnapshotDTO> GetLoadingStatusSnapshot(Guid userId, DateTime snapshotDate);
 
-        public Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(string email);
+        public Task<IEnumerable<LoadingStatusSnapshotDTO>> GetLoadingStatusHistory(Guid userId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TrackerWebAPI.Models.DTO;
 
 namespace TrackerWebAPI.Models
 {
