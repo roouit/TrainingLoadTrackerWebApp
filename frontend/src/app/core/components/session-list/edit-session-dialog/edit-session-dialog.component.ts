@@ -68,7 +68,7 @@ export class EditSessionDialogComponent implements OnInit {
       },
       {
         ...this.sessionEditForm.value,
-        date: this.sessionEditForm.value.date.toISOString(),
+        date: this.sessionEditForm.value.date.format('Y-MM-DD'),
       }
     );
 

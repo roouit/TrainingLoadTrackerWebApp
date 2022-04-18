@@ -1,8 +1,9 @@
 .combined-chart-container {
   display: flex;
-  width: 100vw;
+  width: 100%;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 50px;
 }
 #combined-chart {
   padding: 0 10px;
