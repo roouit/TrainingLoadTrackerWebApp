@@ -15,6 +15,8 @@ namespace TrackerWebAPI.Services
 
         public Task<string> Login(UserLoginDTO request, HttpContext context);
 
+        public Task ChangePassword(Guid userId, ChangePasswordDTO request);
+
         public Task<bool> DeleteUser(Guid userId);
 
         public Task Update(Guid userId, UserUpdateDTO request);

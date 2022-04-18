@@ -36,6 +36,22 @@ namespace TrackerWebAPI.Services
             return _mapper.Map<UserDTO>(user);
         }
 
+        public async Task ChangePassword(Guid userId, ChangePasswordDTO request)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash))
+                throw new Exception("401");
+
+            if (request.NewPassword != request.NewPasswordAgain)
+                throw new ArgumentException("Given new passwords don't match");
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<bool> DeleteUser(Guid UserId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == UserId);
@@ -44,10 +60,18 @@ namespace TrackerWebAPI.Services
                 return false;
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
 
         public async Task Update(Guid userId, UserUpdateDTO request)

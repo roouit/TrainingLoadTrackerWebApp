@@ -81,11 +81,40 @@ namespace TrackerWebAPI.Controllers
             return Ok(user);
         }
 
+        [HttpPut("Changepassword")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO request)
+        {
+            var userId = _tokenService.GetIdFromIdentity(HttpContext);
+
+            if (userId == null)
+                return Forbid("Error when fetching user identity");
+
+            if (!_userService.UserExists((Guid)userId))
+                return Unauthorized("Identity information isn't correct");
+
+            try
+            {
+                await _userService.ChangePassword((Guid)userId, request);
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                if (e.Message == "401")
+                    return Unauthorized("Password was not correct");
+
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutSession(UserUpdateDTO request)
+        public async Task<IActionResult> UpdateUser(UserUpdateDTO request)
         {
             var userId = _tokenService.GetIdFromIdentity(HttpContext);
 
@@ -118,10 +147,13 @@ namespace TrackerWebAPI.Controllers
             if (userId == null)
                 return Forbid("Error when fetching user identity");
 
+            if (!_userService.UserExists((Guid)userId))
+                return Unauthorized("Identity information isn't correct");
+
             var isSuccesful = await _userService.DeleteUser((Guid)userId);
 
             if (!isSuccesful)
-                return NotFound("User not found");
+                return StatusCode(500, "Deleting user failed");
 
             return NoContent();
         }
