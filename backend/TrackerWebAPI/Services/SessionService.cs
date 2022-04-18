@@ -12,11 +12,6 @@ namespace TrackerWebAPI.Services
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        // TODO: implement these three in user settings
-        private readonly int _chronicDefaultRange = 28;
-        private readonly int _acuteDefaultRange = 7;
-        private readonly bool _useEWMA = true;
-
         public SessionService(DataContext context, IMapper mapper, IUserService userService)
         {
             _context = context;
@@ -93,23 +88,23 @@ namespace TrackerWebAPI.Services
                 .OrderBy(s => s.Date)
                 .ToListAsync();
 
+            var user = await _userService.GetUser(userId);
+
             var firstSessionDate = allSessions.First().Date;
-
-            var summary = GetRALoadingStatusSnapshot(snapshotDate, 28, 7, allSessions);
-
-            if (_useEWMA)
-            {
-                var chronicToUse = 14;
-                if ((snapshotDate - firstSessionDate).Days > 14 && (snapshotDate - firstSessionDate).Days <= _chronicDefaultRange)
-                {
-                    chronicToUse = (snapshotDate - firstSessionDate).Days;
-                }
-                return GetEWMALoadingStatusSnapshot(snapshotDate, chronicToUse != _chronicDefaultRange ? chronicToUse : _chronicDefaultRange, _acuteDefaultRange, allSessions);
-            }
-
             var range = (snapshotDate - firstSessionDate).Days;
-            var chronic = Math.Min(range, _chronicDefaultRange);
-            var acute = Math.Min((int)Math.Round(range / 2.0), _acuteDefaultRange);
+            var acute = Math.Min((int)Math.Round(range / 2.0), user.AcuteRange);
+            var chronic = Math.Min(range, user.ChronicRange);
+            var minChronic = 7;
+
+            if (user.CalculationMethod == WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage)
+            {
+                if (user.ChronicRange <= range)
+                {
+                    return GetEWMALoadingStatusSnapshot(snapshotDate, user.ChronicRange, user.AcuteRange, allSessions);
+                }
+
+                return GetEWMALoadingStatusSnapshot(snapshotDate, Math.Max(minChronic, range), acute, allSessions);
+            }
 
             return GetRALoadingStatusSnapshot(snapshotDate, chronic == 0 ? 1 : chronic, acute == 0 ? 1 : acute, allSessions);
         }
@@ -121,34 +116,41 @@ namespace TrackerWebAPI.Services
                 .OrderBy(s => s.Date)
                 .ToListAsync();
 
+            var user = await _userService.GetUser(userId);
             var firstSessionDate = allSessions.First().Date;
-
+            var minChronic = 7;
             var snapshots = new List<LoadingStatusSnapshotDTO>();
 
+            // Initialize values for history loop
             var currentDate = firstSessionDate;
-
+            var range = (currentDate - firstSessionDate).Days;
+            var chronic = Math.Min(range, user.ChronicRange);
+            var acute = Math.Min((int)Math.Round(range / 2.0), user.AcuteRange);
+            
             // Loop over all dates between first session and today
             while (currentDate <= DateTime.Now.Date)
             {
-                if (_useEWMA)
+                if (user.CalculationMethod == WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage)
                 {
-                    var chronicToUse = 14;
-                    if ((currentDate - firstSessionDate).Days > 14 && (currentDate - firstSessionDate).Days <= _chronicDefaultRange)
+                    if (user.ChronicRange <= range)
                     {
-                        chronicToUse = (currentDate - firstSessionDate).Days;
+                        snapshots.Add(GetEWMALoadingStatusSnapshot(currentDate, user.ChronicRange, user.AcuteRange, allSessions));
                     }
-
-                    snapshots.Add(GetEWMALoadingStatusSnapshot(currentDate, chronicToUse != _chronicDefaultRange ? chronicToUse : _chronicDefaultRange, _acuteDefaultRange, allSessions));
+                    else
+                    {
+                        snapshots.Add(GetEWMALoadingStatusSnapshot(currentDate, Math.Max(minChronic, range), acute, allSessions));
+                    }
                 }
                 else
                 {
-                    var range = (currentDate - firstSessionDate).Days;
-                    var chronic = Math.Min(range, _chronicDefaultRange);
-                    var acute = Math.Min((int)Math.Round(range / 2.0), _acuteDefaultRange);
-
                     snapshots.Add(GetRALoadingStatusSnapshot(currentDate, chronic == 0 ? 1 : chronic, acute == 0 ? 1 : acute, allSessions));
                 }
+
+                // Update loop values
                 currentDate = currentDate.AddDays(1);
+                range++;
+                chronic = Math.Min(range, user.ChronicRange);
+                acute = Math.Min((int)Math.Round(range / 2.0), user.AcuteRange);
             }
 
             return snapshots;
