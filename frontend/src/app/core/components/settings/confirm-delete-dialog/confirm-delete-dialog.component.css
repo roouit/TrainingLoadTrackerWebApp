@@ -1,0 +1,40 @@
+.confirm-delete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin-bottom: 25px;
+}
+
+.description {
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+mat-dialog-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.confirm-delete {
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 400px) {
+  mat-dialog-actions {
+    flex-direction: column;
+  }
+
+  mat-dialog-actions > button {
+    width: 100%;
+  }
+
+  .cancel {
+    margin-left: 0px !important;
+    margin-top: 10px;
+  }
+}

@@ -41,7 +41,6 @@
     *ngIf="userApiService.loggedIn()"
     (click)="sidenav.toggle()"
     [routerLink]="['/settings']"
-    >Asetukset</a
+    >Tili</a
   >
-  <a *ngIf="userApiService.loggedIn()" (click)="logout()">Kirjaudu ulos</a>
 </div>

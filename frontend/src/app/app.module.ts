@@ -24,6 +24,7 @@ import { MtxSliderModule } from '@ng-matero/extensions/slider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -52,6 +53,7 @@ import { SettingsComponent } from './core/components/settings/settings.component
 import { ChangePasswordComponent } from './core/components/settings/change-password/change-password.component';
 import { UpdateAccountComponent } from './core/components/settings/update-account/update-account.component';
 import { UpdateCalculationsComponent } from './core/components/settings/update-calculations/update-calculations.component';
+import { ConfirmDeleteAccountDialogComponent } from './core/components/settings/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +75,7 @@ import { UpdateCalculationsComponent } from './core/components/settings/update-c
     ChangePasswordComponent,
     UpdateAccountComponent,
     UpdateCalculationsComponent,
+    ConfirmDeleteAccountDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -99,6 +102,7 @@ import { UpdateCalculationsComponent } from './core/components/settings/update-c
     MatExpansionModule,
     MatDividerModule,
     MatSelectModule,
+    MatCheckboxModule,
   ],
   providers: [
     SessionApiService,

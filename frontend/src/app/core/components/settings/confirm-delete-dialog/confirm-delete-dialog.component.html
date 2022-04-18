@@ -1,0 +1,11 @@
+<div class="confirm-delete">
+  <mat-dialog-content>
+    <h5 class="title">Poista tili pysyvästi</h5>
+    <div class="description">Haluatko varmasti poistaa tilisi ja kaikki harjoituksesi pysyvästi? <b>Poistamista ei voi peruuttaa.</b></div>
+  </mat-dialog-content>
+  <mat-checkbox class="confirm-delete" color="warn" (change)="confirm($event.checked)">Kyllä, haluan poistaa tilini</mat-checkbox>
+  <mat-dialog-actions>
+    <button mat-raised-button class="btn-remove" (click)="delete()" [disabled]="!confirmed">Poista pysyvästi</button>
+    <button mat-raised-button class="cancel" (click)="close()">Peruuta</button>
+  </mat-dialog-actions>
+</div>

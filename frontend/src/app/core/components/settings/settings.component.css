@@ -43,8 +43,18 @@
   text-align: start;
 }
 
+.actions {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .delete-account {
   color: red;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.logout {
   font-size: 0.9em;
   cursor: pointer;
 }

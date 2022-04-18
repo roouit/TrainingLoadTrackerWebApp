@@ -33,6 +33,14 @@ export class UserApiService {
     return this.http.put<void>(`${this.baseUrl}`, data);
   }
 
+  changePassword(data: ChangePasswordDTO): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/changepassword`, data);
+  }
+
+  deleteAccount(): Observable<void> {
+    return this.http.delete<void>(this.baseUrl);
+  }
+
   logout(): void {
     localStorage.removeItem('token');
   }

@@ -40,8 +40,13 @@
 
       <mat-divider></mat-divider>
 
-      <div class="account-settings-subsection">
-        <div class="delete-account" (click)="deleteAccount()">Poista tilini</div>
+      <div class="account-settings-subsection actions">
+        <div class="logout" (click)="logout()">Kirjaudu ulos</div>
+        <div class="delete-account" (click)="openConfirmDeleteAccountDialog()">Poista tilini</div>
+      </div>
+      <div class="messages">
+        <div class="generic-message" *ngIf="genericMessage">{{genericMessage}}</div>
+        <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
       </div>
     </div>
   </mat-expansion-panel>
