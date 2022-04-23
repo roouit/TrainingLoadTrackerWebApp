@@ -6,17 +6,19 @@
 
 .title {
   margin-bottom: 25px;
+  text-align: center;
 }
 
 .description {
   font-size: 0.9em;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 mat-dialog-actions {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .confirm-delete {
@@ -31,6 +33,7 @@ mat-dialog-actions {
 
   mat-dialog-actions > button {
     width: 100%;
+    justify-content: space-between;
   }
 
   .cancel {

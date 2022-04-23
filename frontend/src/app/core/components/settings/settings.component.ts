@@ -36,7 +36,8 @@ export class SettingsComponent implements OnInit {
 
   openConfirmDeleteAccountDialog() {
     const dialogRef = this.dialog.open(ConfirmDeleteAccountDialogComponent, {
-      width: '90%',
+      width: '80%',
+      maxWidth: '500px',
       restoreFocus: false,
     });
 
