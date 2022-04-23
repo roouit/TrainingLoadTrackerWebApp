@@ -25,6 +25,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Services
 import { SessionApiService } from './core/services/session-api.service';
@@ -103,6 +104,7 @@ import { ConfirmDeleteAccountDialogComponent } from './core/components/settings/
     MatDividerModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     SessionApiService,

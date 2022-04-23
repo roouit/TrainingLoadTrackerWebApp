@@ -49,7 +49,9 @@ export class CombinedChartComponent implements OnInit {
       next: (data) => {
         this.setData(data);
         this.initChart();
-        this.d.loaded = true;
+        setTimeout(() => {
+          this.d.loaded = true;
+        }, 700);
       },
       error: (error) => console.log(error),
     });
@@ -95,7 +97,15 @@ export class CombinedChartComponent implements OnInit {
       'd.M'
     );
 
-    this.pointRadius = this.chartRange > 21 ? 1 : 3;
+    this.combinedChart.data.labels = this.data.date.slice(
+      this.rs.value[0],
+      this.rs.value[1] || this.data.date.length
+    );
+
+    if (typeof this.combinedChart.data.labels?.length !== 'undefined') {
+      this.pointRadius = this.combinedChart.data.labels?.length > 21 ? 2 : 3;
+    }
+
     if (
       typeof this.combinedChart.options.elements?.point?.radius !== 'undefined'
     ) {
@@ -308,7 +318,7 @@ export class CombinedChartComponent implements OnInit {
           },
           secondary: {
             beginAtZero: true,
-            max: 2,
+            suggestedMax: 2,
             position: 'right',
             grid: {
               color: ['', '#80b679', '#e5e5e5', '#80b679', ''],

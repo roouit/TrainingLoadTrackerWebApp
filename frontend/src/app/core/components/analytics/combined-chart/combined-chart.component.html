@@ -1,4 +1,7 @@
 <div class="combined-chart-container">
+  <div *ngIf="!d.loaded" class="chart-placeholder">
+    <mat-spinner color=""></mat-spinner>
+  </div>
   <canvas
     id="combined-chart"
     [ngStyle]="{ display: d.loaded ? 'block' : 'none' }"
