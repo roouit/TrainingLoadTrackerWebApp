@@ -19,13 +19,11 @@ export class LandingPageComponent implements OnInit {
   getLoadSummary() {
     this.sessionApiService.getCurrentLoadingStatus().subscribe({
       next: (data) => {
-        data.acute = Math.round(data.acute)
+        data.acute = Math.round(data.acute);
         data.chronic = Math.round(data.chronic);
         this.summary = data;
       },
-      error: (error) => {
-        console.log(error)
-      } 
+      error: (error) => {},
     });
   }
 }

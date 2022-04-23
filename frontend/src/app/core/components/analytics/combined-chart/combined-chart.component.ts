@@ -53,7 +53,7 @@ export class CombinedChartComponent implements OnInit {
           this.d.loaded = true;
         }, 700);
       },
-      error: (error) => console.log(error),
+      error: (error) => {},
     });
   }
 

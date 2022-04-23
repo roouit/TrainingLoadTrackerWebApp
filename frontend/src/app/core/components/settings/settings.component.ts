@@ -28,9 +28,7 @@ export class SettingsComponent implements OnInit {
       next: (data) => {
         this.userData = data;
       },
-      error: (error) => {
-        console.log(error);
-      },
+      error: (error) => {},
     });
   }
 
@@ -60,9 +58,9 @@ export class SettingsComponent implements OnInit {
       },
       error: (error) => {
         if (error.error === 'Deleting user failed') {
-          this.errorMessage = 'Tilin poistaminen epäonnistui'
+          this.errorMessage = 'Tilin poistaminen epäonnistui';
         } else {
-          this.errorMessage = error.error
+          this.errorMessage = error.error;
         }
       },
     });

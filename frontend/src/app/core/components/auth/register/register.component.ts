@@ -61,7 +61,6 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     const temp = Object.assign(this.registerRequest, this.registerForm.value);
-    console.log(temp);
     this.userApiService.register(temp).subscribe({
       next: (data) => {
         this.setMessage('Registration successful. You can now login.');

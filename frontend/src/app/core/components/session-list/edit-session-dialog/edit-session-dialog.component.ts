@@ -81,8 +81,6 @@ export class EditSessionDialogComponent implements OnInit {
 
       this.dialogRef.close({ updated: true });
     } catch (error) {
-      console.log(error)
-
       this.close('Virhe harjoitusta päivittäessä.')
     }
   }

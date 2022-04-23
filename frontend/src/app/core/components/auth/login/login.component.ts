@@ -26,15 +26,6 @@ export class LoginComponent implements OnInit {
     };
   }
 
-  autoLogin(): void {
-    // Valid until 14.6.
-    localStorage.setItem(
-      'token',
-      'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJyb291aXRAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiI3OTE0ZjI3My05Yzg2LTRjZWYtYWY0OS05M2U3ZDc5MTE0ZDMiLCJleHAiOjE2NTUzNjI5NTEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzI4NiIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzI4NiJ9.LH0xejey6HVOJ8OTJZXwhHH0051LvjgbW_4gxhE-CgejY7xxt-8sRrBcn__tIfHtSraRfBBeEqHg5n48vnle7A'
-    );
-    this.router.navigate(['']);
-  }
-
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: [this.loginRequest.email, Validators.required],
