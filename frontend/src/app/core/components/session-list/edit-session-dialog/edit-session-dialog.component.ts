@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Session } from 'src/app/core/interfaces/Session';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-edit-session-dialog',
@@ -25,7 +26,7 @@ export class EditSessionDialogComponent implements OnInit {
 
   ngOnInit() {
     this.sessionEditForm = this.fb.group({
-      date: [this.session.date, Validators.required],
+      date: [moment(this.session.date), Validators.required],
       duration: [this.session.duration, [Validators.required, Validators.min(1), Validators.max(4320)]],
       rpe: [this.session.rpe, [Validators.required, Validators.min(1), Validators.max(10)]],
     });

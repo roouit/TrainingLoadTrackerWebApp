@@ -101,6 +101,8 @@ export class DataTableComponent implements OnInit {
     this.resetMessages();
     const dialogConfig = new MatDialogConfig();
 
+    dialogConfig.width = '90%';
+    dialogConfig.maxWidth = '500px';
     dialogConfig.disableClose = true;
     dialogConfig.restoreFocus = false;
     dialogConfig.autoFocus = 'btn-success';
@@ -114,7 +116,7 @@ export class DataTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe((val) => {
       if (!val.updated) {
         this.resetMessages();
-        this.errorMessage = val.message || 'Virhe harjoitusta päivittäessä.';
+        this.errorMessage = val.message;
         return;
       } 
       this.resetMessages();

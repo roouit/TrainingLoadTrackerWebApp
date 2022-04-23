@@ -1,5 +1,13 @@
+.mat-dialog-title {
+  text-align: center;
+}
+
+.mat-dialog-actions {
+  justify-content: center;
+}
+
 .add-session-inputs {
-  width: 200px;
+  width: 80%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -11,30 +19,38 @@
   align-items: center;
 }
 
+.add-session-inputs > div:first-of-type {
+  margin-bottom: 10px;
+}
+
 .slider {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .slider mat-slider {
-  width: 160px;
+  width: 100%;
   height: 32px;
 }
 
 .slider-label {
-  font-size: 0.7em;
   color: #666666;
+  font-size: 0.9em;
+  margin-top: 5px;
+  margin-left: 7px;
 }
 
 .add-session-inputs > div input {
   border: 1px solid rgb(126, 126, 126);
   border-radius: 5px;
-  width: 30px;
-  height: 20px;
-  margin-top: 15px;
+  width: 35px;
+  height: 30px;
+  margin-right: 10px;
+  margin-top: 20px;
   text-align: center;
-  font-size: 0.6em;
-  
+  font-size: 0.7em;
 }
 
 input::-webkit-outer-spin-button,
@@ -44,7 +60,22 @@ input::-webkit-inner-spin-button {
 }
 
 .date-input {
-  width: 190px;
-  padding-left: 5px;
+  width: 100%;
+  margin-top: 10px;
   align-self: center;
+}
+
+@media (max-width: 450px) {
+  .add-session-title {
+    width: 100%;
+    text-align: center;
+  }
+
+  .add-session-inputs {
+    width: 100%;
+  }
+
+  .slider-label {
+    font-size: 0.8em;
+  }
 }
