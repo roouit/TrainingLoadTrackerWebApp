@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { LoadingStatusSnapshotDTO } from 'src/app/core/interfaces/LoadingStatusSnapshotDTO';
-import { SessionApiService } from 'src/app/core/services/session-api.service';
 import Helpers from 'src/app/core/utils/helpers';
 
 @Component({
@@ -14,7 +13,7 @@ export class LoadSummaryComponent {
   description: string = '';
   descriptionBgColor: string = 'white';
 
-  constructor(private sessionApiService: SessionApiService) {}
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['summary'].currentValue) {
@@ -62,7 +61,7 @@ export class LoadSummaryComponent {
       this.descriptionBgColor = '#e7ffe7';
       this.description =
         'Kuormitustilasi on tasapainossa ja harjoittelusi on ollut viime aikoina nousujohteista.';
-    } else if (this.summary.ratio < 1.0) {
+    } else if (this.summary.ratio <= 1.0) {
       this.descriptionBgColor = '#e7ffe7';
       this.description =
         'Kuormitustilasi on tasapainossa ja harjoittelusi on ollut viime aikoina hieman normaalia kevyempää.';

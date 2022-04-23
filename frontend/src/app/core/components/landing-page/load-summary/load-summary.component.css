@@ -1,5 +1,5 @@
 .summary-container {
-  padding: 20px 0 40px;
+  padding: 40px 0 30px;
   display: flex;
   flex-direction: column;
 }
@@ -30,4 +30,10 @@
   font-size: 0.8em;
   width: 80%;
   margin: 0 auto;
+}
+
+@media (max-width: 450px) {
+  .summary-container div {
+    width: 80%;
+  }
 }

@@ -23,7 +23,9 @@ export class LandingPageComponent implements OnInit {
         data.chronic = Math.round(data.chronic);
         this.summary = data;
       },
-      error: (error) => console.log(error),
+      error: (error) => {
+        console.log(error)
+      } 
     });
   }
 }

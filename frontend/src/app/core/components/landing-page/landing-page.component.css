@@ -1,0 +1,8 @@
+.home .mat-expansion-panel {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.home .mat-panel-title {
+  color: gray;
+}

@@ -9,7 +9,7 @@ import * as moment from 'moment';
   styleUrls: ['./add-session.component.css'],
 })
 export class AddSessionComponent implements OnInit {
-  title: string = 'Uusi harjoitus';
+  title: string = 'Lisää uusi harjoitus';
   today: moment.Moment = moment(new Date());
   genericMessage: string = '';
   errorMessage: string = '';
@@ -82,7 +82,7 @@ export class AddSessionComponent implements OnInit {
     let validatedValue: number = inputValue;
 
     if (inputId === 'duration') {
-      validatedValue = Math.min(Math.max(inputValue, 1), 4320);
+      validatedValue = Math.min(Math.max(inputValue, 1), 100000);
     } else if (inputId === 'rpe') {
       validatedValue = Math.min(Math.max(inputValue, 1), 10);
     }
