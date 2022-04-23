@@ -1,29 +1,36 @@
-<mat-sidenav-container>
+<div [ngClass]="{'container': true, 'desktopView': !mobileView}" class="container">
+  <mat-sidenav-container [hasBackdrop]="false">
 
-  <mat-sidenav
-    #sidenav="matSidenav"
-    position="end"
-    class="mat-elevation-z8"
-    autoFocus=false
-  >
-    <app-side-navigation [sidenav]="sidenav"></app-side-navigation>
-  </mat-sidenav>
+    <mat-sidenav
+      #sidenav="matSidenav"
+      position="end"
+      class="mat-elevation-z2"
+      autoFocus=false
+      [mode]="mobileView ? 'over' : 'side'"
+      [opened]="!mobileView"
+      [disableClose]=""
+    >
+      <app-side-navigation [sidenav]="sidenav"></app-side-navigation>
+    </mat-sidenav>
 
-  <mat-sidenav-content style="background-color: white;">
-    <div id="wrapper">
-      <div id="header">
-        <h5 class="app-title">{{title}}</h5>
-        <img
-          class="menu-icon"
-          (click)="sidenav.toggle()"
-          src="../../../../assets/menu_icon.svg"
-          alt="menu icon"
-        />
+    <mat-sidenav-content>
+      <div id="wrapper">
+        <div id="header">
+          <h5 class="app-title">{{title}}</h5>
+          <img
+            *ngIf="mobileView"
+            class="menu-icon"
+            (click)="sidenav.toggle()"
+            src="../../../../assets/menu_icon.svg"
+            alt="menu icon"
+          />
+        </div>
+        <div class="page-content">
+          <router-outlet></router-outlet>
+        </div>
       </div>
-      <div class="page-content">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  </mat-sidenav-content>
+    </mat-sidenav-content>
 
-</mat-sidenav-container>
+  </mat-sidenav-container>
+
+</div>

@@ -1,4 +1,5 @@
 <button
+  *ngIf="mobileView"
   class="close-button"
   (click)="sidenav.toggle()"
   mat-icon-button
@@ -9,37 +10,37 @@
 <div class="nav-links">
   <a
     *ngIf="!userApiService.loggedIn()"
-    (click)="sidenav.toggle()"
+    (click)="changePageAction()"
     [routerLink]="['/auth/login']"
     >Kirjaudu</a
   >
   <a
     *ngIf="!userApiService.loggedIn()"
-    (click)="sidenav.toggle()"
+    (click)="changePageAction()"
     [routerLink]="['/auth/register']"
     >Rekisteröidy</a
   >
   <a
     *ngIf="userApiService.loggedIn()"
-    (click)="sidenav.toggle()"
+    (click)="changePageAction()"
     [routerLink]="['/']"
     >Etusivu</a
   >
   <a
     *ngIf="userApiService.loggedIn()"
-    (click)="sidenav.toggle()"
+    (click)="changePageAction()"
     [routerLink]="['/sessions']"
     >Harjoitukset</a
   >
   <a
     *ngIf="userApiService.loggedIn()"
-    (click)="sidenav.toggle()"
+    (click)="changePageAction()"
     [routerLink]="['/analyze']"
     >Analysoi</a
   >
   <a
     *ngIf="userApiService.loggedIn()"
-    (click)="sidenav.toggle()"
+    (click)="changePageAction()"
     [routerLink]="['/settings']"
     >Tili</a
   >
