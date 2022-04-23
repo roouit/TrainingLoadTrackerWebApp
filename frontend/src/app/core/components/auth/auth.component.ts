@@ -37,10 +37,10 @@ export class AuthComponent implements OnInit {
     setMessage: (message: string) => void;
   }) {
     if (componentRef instanceof LoginComponent) {
-      this.title = 'Kirjaudu';
+      this.title = 'Kirjaudu sisään';
       this.resetError();
     } else if (componentRef instanceof RegisterComponent) {
-      this.title = 'Rekisteröidy';
+      this.title = 'Luo uusi tili';
       this.resetError();
       this.resetMessage();
     } else {

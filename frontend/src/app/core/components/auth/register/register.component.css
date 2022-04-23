@@ -1,6 +1,6 @@
 .register-form {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .register-form + a {
@@ -12,6 +12,12 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  width: 280px;
+  width: 70%;
+  max-width: 500px;
   padding-bottom: 10px;
+}
+
+.register-user-btn {
+  width: 70%;
+  max-width: 500px;
 }
