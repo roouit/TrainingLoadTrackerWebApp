@@ -1,28 +1,69 @@
-<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+<mat-spinner
+  class="settings-calculations-spinner"
+  diameter="40"
+  *ngIf="!loaded"
+></mat-spinner>
+<form *ngIf="loaded" class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
   <mat-form-field class="number-input" appearance="legacy" floatLabel="always">
     <mat-label>Akuutti ajanjakso</mat-label>
-    <input matInput type="number" name="acuteRange" formControlName="acuteRange" (input)="handleChange($event)">
+    <input
+      matInput
+      type="number"
+      name="acuteRange"
+      formControlName="acuteRange"
+      (input)="handleChange($event)"
+    />
     <span class="type-suffix" matSuffix>päivää</span>
-    <mat-error *ngIf="form.invalid">{{getErrorMessage("acuteRange")}}</mat-error>
+    <mat-error *ngIf="form.invalid">{{
+      getErrorMessage("acuteRange")
+    }}</mat-error>
   </mat-form-field>
   <mat-form-field class="number-input" appearance="legacy" floatLabel="always">
     <mat-label>Krooninen ajanjakso</mat-label>
-    <input matInput type="number" name="chronicRange" formControlName="chronicRange" (input)="handleChange($event)">
+    <input
+      matInput
+      type="number"
+      name="chronicRange"
+      formControlName="chronicRange"
+      (input)="handleChange($event)"
+    />
     <span class="type-suffix" matSuffix>päivää</span>
-    <mat-error *ngIf="form.invalid">{{getErrorMessage("chronicRange")}}</mat-error>
+    <mat-error *ngIf="form.invalid">{{
+      getErrorMessage("chronicRange")
+    }}</mat-error>
   </mat-form-field>
   <div class="div-with-button">
-    <mat-form-field class="calculate-select" appearance="legacy" floatLabel="always">
+    <mat-form-field
+      class="calculate-select"
+      appearance="legacy"
+      floatLabel="always"
+    >
       <mat-label>Kuormittumisen laskentatapa</mat-label>
-      <mat-select name="calculationMethod" formControlName="calculationMethod" (selectionChange)="handleChange($event)">
+      <mat-select
+        name="calculationMethod"
+        formControlName="calculationMethod"
+        (selectionChange)="handleChange($event)"
+      >
         <mat-option value="RollingAverage">Liukuva keskiarvo (SMA)</mat-option>
-        <mat-option value="ExponentiallyWeightedMovingAverage">Eksponentiaalinen liukuva keskiarvo (EWMA)</mat-option>
+        <mat-option value="ExponentiallyWeightedMovingAverage"
+          >Eksponentiaalinen liukuva keskiarvo (EWMA)</mat-option
+        >
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button class="btn-success save-btn" type="submit" [disabled]="!(changed && form.valid)">Tallenna</button>
+    <button
+      mat-raised-button
+      class="btn-success save-btn"
+      [class.spinner]="loading"
+      type="submit"
+      [disabled]="!(changed && form.valid)"
+    >
+      {{ loading ? "" : "Tallenna" }}
+    </button>
   </div>
   <div class="messages">
-    <div class="generic-message" *ngIf="genericMessage">{{genericMessage}}</div>
-    <div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
+    <div class="generic-message" *ngIf="genericMessage">
+      {{ genericMessage }}
+    </div>
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
   </div>
 </form>

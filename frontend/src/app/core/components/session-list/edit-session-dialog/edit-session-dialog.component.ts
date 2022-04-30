@@ -14,6 +14,7 @@ export class EditSessionDialogComponent implements OnInit {
   sessionEditForm!: FormGroup;
   session: Session;
   today: string = new Date().toISOString();
+  loading: boolean = false;
 
   constructor(
     private sessionApiService: SessionApiService,
@@ -62,6 +63,9 @@ export class EditSessionDialogComponent implements OnInit {
   }
 
   save(): void {
+    if (this.loading) return;
+
+    this.loading = true;
     // Copy original session and update the copy
     const updatedSession = Object.assign(
       {
@@ -74,7 +78,14 @@ export class EditSessionDialogComponent implements OnInit {
     );
 
     try {
-      this.sessionApiService.editSession(updatedSession).subscribe();
+      this.sessionApiService.editSession(updatedSession).subscribe({
+        next: (token) => {
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+        },
+      });
 
       // Update values in table
       Object.assign(this.session, updatedSession);

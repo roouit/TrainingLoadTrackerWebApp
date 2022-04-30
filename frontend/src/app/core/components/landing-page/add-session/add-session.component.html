@@ -27,7 +27,7 @@
             max="180"
             aria-label="units"
           ></mat-slider>
-          <div class="slider-label">Harjoituksen kesto</div>
+          <div class="slider-label">Harjoituksen kesto (min)</div>
         </div>
       </div>
 
@@ -74,10 +74,11 @@
     <button
       mat-raised-button
       class="btn-success add-session-btn"
+      [class.spinner]="loading"
       type="submit"
       [disabled]="!addSessionForm.valid"
     >
-      Lisää
+      {{ loading ? "" : "Lisää" }}
     </button>
   </form>
 </div>

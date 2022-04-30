@@ -23,6 +23,7 @@ export class DataTableComponent implements OnInit {
   columnsToDisplay = ['date', 'duration', 'rpe', 'load', 'buttons'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  loaded: boolean = false;
 
   constructor(
     private sessionApiService: SessionApiService,
@@ -33,6 +34,7 @@ export class DataTableComponent implements OnInit {
   ngOnInit(): void {
     this.sessionApiService.getSessionList().subscribe({
       next: (data) => {
+        this.loaded = true;
         this.dataSource = new MatTableDataSource(this.sortByDate(data));
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -51,6 +53,7 @@ export class DataTableComponent implements OnInit {
         };
       },
       error: (err) => {
+        this.loaded = true;
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
             this.router.navigate(['/auth/login']);

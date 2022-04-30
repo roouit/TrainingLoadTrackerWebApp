@@ -1,16 +1,48 @@
 <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="register-inputs">
-    <mat-form-field class="email-input" appearance="standard" floatLabel="always">
+    <mat-form-field
+      class="email-input"
+      appearance="standard"
+      floatLabel="always"
+    >
       <mat-label>Sähköposti</mat-label>
-      <input matInput id="email" type="email" formControlName="email" required>
-      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("email")}}</mat-error>
+      <input
+        matInput
+        id="email"
+        type="email"
+        formControlName="email"
+        required
+      />
+      <mat-error *ngIf="registerForm.invalid">{{
+        getErrorMessage("email")
+      }}</mat-error>
     </mat-form-field>
-    <mat-form-field class="password-input" appearance="standard" floatLabel="always">
+    <mat-form-field
+      class="password-input"
+      appearance="standard"
+      floatLabel="always"
+    >
       <mat-label>Salasana</mat-label>
-      <input matInput id="password" type="password" formControlName="password" required>
-      <mat-error *ngIf="registerForm.invalid">{{getErrorMessage("password")}}</mat-error>
+      <input
+        matInput
+        id="password"
+        type="password"
+        formControlName="password"
+        required
+      />
+      <mat-error *ngIf="registerForm.invalid">{{
+        getErrorMessage("password")
+      }}</mat-error>
     </mat-form-field>
   </div>
-  <button mat-raised-button class="btn-success register-user-btn" type="submit" [disabled]="!registerForm.valid">Rekisteröidy</button>
+  <button
+    mat-raised-button
+    class="btn-success register-user-btn"
+    [class.spinner]="loading"
+    type="submit"
+    [disabled]="!registerForm.valid"
+  >
+    {{ loading ? "" : "Rekisteröidy" }}
+  </button>
 </form>
 <a [routerLink]="['/auth/login']">Minulla on jo tunnukset</a>

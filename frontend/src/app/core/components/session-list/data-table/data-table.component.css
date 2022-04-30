@@ -36,7 +36,7 @@
 .mat-column-date {
   padding-left: 24px!important;
   min-width: 100px!important;
-  width: 34%!important;
+  width: 32%!important;
 }
 
 .mat-column-duration {
@@ -55,7 +55,12 @@
 }
 
 .mat-column-buttons {
-  width: 15%!important;
+  width: 17%!important;
   min-width: 56px!important;
   padding-right: 0px!important;
+}
+
+.datatable-spinner {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }

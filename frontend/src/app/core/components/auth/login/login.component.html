@@ -1,16 +1,48 @@
 <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="login-inputs">
-    <mat-form-field class="email-input" appearance="standard" floatLabel="always">
+    <mat-form-field
+      class="email-input"
+      appearance="standard"
+      floatLabel="always"
+    >
       <mat-label>Sähköposti</mat-label>
-      <input matInput id="email" type="email" formControlName="email" required>
-      <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("email")}}</mat-error>
+      <input
+        matInput
+        id="email"
+        type="email"
+        formControlName="email"
+        required
+      />
+      <mat-error *ngIf="loginForm.invalid">{{
+        getErrorMessage("email")
+      }}</mat-error>
     </mat-form-field>
-    <mat-form-field class="password-input" appearance="standard" floatLabel="always">
+    <mat-form-field
+      class="password-input"
+      appearance="standard"
+      floatLabel="always"
+    >
       <mat-label>Salasana</mat-label>
-      <input matInput id="password" type="password" formControlName="password" required>
-      <mat-error *ngIf="loginForm.invalid">{{getErrorMessage("password")}}</mat-error>
+      <input
+        matInput
+        id="password"
+        type="password"
+        formControlName="password"
+        required
+      />
+      <mat-error *ngIf="loginForm.invalid">{{
+        getErrorMessage("password")
+      }}</mat-error>
     </mat-form-field>
   </div>
-  <button mat-raised-button class="btn-success login-btn" type="submit" [disabled]="!loginForm.valid">Kirjaudu sisään</button>
+  <button
+    mat-raised-button
+    class="btn-success login-btn"
+    [class.spinner]="loading"
+    type="submit"
+    [disabled]="!loginForm.valid"
+  >
+    {{ loading ? "" : "Kirjaudu sisään" }}
+  </button>
 </form>
 <a [routerLink]="['/auth/register']">En ole vielä rekisteröitynyt</a>

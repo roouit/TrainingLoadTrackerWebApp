@@ -2,72 +2,79 @@
 
 <mat-dialog-content [formGroup]="sessionEditForm">
   <div class="add-session-inputs">
-      <div class="duration-input">
-        <input
-          matInput
+    <div class="duration-input">
+      <input
+        matInput
+        id="duration"
+        (input)="onInputChange($event)"
+        type="number"
+        formControlName="duration"
+      />
+      <div class="slider">
+        <mat-slider
           id="duration"
-          (input)="onInputChange($event)"
-          type="number"
+          color="primary"
           formControlName="duration"
-        />
-        <div class="slider">
-          <mat-slider
-            id="duration"
-            color="primary"
-            formControlName="duration"
-            (input)="onSliderChange($event)"
-            step="5"
-            min="0"
-            max="180"
-            aria-label="units"
-          ></mat-slider>
-          <div class="slider-label">Harjoituksen kesto</div>
-        </div>
+          (input)="onSliderChange($event)"
+          step="5"
+          min="0"
+          max="180"
+          aria-label="units"
+        ></mat-slider>
+        <div class="slider-label">Harjoituksen kesto</div>
       </div>
-
-      <div class="rpe-input">
-        <input
-          matInput
-          id="rpe"
-          (input)="onInputChange($event)"
-          type="number"
-          formControlName="rpe"
-        />
-        <div class="slider">
-          <mat-slider
-            id="rpe"
-            color="primary"
-            formControlName="rpe"
-            (input)="onSliderChange($event)"
-            step="1"
-            min="0"
-            max="10"
-            aria-label="units"
-          ></mat-slider>
-          <div class="slider-label">Koettu kuormitus (RPE)</div>
-        </div>
-      </div>
-
-      <mat-form-field
-        class="date-input"
-        (click)="picker.open()"
-        appearance="legacy"
-        floatLabel="always"
-      >
-        <input
-          matInput
-          [max]="today"
-          [matDatepicker]="picker"
-          formControlName="date"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker">
-        </mat-datepicker-toggle>
-        <mat-datepicker touchUi #picker></mat-datepicker>
-      </mat-form-field>
     </div>
+
+    <div class="rpe-input">
+      <input
+        matInput
+        id="rpe"
+        (input)="onInputChange($event)"
+        type="number"
+        formControlName="rpe"
+      />
+      <div class="slider">
+        <mat-slider
+          id="rpe"
+          color="primary"
+          formControlName="rpe"
+          (input)="onSliderChange($event)"
+          step="1"
+          min="0"
+          max="10"
+          aria-label="units"
+        ></mat-slider>
+        <div class="slider-label">Koettu kuormitus (RPE)</div>
+      </div>
+    </div>
+
+    <mat-form-field
+      class="date-input"
+      (click)="picker.open()"
+      appearance="legacy"
+      floatLabel="always"
+    >
+      <input
+        matInput
+        [max]="today"
+        [matDatepicker]="picker"
+        formControlName="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
+      <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-raised-button (click)="close()">Sulje</button>
-    <button mat-raised-button class="btn-success" (click)="save()" [disabled]="!sessionEditForm.valid">Tallenna</button>
+  <button mat-raised-button (click)="close()">Sulje</button>
+  <button
+    mat-raised-button
+    class="btn-success"
+    [class.spinner]="loading"
+    (click)="save()"
+    [disabled]="!sessionEditForm.valid"
+  >
+    {{ loading ? "" : "Tallenna" }}
+  </button>
 </mat-dialog-actions>

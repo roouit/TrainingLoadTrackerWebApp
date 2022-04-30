@@ -72,3 +72,27 @@ p {
   color: rgb(12, 141, 12);
   padding-top: 5px;
 }
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.mat-raised-button {
+  min-height: 40px!important;
+}
+ 
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-top-color: rgba(0,0,0,0);
+  animation: spinner .8s linear infinite;
+}

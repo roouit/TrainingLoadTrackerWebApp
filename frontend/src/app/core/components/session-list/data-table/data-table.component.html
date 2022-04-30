@@ -1,5 +1,5 @@
-<div class="generic-message" *ngIf="genericMessage">{{genericMessage}}</div>
-<div class="error-message" *ngIf="errorMessage">{{errorMessage}}</div>
+<div class="generic-message" *ngIf="genericMessage">{{ genericMessage }}</div>
+<div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 <table mat-table [dataSource]="dataSource" matSort class="session-table">
   <ng-container matColumnDef="date">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Päivä</th>
@@ -28,10 +28,20 @@
   <ng-container matColumnDef="buttons">
     <th mat-header-cell *matHeaderCellDef></th>
     <td class="action-button-cell" mat-cell *matCellDef="let row">
-      <button class="action-button" (click)="openEditSessionDialog(row)" mat-icon-button aria-label="Button with an edit icon">
+      <button
+        class="action-button"
+        (click)="openEditSessionDialog(row)"
+        mat-icon-button
+        aria-label="Button with an edit icon"
+      >
         <mat-icon class="edit-icon">edit</mat-icon>
       </button>
-      <button class="action-button" (click)="openConfirmDeleteDialog(row)" mat-icon-button aria-label="Button with a delete icon">
+      <button
+        class="action-button"
+        (click)="openConfirmDeleteDialog(row)"
+        mat-icon-button
+        aria-label="Button with a delete icon"
+      >
         <mat-icon class="delete-icon">delete</mat-icon>
       </button>
     </td>
@@ -42,14 +52,16 @@
     mat-row
     class="session-data-row"
     *matRowDef="let row; columns: columnsToDisplay"
-  >
-    
-</tr>
-
+  ></tr>
 </table>
-<mat-paginator class="session-table-paginator"
+<mat-spinner
+  class="datatable-spinner"
+  diameter="40"
+  *ngIf="!loaded"
+></mat-spinner>
+<mat-paginator
+  class="session-table-paginator"
   [pageSize]="15"
   showFirstLastButtons
   hidePageSize="true"
 ></mat-paginator>
-

@@ -49,13 +49,11 @@
 .add-session-inputs > div input {
   border: 1px solid rgb(126, 126, 126);
   border-radius: 5px;
-  width: 35px;
-  height: 30px;
+  width: 50px;
+  height: 35px;
   margin-right: 10px;
   margin-top: 20px;
   text-align: center;
-  font-size: 0.7em;
-  
 }
 
 input::-webkit-outer-spin-button,

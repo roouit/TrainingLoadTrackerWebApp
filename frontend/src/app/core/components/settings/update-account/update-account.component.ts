@@ -16,6 +16,7 @@ export class UpdateAccountComponent implements OnInit {
   form!: FormGroup;
   genericMessage: string = '';
   errorMessage: string = '';
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -33,24 +34,31 @@ export class UpdateAccountComponent implements OnInit {
       this.form.setValue({
         email: this.userData.email,
       });
-      this.previousUserData = {...this.userData}
+      this.previousUserData = { ...this.userData };
       this.loaded = true;
     }
   }
 
   handleChange(event: any): void {
     if (this.genericMessage) {
-      this.resetMessages()
+      this.resetMessages();
     }
 
-    if (this.previousUserData[event.target.name as keyof UserDTO] !== event.target.value) {
+    if (
+      this.previousUserData[event.target.name as keyof UserDTO] !==
+      event.target.value
+    ) {
       this.changed = true;
     } else {
-      this.changed = false
+      this.changed = false;
     }
   }
 
   onSubmit(): void {
+    if (this.loading) return;
+
+    this.loading = true;
+    
     this.resetMessages();
     this.userApiService
       .update({
@@ -62,10 +70,12 @@ export class UpdateAccountComponent implements OnInit {
           this.genericMessage = 'Tiedot päivitetty';
           this.previousUserData.email = this.form.value.email;
           this.changed = false;
+          this.loading = false;
         },
         error: (err) => {
           this.resetMessages();
           this.errorMessage = 'Päivitys epäonnistui';
+          this.loading = false;
         },
       });
   }
@@ -79,7 +89,7 @@ export class UpdateAccountComponent implements OnInit {
     if (this.form.get(formKey)?.hasError('required')) {
       return `Kenttä ei voi olla tyhjä`;
     } else if (this.form.get(formKey)?.hasError('email')) {
-      return 'Sähköposti ei ole kunnollinen'
+      return 'Sähköposti ei ole kunnollinen';
     }
   }
 }

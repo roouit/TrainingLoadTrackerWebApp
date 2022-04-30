@@ -11,6 +11,7 @@ export class ChangePasswordComponent implements OnInit {
   form!: FormGroup;
   genericMessage: string = '';
   errorMessage: string = '';
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +64,10 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.loading) return;
+
+    this.loading = true;
+    
     this.resetMessages();
     this.userApiService
       .changePassword({
@@ -74,6 +79,7 @@ export class ChangePasswordComponent implements OnInit {
         next: (data) => {
           this.genericMessage = 'Salasana vaihdettu';
           this.resetForm();
+          this.loading = false;
         },
         error: (err) => {
           if (err.error === 'Password was not correct') {
@@ -83,6 +89,7 @@ export class ChangePasswordComponent implements OnInit {
           } else {
             this.errorMessage = 'Salasanan vaihtaminen epäonnistui';
           }
+          this.loading = false;
         },
       });
   }

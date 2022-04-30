@@ -15,6 +15,7 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   setError!: Function;
   setMessage!: Function;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -26,7 +27,8 @@ export class RegisterComponent implements OnInit {
       email: '',
       acuteRange: 7,
       chronicRange: 28,
-      calculationMethod: WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage
+      calculationMethod:
+        WorkloadCalculateMethod.ExponentiallyWeightedMovingAverage,
     };
   }
 
@@ -60,19 +62,27 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.loading) return;
+
+    this.loading = true;
     const temp = Object.assign(this.registerRequest, this.registerForm.value);
+    
     this.userApiService.register(temp).subscribe({
       next: (data) => {
         this.setMessage('Registration successful. You can now login.');
         this.router.navigate(['/auth/login']);
+        this.loading = false;
       },
-      error: (err) => this.handleError(err),
+      error: (err) => {
+        this.handleError(err);
+        this.loading = false;
+      }
     });
   }
 
   handleError(err: any): void {
     if (this.setError) {
-      this.setError(err.error)
+      this.setError(err.error);
     }
   }
 

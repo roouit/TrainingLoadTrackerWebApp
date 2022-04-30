@@ -22,6 +22,7 @@ export class AddSessionComponent implements OnInit {
     rpe: [0, [Validators.required, Validators.min(1), Validators.max(10)]],
   });
   @Output() sessionAddedEvent = new EventEmitter<void>();
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +32,9 @@ export class AddSessionComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
+    if (this.loading) return;
+
+    this.loading = true;
     const newSessionCandidate = {
       date: this.addSessionForm.value.date.format('Y-MM-DD'),
       duration: this.addSessionForm.value.duration,
@@ -43,6 +47,7 @@ export class AddSessionComponent implements OnInit {
         this.genericMessage = 'Uusi harjoitus lisätty!';
         this.resetForm();
         this.sessionAddedEvent.emit();
+        this.loading = false;
       },
       error: (err) => {
         const property = Object.keys(err.error.errors)[0];
@@ -50,6 +55,7 @@ export class AddSessionComponent implements OnInit {
         this.errorMessage = `Virhe harjoitusta lisättäessä: ${
           err.error.errors[property] ?? 'tuntematon virhe'
         }`;
+        this.loading = false;
       },
     });
   }

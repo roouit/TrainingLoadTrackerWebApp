@@ -40,7 +40,11 @@
   width: 65%;
 }
 
-@media (max-width: 400px) {
+.settings-calculations-spinner {
+  margin: 10px auto;
+}
+
+@media (max-width: 500px) {
   .div-with-button {
     flex-direction: column;
   }

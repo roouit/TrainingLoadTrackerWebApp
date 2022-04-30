@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   setError!: Function;
   setMessage!: Function;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,14 +35,22 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.loading) return
+
+    this.loading = true;
+    
     this.userApiService
       .login(Object.assign(this.loginRequest, this.loginForm.value))
       .subscribe({
         next: (token) => {
           localStorage.setItem('token', token);
           this.router.navigate(['']);
+          this.loading = false;
         },
-        error: (err) => this.handleError(err),
+        error: (err) => {
+          this.handleError(err);
+          this.loading = false;
+        }
       });
   }
 

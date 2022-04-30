@@ -12,6 +12,7 @@ import { UserApiService } from 'src/app/core/services/user-api.service';
 export class UpdateCalculationsComponent implements OnInit {
   @Input() userData!: UserDTO;
   previousUserData!: UserDTO;
+  loading: boolean = false;
   loaded: boolean = false;
   changed: boolean = false;
   form!: FormGroup;
@@ -25,8 +26,14 @@ export class UpdateCalculationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      acuteRange: [0, [Validators.required, Validators.min(3), Validators.max(15)]],
-      chronicRange: [0, [Validators.required, Validators.min(7), Validators.max(50)]],
+      acuteRange: [
+        0,
+        [Validators.required, Validators.min(3), Validators.max(15)],
+      ],
+      chronicRange: [
+        0,
+        [Validators.required, Validators.min(7), Validators.max(50)],
+      ],
       calculationMethod: [WorkloadCalculateMethod[0], Validators.required],
     });
   }
@@ -62,6 +69,10 @@ export class UpdateCalculationsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.loading) return;
+
+    this.loading = true;
+
     this.resetMessages();
     this.userApiService
       .update({
@@ -79,10 +90,12 @@ export class UpdateCalculationsComponent implements OnInit {
             WorkloadCalculateMethod
           ).indexOf(this.form.value.calculationMethod);
           this.changed = false;
+          this.loading = false;
         },
         error: (err) => {
           this.resetMessages();
           this.errorMessage = 'Päivitys epäonnistui';
+          this.loading = false;
         },
       });
   }
@@ -98,11 +111,15 @@ export class UpdateCalculationsComponent implements OnInit {
     }
 
     if (this.form.get(formKey)?.hasError('min')) {
-      return `Arvon pitää olla vähintään ${formKey === 'acuteRange' ? 3 : 7} päivää`;
+      return `Arvon pitää olla vähintään ${
+        formKey === 'acuteRange' ? 3 : 7
+      } päivää`;
     }
 
     if (this.form.get(formKey)?.hasError('max')) {
-      return `Arvo voi olla enintään ${formKey === 'acuteRange' ? 15 : 50} päivää`;
+      return `Arvo voi olla enintään ${
+        formKey === 'acuteRange' ? 15 : 50
+      } päivää`;
     }
   }
 }

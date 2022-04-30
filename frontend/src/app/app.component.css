@@ -28,6 +28,7 @@ mat-sidenav-content {
   width: 100%;
   align-self: center;
   color: #2D89B0;
+  font-size: 1.2em;
 }
 
 .menu-icon {
@@ -50,4 +51,10 @@ mat-sidenav-content {
 .desktopView {
   max-width: 1000px!important;
   box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+}
+
+@media (max-width: 400px) {
+  .app-title {
+    font-size: 0.9em;
+  }
 }
