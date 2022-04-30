@@ -32,6 +32,7 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+ 
 }
 
 .slider mat-slider {
@@ -44,6 +45,9 @@
   font-size: 0.9em;
   margin-top: 5px;
   margin-left: 7px;
+  width: 100%;
+  padding-right: 3px;
+  text-align: left;
 }
 
 .add-session-inputs > div input {
@@ -60,6 +64,22 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.mat-icon {
+  height: 1.2em !important;
+  font-size: 1.2em !important;
+  line-height: 1.1em!important;
+}
+
+.rpe-help-button {
+  float: right;
+  height: 1.2em!important;
+  line-height: 1.1em!important;
+}
+
+.rpe-help-icon {
+  color: rgb(0, 0, 0);
 }
 
 .date-input {

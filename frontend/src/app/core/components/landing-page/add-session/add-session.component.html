@@ -50,7 +50,18 @@
             max="10"
             aria-label="units"
           ></mat-slider>
-          <div class="slider-label">Koettu kuormitus (RPE)</div>
+          <div class="slider-label">
+            Koettu kuormitus (RPE)
+            <button
+              class="rpe-help-button"
+              type="button"
+              (click)="showRpeHelp()"
+              mat-icon-button
+              aria-label="Button with a question mark icon"
+            >
+              <mat-icon class="rpe-help-icon">help_outline</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
 

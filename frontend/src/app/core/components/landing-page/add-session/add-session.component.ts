@@ -2,13 +2,15 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SessionApiService } from 'src/app/core/services/session-api.service';
 import * as moment from 'moment';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { RpeHelpDialogComponent } from 'src/app/core/utils/help-dialogs/rpe-help-dialog/rpe-help-dialog.component';
 
 @Component({
   selector: 'app-add-session',
   templateUrl: './add-session.component.html',
   styleUrls: ['./add-session.component.css'],
 })
-export class AddSessionComponent implements OnInit {
+export class AddSessionComponent {
   title: string = 'Lisää uusi harjoitus';
   today: moment.Moment = moment(new Date());
   genericMessage: string = '';
@@ -26,10 +28,9 @@ export class AddSessionComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private sessionApiService: SessionApiService
+    private sessionApiService: SessionApiService,
+    private dialog: MatDialog
   ) {}
-
-  ngOnInit(): void {}
 
   onSubmit() {
     if (this.loading) return;
@@ -100,5 +101,15 @@ export class AddSessionComponent implements OnInit {
     const patchObject: any = {};
     patchObject[target] = value;
     this.addSessionForm.patchValue(patchObject);
+  }
+
+  showRpeHelp() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '90%';
+    dialogConfig.maxWidth = '250px';
+    dialogConfig.restoreFocus = false;
+    dialogConfig.autoFocus = '';
+
+    this.dialog.open(RpeHelpDialogComponent, dialogConfig);
   }
 }

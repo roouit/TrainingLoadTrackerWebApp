@@ -55,6 +55,7 @@ import { ChangePasswordComponent } from './core/components/settings/change-passw
 import { UpdateAccountComponent } from './core/components/settings/update-account/update-account.component';
 import { UpdateCalculationsComponent } from './core/components/settings/update-calculations/update-calculations.component';
 import { ConfirmDeleteAccountDialogComponent } from './core/components/settings/confirm-delete-dialog/confirm-delete-dialog.component';
+import { RpeHelpDialogComponent } from './core/utils/help-dialogs/rpe-help-dialog/rpe-help-dialog.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { ConfirmDeleteAccountDialogComponent } from './core/components/settings/
     UpdateAccountComponent,
     UpdateCalculationsComponent,
     ConfirmDeleteAccountDialogComponent,
+    RpeHelpDialogComponent,
   ],
   imports: [
     BrowserModule,

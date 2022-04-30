@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 15px
+}
+
+.text {
+  font-size: 0.7em;
+  margin-bottom: 15px;
+}
+
+.rpe-numbers-list {
+  list-style: none;
+  font-size: 0.8em;
+  width: 100%;
+}
+
+.list-item {
+  padding-left: 35px;
+  width: 100%;
+  display: flex;
+}
+
+.number {
+  width: 20px;
+  margin-right: 15px;
+  font-weight: bold;
+  text-align: right;
+}
