@@ -9,6 +9,8 @@ namespace TrackerWebAPI.Services
 
         public Task<UserDTO> GetUser(Guid userId);
 
+        public Task<CalculationReliabilityDTO> GetCalculationReliability(Guid userId);
+
         public Task<IEnumerable<User>> GetUsers();
 
         public Task<UserDTO> Register(UserRegisterDTO request);

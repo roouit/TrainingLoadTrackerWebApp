@@ -157,5 +157,26 @@ namespace TrackerWebAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("calculationreliability")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CalculationReliabilityDTO>> GetCalculationReliability()
+        {
+            var userId = _tokenService.GetIdFromIdentity(HttpContext);
+
+            if (userId == null)
+                return Forbid("Error when fetching user identity");
+
+            var reliabilityStatus = await _userService.GetCalculationReliability((Guid)userId);
+
+            if (reliabilityStatus == null)
+            {
+                return NotFound("Couldn't get calculation reliability status");
+            }
+
+            return Ok(reliabilityStatus);
+        }
     }
 }

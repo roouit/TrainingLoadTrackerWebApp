@@ -127,5 +127,28 @@ namespace TrackerWebAPI.Services
                 .Select(u => u.UserId)
                 .FirstOrDefault();
         }
+
+        public async Task<CalculationReliabilityDTO> GetCalculationReliability(Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null) return null;
+
+            var firstSessionDate = await _context.Sessions
+                .Where(s => s.UserId == userId)
+                .OrderBy(s => s.Date)
+                .Select(s => s.Date)
+                .FirstAsync();
+
+            Console.WriteLine(firstSessionDate);
+
+            var range = (DateTime.Now.Date - firstSessionDate).Days;
+
+            Console.WriteLine(range);
+            Console.WriteLine(user.ChronicRange);
+
+
+            return new CalculationReliabilityDTO(range >= user.ChronicRange);
+        }
     }
 }
