@@ -56,6 +56,7 @@ import { UpdateAccountComponent } from './core/components/settings/update-accoun
 import { UpdateCalculationsComponent } from './core/components/settings/update-calculations/update-calculations.component';
 import { ConfirmDeleteAccountDialogComponent } from './core/components/settings/confirm-delete-dialog/confirm-delete-dialog.component';
 import { RpeHelpDialogComponent } from './core/utils/help-dialogs/rpe-help-dialog/rpe-help-dialog.component';
+import { ReliabilityWarningDialogComponent } from './core/utils/help-dialogs/reliability-warning-dialog/reliability-warning-dialog.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { RpeHelpDialogComponent } from './core/utils/help-dialogs/rpe-help-dialo
     UpdateCalculationsComponent,
     ConfirmDeleteAccountDialogComponent,
     RpeHelpDialogComponent,
+    ReliabilityWarningDialogComponent,
   ],
   imports: [
     BrowserModule,

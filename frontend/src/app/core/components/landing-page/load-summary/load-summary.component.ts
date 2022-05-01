@@ -1,5 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { LoadingStatusSnapshotDTO } from 'src/app/core/interfaces/LoadingStatusSnapshotDTO';
+import { ReliabilityWarningDialogComponent } from 'src/app/core/utils/help-dialogs/reliability-warning-dialog/reliability-warning-dialog.component';
 import Helpers from 'src/app/core/utils/helpers';
 
 @Component({
@@ -12,8 +14,15 @@ export class LoadSummaryComponent {
   loaded: boolean = false;
   description: string = '';
   descriptionBgColor: string = 'white';
+  showWarning: boolean = false;
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
+
+  ngDoCheck() {
+    if (!(localStorage.getItem('reliableCalculations') === 'true') && !this.showWarning) {
+      this.showWarning = true;
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['summary'].currentValue) {
@@ -36,6 +45,16 @@ export class LoadSummaryComponent {
       return 'red';
     }
     return '#ffd000'; // Orange-ish
+  }
+
+  showCalculationWarning() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '90%';
+    dialogConfig.maxWidth = '500px';
+    dialogConfig.restoreFocus = false;
+    dialogConfig.autoFocus = undefined;
+
+    this.dialog.open(ReliabilityWarningDialogComponent, dialogConfig);
   }
 
   setDescription(): void {

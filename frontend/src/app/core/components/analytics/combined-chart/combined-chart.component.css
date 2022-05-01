@@ -45,6 +45,24 @@
   padding-top: 5px;
 }
 
+.mat-icon {
+  height: 1.8em !important;
+  width: 1.8em !important;
+  font-size: 1.8em !important;
+  line-height: 1em!important;
+  
+}
+
+.reliability-warning-button {
+  height: 1.8em!important;
+  width: 1.8em !important;
+  line-height: 1.8em!important;
+}
+
+.reliability-warning-icon {
+  color: #ffd000;
+}
+
 @media (min-width: 800px) {
   .chart-placeholder {
     height: calc((100vw - 200px) * 0.75);

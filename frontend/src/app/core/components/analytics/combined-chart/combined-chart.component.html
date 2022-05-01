@@ -1,4 +1,14 @@
 <div class="combined-chart-container">
+  <button
+    *ngIf="showWarning"
+    class="reliability-warning-button"
+    type="button"
+    (click)="showCalculationWarning()"
+    mat-icon-button
+    aria-label="Button with a warning icon"
+  >
+    <mat-icon class="reliability-warning-icon">report_problem</mat-icon>
+  </button>
   <div *ngIf="!d.loaded" class="chart-placeholder">
     <mat-spinner color=""></mat-spinner>
   </div>

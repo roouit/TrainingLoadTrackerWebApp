@@ -82,6 +82,7 @@ export class UpdateCalculationsComponent implements OnInit {
       })
       .subscribe({
         next: (data) => {
+          this.updateCalculationReliabilityStatus();
           this.resetMessages();
           this.genericMessage = 'Tiedot päivitetty';
           this.previousUserData.acuteRange = this.form.value.acuteRange;
@@ -98,6 +99,17 @@ export class UpdateCalculationsComponent implements OnInit {
           this.loading = false;
         },
       });
+  }
+
+  updateCalculationReliabilityStatus() {
+    this.userApiService.getCalculationReliability().subscribe({
+      next: (data) => {
+        localStorage.setItem('reliableCalculations', String(data.reliable));
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   resetMessages(): void {

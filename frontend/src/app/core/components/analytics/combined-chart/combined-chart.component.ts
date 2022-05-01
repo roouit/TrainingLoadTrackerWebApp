@@ -7,6 +7,8 @@ import { format } from 'date-fns';
 import { fi } from 'date-fns/locale';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import Helpers from 'src/app/core/utils/helpers';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ReliabilityWarningDialogComponent } from 'src/app/core/utils/help-dialogs/reliability-warning-dialog/reliability-warning-dialog.component';
 
 
 @Component({
@@ -15,6 +17,7 @@ import Helpers from 'src/app/core/utils/helpers';
   styleUrls: ['./combined-chart.component.css'],
 })
 export class CombinedChartComponent implements OnInit {
+  showWarning: boolean = false;
   chartRange: number = 14;
   pointRadius: number = 3;
   chartLastDate: string = format(new Date(), 'd.M');
@@ -42,7 +45,10 @@ export class CombinedChartComponent implements OnInit {
     value: [-this.chartRange, 0],
   };
 
-  constructor(private sessionApiService: SessionApiService) {}
+  constructor(
+    private sessionApiService: SessionApiService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.sessionApiService.getLoadingStatusHistory().subscribe({
@@ -57,6 +63,15 @@ export class CombinedChartComponent implements OnInit {
     });
   }
 
+  ngDoCheck() {
+    if (
+      !(localStorage.getItem('reliableCalculations') === 'true') &&
+      !this.showWarning
+    ) {
+      this.showWarning = true;
+    }
+  }
+
   setData(data: LoadingStatusSnapshotDTO[]): void {
     for (const snapshot of data) {
       this.data.date.push(snapshot.snapshotDate.toString().split('T')[0]);
@@ -65,6 +80,16 @@ export class CombinedChartComponent implements OnInit {
       this.data.ratio.push(snapshot.ratio);
       this.data.exercises.push(snapshot.dailyLoad);
     }
+  }
+
+  showCalculationWarning() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '90%';
+    dialogConfig.maxWidth = '500px';
+    dialogConfig.restoreFocus = false;
+    dialogConfig.autoFocus = undefined;
+
+    this.dialog.open(ReliabilityWarningDialogComponent, dialogConfig);
   }
 
   onSlideToggleChange($event: MatSlideToggleChange): void {
@@ -244,19 +269,18 @@ export class CombinedChartComponent implements OnInit {
                 if (context.parsed.y !== null) {
                   switch (context.datasetIndex) {
                     case 0:
-                      
                       label += Helpers.roundToDecimals(context.parsed.y, 2);
-                      break
+                      break;
                     case 1:
                     case 2:
                       label += Helpers.roundToDecimals(context.parsed.y, 1);
-                      break
+                      break;
                     default:
                       label += context.parsed.y;
                       break;
                   }
                 }
-                
+
                 return label;
               },
             },

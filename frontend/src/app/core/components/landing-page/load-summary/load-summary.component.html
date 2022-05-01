@@ -1,6 +1,19 @@
 <div class="summary-container">
   <div class="ratio-text">
-    ACWR-suhde
+    <span>
+      ACWR-suhde
+      <button
+        *ngIf="showWarning"
+        class="reliability-warning-button"
+        type="button"
+        (click)="showCalculationWarning()"
+        mat-icon-button
+        aria-label="Button with a warning icon"
+      >
+        <mat-icon class="reliability-warning-icon">report_problem</mat-icon>
+      </button>
+    </span>
+
     <span class="ratio-value" [ngStyle]="{ color: getRatioColor() }">{{
       !loaded ? "-" : getRoundedRatio()
     }}</span>

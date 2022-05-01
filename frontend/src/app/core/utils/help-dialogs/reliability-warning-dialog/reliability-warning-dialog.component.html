@@ -1,0 +1,21 @@
+<div class="container">
+  <mat-dialog-content>
+    <div class="title">Huomautus datan epätarkkuudesta</div>
+    <div class="text">
+      Tämä huomautus näytetään, koska kroonisen kuormituksen laskentaan
+      käytettävä aikaväli on pidempi, kuin aika ensimmäisestä syöttämästäsi
+      harjoituksesta.
+    </div>
+    <div class="text">
+      Tämä otetaan huomioon laskennassa, mutta kuormittumisen arvojen
+      luotettavuus on madaltunut rajoitetun datan määrän takia. Mitä vähemmän
+      dataa on, niin sitä herkemmin kuormittumisen arvot muuttuvat yhdestä
+      harjoituksesta.
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button class="close-button" (click)="close()">
+      Sulje
+    </button>
+  </mat-dialog-actions>
+</div>

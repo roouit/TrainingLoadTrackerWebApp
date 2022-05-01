@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CalculationReliabilityDTO } from '../interfaces/CalculationReliabilityDTO';
 import { ChangePasswordDTO } from '../interfaces/ChangePasswordDTO';
 import { UserDTO } from '../interfaces/UserDTO';
 import { UserLoginDTO } from '../interfaces/UserLoginDTO';
@@ -39,6 +40,10 @@ export class UserApiService {
 
   deleteAccount(): Observable<void> {
     return this.http.delete<void>(this.baseUrl);
+  }
+
+  getCalculationReliability(): Observable<CalculationReliabilityDTO> {
+    return this.http.get<CalculationReliabilityDTO>(`${this.baseUrl}/calculationreliability`);
   }
 
   logout(): void {
