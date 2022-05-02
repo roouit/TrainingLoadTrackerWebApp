@@ -119,7 +119,7 @@ export class ChangePasswordComponent implements OnInit {
       return `Salasanassa ei saa olla yli 55 merkkiä`;
     }
 
-    if (this.form.get(formKey)?.hasError('passwordMatch')) {
+    if (this.form.get(formKey)?.hasError('confirmedValidator')) {
       return `Salasana eivät täsmää`;
     }
   }

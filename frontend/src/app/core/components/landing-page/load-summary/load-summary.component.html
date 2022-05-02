@@ -3,7 +3,7 @@
     <span>
       ACWR-suhde
       <button
-        *ngIf="showWarning"
+        *ngIf="showWarning && loaded"
         class="reliability-warning-button"
         type="button"
         (click)="showCalculationWarning()"

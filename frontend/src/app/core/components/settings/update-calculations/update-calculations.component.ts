@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { WorkloadCalculateMethod } from 'src/app/core/interfaces/LoadingStatusSnapshotDTO';
 import { UserDTO } from 'src/app/core/interfaces/UserDTO';
 import { UserApiService } from 'src/app/core/services/user-api.service';
@@ -25,17 +25,25 @@ export class UpdateCalculationsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      acuteRange: [
-        0,
-        [Validators.required, Validators.min(3), Validators.max(15)],
-      ],
-      chronicRange: [
-        0,
-        [Validators.required, Validators.min(7), Validators.max(50)],
-      ],
-      calculationMethod: [WorkloadCalculateMethod[0], Validators.required],
-    });
+    this.form = this.fb.group(
+      {
+        acuteRange: [
+          0,
+          [Validators.required, Validators.min(3), Validators.max(15)],
+        ],
+        chronicRange: [
+          0,
+          [Validators.required, Validators.min(7), Validators.max(50)],
+        ],
+        calculationMethod: [WorkloadCalculateMethod[0], Validators.required],
+      },
+      {
+        validator: this.acuteChronicRelationValidator(
+          'acuteRange',
+          'chronicRange'
+        ),
+      }
+    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -49,6 +57,20 @@ export class UpdateCalculationsComponent implements OnInit {
       this.previousUserData = { ...this.userData };
       this.loaded = true;
     }
+  }
+
+  acuteChronicRelationValidator(acuteRange: string, chronicRange: string) {
+    return (formGroup: FormGroup) => {
+      const acute = formGroup.controls[acuteRange];
+      const chronic = formGroup.controls[chronicRange];
+      if (acute.errors || chronic.errors) {
+        return;
+      }
+      if (acute.value >= chronic.value) {
+        acute.setErrors({ higherThanChronic: true });
+        chronic.setErrors({ higherThanChronic: true });
+      }
+    };
   }
 
   handleChange(event: any): void {
@@ -132,6 +154,10 @@ export class UpdateCalculationsComponent implements OnInit {
       return `Arvo voi olla enintään ${
         formKey === 'acuteRange' ? 15 : 50
       } päivää`;
+    }
+
+    if (this.form.get(formKey)?.hasError('higherThanChronic')) {
+      return 'Akuutin tulee olla kroonista vähemmän'
     }
   }
 }
